@@ -1,25 +1,27 @@
-import React from 'react';
-import logo from './logo.svg';
+import { useState } from "react";
+import { GeoPackage } from '@ngageoint/geopackage';
+import FileLoaderView from "./Views/FileLoaderView";
+
 import './App.css';
 
 function App() {
+
+  const [geoPackage, setGeoPackage] = useState<GeoPackage>();
+
+  /**
+   * THIS FUNCTION IS ONLY USE TO SUPPRESS THE TS ERROR.
+   * PLEASE REMOVE THIS FUNCTION WHEN ALL VARS ARE USED.
+   */
+  function handleUnusedVars() {
+    if (geoPackage) {
+      console.log(geoPackage);
+    }
+  }
+  handleUnusedVars();
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <FileLoaderView setGeoPackage={(geoPackage: GeoPackage) => setGeoPackage(geoPackage)}>
+    </FileLoaderView>
   );
 }
 
