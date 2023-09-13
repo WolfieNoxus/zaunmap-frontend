@@ -5,22 +5,22 @@
     max-width: 300px;
     margin: 0 auto;
     position: relative;
-  }
-  
-  .file-input {
+}
+
+.file-input {
     display: none;
-  }
-  
-  .drop-zone {
+}
+
+.drop-zone {
     text-align: center;
     cursor: pointer;
-  }
-  
-  .drop-zone span {
+}
+
+.drop-zone span {
     color: blue;
     text-decoration: underline;
-  }
+}
 
-  .file-loader-prompt {
+.file-loader-prompt {
     text-align: center;
-  }
+}

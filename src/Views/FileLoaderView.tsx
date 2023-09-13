@@ -7,6 +7,9 @@ import '../css/FileLoader.css';
 
 export default function FileLoaderView({ children, setGeoPackage }: { children: any, setGeoPackage: (geoPackage: GeoPackage) => void }) {
 
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
+
     /**
      * Handle File Load / Change, Send to Controller for Conversion
      * 
@@ -14,9 +17,6 @@ export default function FileLoaderView({ children, setGeoPackage }: { children: 
      * 
      * @returns void
      */
-
-    const fileInputRef = useRef<HTMLInputElement>(null);
-
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (file) {
@@ -31,6 +31,13 @@ export default function FileLoaderView({ children, setGeoPackage }: { children: 
         event.preventDefault();
     };
 
+    /**
+     * Handle File Drop, Send to Controller for Conversion
+     * 
+     * @param event: React.DragEvent<HTMLDivElement>
+     * 
+     * @returns void
+     */
     const onDrop = (event: React.DragEvent<HTMLDivElement>) => {
         event.preventDefault();
         if (event.dataTransfer) {
