@@ -1,0 +1,26 @@
+/* FileLoader.css */
+.loader-container {
+    border: 2px dashed #ccc;
+    padding: 20px;
+    max-width: 300px;
+    margin: 0 auto;
+    position: relative;
+  }
+  
+  .file-input {
+    display: none;
+  }
+  
+  .drop-zone {
+    text-align: center;
+    cursor: pointer;
+  }
+  
+  .drop-zone span {
+    color: blue;
+    text-decoration: underline;
+  }
+
+  .file-loader-prompt {
+    text-align: center;
+  }
