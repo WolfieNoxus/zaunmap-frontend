@@ -1,5 +1,5 @@
-import { MapContainer, TileLayer, GeoJSON, useMapEvents } from 'react-leaflet';
-import { LatLngTuple, LatLngBoundsLiteral, LatLng, LatLngBounds} from 'leaflet';
+import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
+import { LatLngTuple, LatLngBoundsLiteral} from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 type MapDisplayProps = {
     geoJsonData: any; 

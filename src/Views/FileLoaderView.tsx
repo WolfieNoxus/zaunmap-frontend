@@ -1,6 +1,4 @@
 import { useRef, useState} from 'react';
-import { GeoPackage } from '@ngageoint/geopackage';
-import Converters from "../Controllers/Converters";
 import GeoJSONMapDisplay from './GeoJSONMapDisplay';
 import '../css/FileLoader.css';
 
