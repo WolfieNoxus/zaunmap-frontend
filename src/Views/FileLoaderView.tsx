@@ -4,7 +4,7 @@ import Converters from "../Controllers/Converters";
 import GeoJSONMapDisplay from './GeoJSONMapDisplay';
 import '../css/FileLoader.css';
 
-export default function fileLoaderView({ children, setGeoPackage }: { children: any, setGeoPackage: (geoPackage: File) => void }) {
+export default function FileLoaderView({ children, setGeoPackage }: { children: any, setGeoPackage: (geoPackage: File) => void }) {
 
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [geoJsonData, setGeoJSON] = useState<any>(null);
