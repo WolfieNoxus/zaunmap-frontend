@@ -5,7 +5,7 @@ type MapDisplayProps = {
     geoJsonData: any; 
 };
 
-const geoJSONMapDisplay: React.FC<MapDisplayProps> = ({ geoJsonData }) => {
+const GeoJSONMapDisplay: React.FC<MapDisplayProps> = ({ geoJsonData }) => {
     // geographic coordinates of the intersection of the Equator and the Prime Meridian
     const center : LatLngTuple = [0, 0];
     // set up the bounds of the map
@@ -74,4 +74,4 @@ const geoJSONMapDisplay: React.FC<MapDisplayProps> = ({ geoJsonData }) => {
     );
 };
 
-export default geoJSONMapDisplay;
+export default GeoJSONMapDisplay;
