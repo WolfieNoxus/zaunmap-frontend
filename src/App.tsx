@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { GeoPackage } from '@ngageoint/geopackage';
 import FileLoaderView from "./Views/FileLoaderView";
 
 import './App.css';
