@@ -6,7 +6,7 @@ import './App.css';
 
 function App() {
 
-  const [geoPackage, setGeoPackage] = useState<GeoPackage>();
+  const [geoPackage, setGeoPackage] = useState<File>();
 
   /**
    * THIS FUNCTION IS ONLY USE TO SUPPRESS THE TS ERROR.
@@ -20,7 +20,7 @@ function App() {
   handleUnusedVars();
 
   return (
-    <FileLoaderView setGeoPackage={(geoPackage: GeoPackage) => setGeoPackage(geoPackage)}>
+    <FileLoaderView setGeoPackage={(geoPackage: File) => setGeoPackage(geoPackage)}>
     </FileLoaderView>
   );
 }

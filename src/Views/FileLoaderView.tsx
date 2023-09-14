@@ -1,15 +1,13 @@
-import { useRef } from 'react';
+import { useRef, useState} from 'react';
 import { GeoPackage } from '@ngageoint/geopackage';
-
 import Converters from "../Controllers/Converters";
-
+import GeoJSONMapDisplay from './GeoJSONMapDisplay';
 import '../css/FileLoader.css';
 
-export default function FileLoaderView({ children, setGeoPackage }: { children: any, setGeoPackage: (geoPackage: GeoPackage) => void }) {
+export default function fileLoaderView({ children, setGeoPackage }: { children: any, setGeoPackage: (geoPackage: File) => void }) {
 
     const fileInputRef = useRef<HTMLInputElement>(null);
-
-
+    const [geoJsonData, setGeoJSON] = useState<any>(null);
     /**
      * Handle File Load / Change, Send to Controller for Conversion
      * 
@@ -19,8 +17,20 @@ export default function FileLoaderView({ children, setGeoPackage }: { children: 
      */
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
+        // For now, it only consists the parsing of the GeoJSON file into readable data,
+        // And then pass into the geoJsonData, which will trigger the MapDisplay
         if (file) {
-            setGeoPackage(Converters(file));
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                const content = e.target?.result;
+                try {
+                    const parsedGeoJson = JSON.parse(content as string);
+                    setGeoJSON(parsedGeoJson)
+                }catch (error) {
+                    console.error("Error parsing GeoJSON:", error);
+                }
+            };
+            reader.readAsText(file);
         }
         else {
             throw new Error("File not found!");
@@ -43,7 +53,7 @@ export default function FileLoaderView({ children, setGeoPackage }: { children: 
         if (event.dataTransfer) {
             const file = event.dataTransfer.files?.[0];
             if (file) {
-                setGeoPackage(Converters(file));
+                setGeoPackage(file);
             }
             else {
                 throw new Error("File not found!");
@@ -68,6 +78,7 @@ export default function FileLoaderView({ children, setGeoPackage }: { children: 
             <div className='file-loader-prompt'>
                 <span>Supported file types for conversion are GeoJSON, Shapefile, Shapefile Zip, KML</span>
             </div>
+            <GeoJSONMapDisplay geoJsonData={geoJsonData} />
         </div>
     );
 };
