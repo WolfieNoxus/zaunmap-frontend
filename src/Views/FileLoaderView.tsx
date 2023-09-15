@@ -1,11 +1,11 @@
-import { useRef, useState} from 'react';
-import GeoJSONMapDisplay from './GeoJSONMapDisplay';
+import { useRef, useState } from 'react';
 import '../css/FileLoader.css';
-
+import { MapWrapper } from './MapWrapper';
 export default function FileLoaderView({ children, setGeoPackage }: { children: any, setGeoPackage: (geoPackage: File) => void }) {
 
     const fileInputRef = useRef<HTMLInputElement>(null);
-    const [geoJsonData, setGeoJSON] = useState<any>(null);
+    const [fileData, setFileData] = useState<File | null>(null);
+    const [fileType, setFileType] = useState<string | null>(null)
     /**
      * Handle File Load / Change, Send to Controller for Conversion
      * 
@@ -18,17 +18,15 @@ export default function FileLoaderView({ children, setGeoPackage }: { children: 
         // For now, it only consists the parsing of the GeoJSON file into readable data,
         // And then pass into the geoJsonData, which will trigger the MapDisplay
         if (file) {
-            const reader = new FileReader();
-            reader.onload = async (e) => {
-                const content = e.target?.result;
-                try {
-                    const parsedGeoJson = JSON.parse(content as string);
-                    setGeoJSON(parsedGeoJson)
-                }catch (error) {
-                    console.error("Error parsing GeoJSON:", error);
-                }
-            };
-            reader.readAsText(file);
+            const fileHeader = file.name.split(".").slice(1).join(".")
+            if (fileHeader === "geo.json" || fileHeader === "geojson"){
+                setFileType(fileHeader);
+                setFileData(file);
+            }
+            else if (fileHeader === "kml") {
+                setFileType(fileHeader);
+                setFileData(file);
+            }
         }
         else {
             throw new Error("File not found!");
@@ -51,7 +49,15 @@ export default function FileLoaderView({ children, setGeoPackage }: { children: 
         if (event.dataTransfer) {
             const file = event.dataTransfer.files?.[0];
             if (file) {
-                setGeoPackage(file);
+                const fileHeader = file.name.split(".").slice(1).join(".")
+                if (fileHeader === "geo.json" || fileHeader === "geojson"){
+                    setFileType(fileHeader);
+                    setFileData(file);
+                }
+                else if (fileHeader === "kml") {
+                    setFileType(fileHeader);
+                    setFileData(file);
+                }
             }
             else {
                 throw new Error("File not found!");
@@ -76,7 +82,7 @@ export default function FileLoaderView({ children, setGeoPackage }: { children: 
             <div className='file-loader-prompt'>
                 <span>Supported file types for conversion are GeoJSON, Shapefile, Shapefile Zip, KML</span>
             </div>
-            <GeoJSONMapDisplay geoJsonData={geoJsonData} />
+            <MapWrapper fileType={fileType} fileData={fileData} />
         </div>
     );
 };
