@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "es5",
     "typeRoots": ["./src/types", "./node_modules/@types"],
-    "types": ["leaflet-omnivore"],
+    "types": ["DeclareTypes"],
     "lib": [
       "dom",
       "dom.iterable",
