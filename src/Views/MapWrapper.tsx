@@ -39,32 +39,53 @@ export function MapWrapper({ fileType, fileData }: TPropsType) {
                     setGeoJSONData(geoJsonArray);
                 } 
                 // handle shapefile
-                else if (fileType === "zip") {  
-                    const jszip = new JSZip();
-                    const zip = await jszip.loadAsync(fileData);
-                    // Group files by their basename
+                else if (fileType === "zip" || fileType === "shp") { 
+                    let zip;
+                    // When the file uploaded is a single shp file, we will convert it to zip
+                    // and then parse the zip and parse to geojson
+                    if (fileType === "shp") {
+                        const shpToZip = new JSZip();
+                        shpToZip.file(fileData.name, fileData);
+                        const zipFile = await shpToZip.generateAsync({ type: "arraybuffer" });
+                        zip = await new JSZip().loadAsync(zipFile);
+                    }
+                    // this will when the uploaded file is a zip 
+                    else {
+                        zip = await new JSZip().loadAsync(fileData);
+                    }
+                    // Group files by their pairname
                     let groupedFiles: { [key: string]: { [key: string]: JSZip.JSZipObject } } = {};
+
                     zip.forEach((relativePath, zipEntry) => {
-                        const basename = relativePath.split('.').slice(0, -1).join('.');
-                        if (!groupedFiles[basename]) {
-                            groupedFiles[basename] = {};
+                        const pairname = relativePath.split('.').slice(0, -1).join('.');
+                        if (!groupedFiles[pairname]) {
+                            groupedFiles[pairname] = {};
                         }
                         const ext = (relativePath.split('.').pop() ?? "").toLowerCase();
-                        groupedFiles[basename][ext] = zipEntry;
+                        groupedFiles[pairname][ext] = zipEntry;
                     });
-                    // Extract and parse all the shp and dbf files
-                    let geojsonDatas : GeoJsonObject[] = [];
-                    for (let basename in groupedFiles) {
-                        if (groupedFiles[basename].shp && groupedFiles[basename].dbf) {
-                            const shpBuffer = await groupedFiles[basename].shp.async('arraybuffer');
-                            const dbfBuffer = await groupedFiles[basename].dbf.async('arraybuffer');
-                            const prjBuffer = groupedFiles[basename].prj ? await groupedFiles[basename].prj.async('text') : null;
+                    let geojsonDatas: GeoJsonObject[] = [];
+                    for (let pairname in groupedFiles) {
+                        // If both .shp and .dbf are present, proceed with parsing
+                        if (groupedFiles[pairname].shp && groupedFiles[pairname].dbf) {
+                            const shpBuffer = await groupedFiles[pairname].shp.async('arraybuffer');
+                            const dbfBuffer = await groupedFiles[pairname].dbf.async('arraybuffer');
+                            const prjBuffer = groupedFiles[pairname].prj ? await groupedFiles[pairname].prj.async('text') : null;
                             
                             const geojsonData = shp.combine([
                                 shp.parseShp(shpBuffer, prjBuffer),
                                 shp.parseDbf(dbfBuffer)
                             ]);
                             geojsonDatas.push(geojsonData);
+                        }
+                        // If only .shp is present 
+                        else if (groupedFiles[pairname].shp) {
+                            const shpBuffer = await groupedFiles[pairname].shp.async('arraybuffer');
+                            const geojsonData = shp.parseShp(shpBuffer);
+                            geojsonDatas.push(geojsonData);
+                        } 
+                        else {
+                            console.warn(`File set for basename: ${pairname} is missing required components.`);
                         }
                     }
                     setGeoJSONData(geojsonDatas);

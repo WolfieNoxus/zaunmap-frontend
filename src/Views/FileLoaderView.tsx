@@ -28,7 +28,7 @@ export default function FileLoaderView({ children, setGeoPackage }: { children: 
                 setFileType(fileHeader);
                 setFileData(file);
             }
-            else if (fileHeader === "zip") {
+            else if (fileHeader === "zip" || fileHeader === "shp") {
                 setFileType(fileHeader);
                 setFileData(file);
             }   
@@ -63,10 +63,10 @@ export default function FileLoaderView({ children, setGeoPackage }: { children: 
                     setFileType(fileHeader);
                     setFileData(file);
                 }
-                else if (fileHeader === "zip") {
+                else if (fileHeader === "zip" || fileHeader === "shp") {
                     setFileType(fileHeader);
                     setFileData(file);
-                }  
+                }   
             }
             else {
                 throw new Error("File not found!");
