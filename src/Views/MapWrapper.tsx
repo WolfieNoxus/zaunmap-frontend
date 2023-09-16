@@ -3,45 +3,81 @@ import MapView from './MapView';
 import GeoJSONMapView from './GeoJSONMapView';
 import { GeoJsonObject } from 'geojson';
 import tj from '@mapbox/togeojson';
-import domParser from 'xmldom'; 
+import domParser from 'xmldom';
+import shp from 'shpjs';
+import JSZip from 'jszip';
 
-type PropsType = {
+type TPropsType = {
     fileType: string | null;
     fileData: File | null; 
 };
 
-export function MapWrapper({ fileType, fileData }: PropsType) {
-    const [geoJSONData, setGeoJSONData] = useState<GeoJsonObject | null>(null);
-    
+export function MapWrapper({ fileType, fileData }: TPropsType) {
+    const [geoJSONData, setGeoJSONData] = useState<GeoJsonObject[] | null>(null)
     useEffect(() => {
         // reset state
         setGeoJSONData(null);
-        // This will either parse GeoJSON or convert KML/Shapfile to GeoJSON and parse,
-        // and then send to GeoJSONMapView to render
         if (fileData) {
             const reader = new FileReader();
-            reader.onload = (e) => {
-                const content = e.target?.result as string;
+            reader.onload = async (e) => {
+                const content = e.target?.result;
+                // handle geojson file
                 if (fileType === "geo.json" || fileType === "geojson" ) {
                     try {
-                        const parsedGeoJson = JSON.parse(content);
-                        setGeoJSONData(parsedGeoJson);
+                        const parsedGeoJson = JSON.parse(content as string);
+                        const geoJsonArray: GeoJsonObject[] = [parsedGeoJson];
+                        setGeoJSONData(geoJsonArray);
                     } catch (error) {
                         console.error("Error parsing GeoJSON:", error);
                     }
-                } else if (fileType === "kml") {
-                    const kmlDocument = new domParser.DOMParser().parseFromString(content, 'text/xml');
+                }
+                // handle kml file 
+                else if (fileType === "kml") {
+                    const kmlDocument = new domParser.DOMParser().parseFromString(content as string, 'text/xml');
                     const convertedGeoJSON = tj.kml(kmlDocument);
-                    setGeoJSONData(convertedGeoJSON);
+                    const geoJsonArray: GeoJsonObject[] = [convertedGeoJSON];
+                    setGeoJSONData(geoJsonArray);
+                } 
+                // handle shapefile
+                else if (fileType === "zip") {  
+                    const jszip = new JSZip();
+                    const zip = await jszip.loadAsync(fileData);
+                    // Group files by their basename
+                    let groupedFiles: { [key: string]: { [key: string]: JSZip.JSZipObject } } = {};
+                    zip.forEach((relativePath, zipEntry) => {
+                        const basename = relativePath.split('.').slice(0, -1).join('.');
+                        if (!groupedFiles[basename]) {
+                            groupedFiles[basename] = {};
+                        }
+                        const ext = (relativePath.split('.').pop() ?? "").toLowerCase();
+                        groupedFiles[basename][ext] = zipEntry;
+                    });
+                    // Extract and parse all the shp and dbf files
+                    let geojsonDatas : GeoJsonObject[] = [];
+                    for (let basename in groupedFiles) {
+                        if (groupedFiles[basename].shp && groupedFiles[basename].dbf) {
+                            const shpBuffer = await groupedFiles[basename].shp.async('arraybuffer');
+                            const dbfBuffer = await groupedFiles[basename].dbf.async('arraybuffer');
+                            const prjBuffer = groupedFiles[basename].prj ? await groupedFiles[basename].prj.async('text') : null;
+                            
+                            const geojsonData = shp.combine([
+                                shp.parseShp(shpBuffer, prjBuffer),
+                                shp.parseDbf(dbfBuffer)
+                            ]);
+                            geojsonDatas.push(geojsonData);
+                        }
+                    }
+                    setGeoJSONData(geojsonDatas);
                 }
             };
             reader.readAsText(fileData);
+        
         }
     }, [fileType, fileData]);
-    // if a file is uploaded, we will call GeoJSONMapView
+
     if (geoJSONData) {
         return <GeoJSONMapView geoJSONData={geoJSONData} />;
     }
-    // default case when no file uploaded
+
     return <MapView fileData={fileData} />;
 }

@@ -2,17 +2,17 @@ import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { GeoJsonObject } from 'geojson';
 
-type GeoJSONMapViewProps = {
-    geoJSONData: GeoJsonObject;
+type TGeoJSONMapViewProps = {
+    geoJSONData: GeoJsonObject[];
 };
 
-const GeoJSONMapView: React.FC<GeoJSONMapViewProps> = ({ geoJSONData }) => {
+const GeoJSONMapView: React.FC<TGeoJSONMapViewProps> = ({ geoJSONData }) => {
     return (
         <MapContainer 
+        className="structure-of-map"
         center={[0, 0]} 
         zoom={4} 
         minZoom={1} 
-        style={{ height: "700px", width: "100%" }} 
         maxBounds={[
             [-90, -180],
             [90, 180]
@@ -23,7 +23,8 @@ const GeoJSONMapView: React.FC<GeoJSONMapViewProps> = ({ geoJSONData }) => {
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             />
-            <GeoJSON data={geoJSONData} />
+            { geoJSONData.map( (geoJsonObject, index) => ( <GeoJSON key={index} data={geoJsonObject} />) ) }
+
         </MapContainer>
     );
 }

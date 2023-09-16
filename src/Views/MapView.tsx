@@ -1,19 +1,19 @@
 import { Component } from 'react';
 import { MapContainer, TileLayer } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-
-type MapViewProps = {
+import '../css/FileLoader.css';
+type TMapViewProps = {
     fileData: File | null;
 };
 
-class MapView extends Component<MapViewProps> {
+class MapView extends Component<TMapViewProps> {
     render() {
         return (
             <MapContainer 
+                className="structure-of-map"
                 center={[0, 0]} 
                 zoom={4}
                 minZoom={1}
-                style={{ height: "700px", width: "100%" }}
                 maxBounds={[
                     [-90, -180],
                     [90, 180]
