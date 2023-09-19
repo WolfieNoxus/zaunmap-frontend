@@ -1,5 +1,5 @@
-import { GeoPackage } from '@ngageoint/geopackage';
-
+import { GeoPackage, GeoPackageAPI } from '@ngageoint/geopackage';
+import { GeoJSONToGeoPackage } from '@ngageoint/geopackage-geojson-js';
 /**
  * Handle File Load / Change, Send to Controller for Conversion
  * 
