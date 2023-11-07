@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "es5",
     "typeRoots": ["./src/types", "./node_modules/@types"],
-    "types": ["cypress"],
+    "types": ["cypress", "cypress-file-upload"],
     "lib": [
       "dom",
       "dom.iterable",
