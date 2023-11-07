@@ -1,2 +1,36 @@
-- name: Cypress.io
-  uses: cypress-io/github-action@v6.6.0
+name: Cypress Test
+on: [push, pull_request]
+jobs:
+  cypress-run-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Cypress Test with Chrome
+        uses: cypress-io/github-action@v6
+        with:
+          build: npm run build
+          start: npm start
+          browser: chrome
+  cypress-run-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Cypress Test with Chrome
+        uses: cypress-io/github-action@v6
+        with:
+          build: npm run build
+          start: npm start
+          browser: firefox
+  cypress-run-mac:
+    runs-on: macos-13
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Cypress Test with Chrome
+        uses: cypress-io/github-action@v6
+        with:
+          build: npm run build
+          start: npm start
+          browser: safari
