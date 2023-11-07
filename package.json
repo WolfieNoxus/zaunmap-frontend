@@ -6,6 +6,7 @@
     "@mapbox/togeojson": "^0.16",
     "buffer": "^6",
     "geojson": "^0.5",
+    "jszip": "^3",
     "leaflet": "^1",
     "react": "^18",
     "react-dom": "^18",
@@ -13,8 +14,7 @@
     "shpjs": "^4",
     "typescript": "^5",
     "web-vitals": "^3",
-    "xmldom": "^0.6",
-    "jszip": "^3"
+    "xmldom": "^0.6"
   },
   "overrides": {
     "typescript": "^5"
@@ -50,6 +50,7 @@
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "@types/xmldom": "^0.1",
+    "axios": "^1.6.0",
     "cypress": "^13",
     "react-scripts": "^5"
   }
