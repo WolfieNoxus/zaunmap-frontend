@@ -20,7 +20,7 @@ export function MapWrapper({ fileType, fileData }: TPropsType) {
         if (fileData) {
             const reader = new FileReader();
             reader.onload = async (e) => {
-                const content = e.target?.result;
+                const content =  e.target?.result;
                 // handle geojson file
                 if (fileType === "geo.json" || fileType === "geojson" ) {
                     try {
