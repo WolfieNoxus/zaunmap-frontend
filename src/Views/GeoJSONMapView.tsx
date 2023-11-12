@@ -1,4 +1,4 @@
-import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
+import { MapContainer, TileLayer, GeoJSON, ZoomControl } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { GeoJsonObject } from 'geojson';
 
@@ -18,13 +18,14 @@ const GeoJSONMapView: React.FC<TGeoJSONMapViewProps> = ({ geoJSONData }) => {
             [90, 180]
         ]}
         maxBoundsViscosity={1}
+        zoomControl={false}
         >
             <TileLayer
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             />
             { geoJSONData.map( (geoJsonObject, index) => ( <GeoJSON key={index} data={geoJsonObject} />) ) }
-
+            <ZoomControl position="bottomleft" />
         </MapContainer>
     );
 }

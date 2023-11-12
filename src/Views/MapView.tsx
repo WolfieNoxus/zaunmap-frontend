@@ -1,32 +1,34 @@
-import { Component } from 'react';
-import { MapContainer, TileLayer } from 'react-leaflet';
-import 'leaflet/dist/leaflet.css';
-import '../css/FileLoader.css';
+import { Component } from "react";
+import { MapContainer, TileLayer, ZoomControl } from "react-leaflet";
+import "leaflet/dist/leaflet.css";
+// import '../css/FileLoader.css';
 type TMapViewProps = {
-    fileData: File | null;
+  fileData: File | null;
 };
 
 class MapView extends Component<TMapViewProps> {
-    render() {
-        return (
-            <MapContainer 
-                className="structure-of-map"
-                center={[0, 0]} 
-                zoom={4}
-                minZoom={1}
-                maxBounds={[
-                    [-90, -180],
-                    [90, 180]
-                ]}
-                maxBoundsViscosity={1}
-            >
-                <TileLayer
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                />
-            </MapContainer>
-        );
-    }
+  render() {
+    return (
+      <MapContainer
+        className="structure-of-map"
+        center={[0, 0]}
+        zoom={4}
+        minZoom={1}
+        maxBounds={[
+          [-90, -180],
+          [90, 180],
+        ]}
+        maxBoundsViscosity={1}
+        zoomControl={false}
+      >
+        <TileLayer
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        />
+        <ZoomControl position="bottomleft" />
+      </MapContainer>
+    );
+  }
 }
 
 export default MapView;
