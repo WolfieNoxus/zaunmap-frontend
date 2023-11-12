@@ -1,7 +1,9 @@
 import { MapContainer, TileLayer, ZoomControl } from "react-leaflet";
-import { RiCommunityLine } from "react-icons/ri";
-import { BiSearch } from "react-icons/bi";
 import "leaflet/dist/leaflet.css";
+import TopLeft from "./Components/TopLeft";
+import TopRight from "./Components/TopRight";
+import BottomRight from "./Components/BottomRight";
+import BottomLeft from "./Components/BottomLeft";
 
 type TMapViewProps = {
   fileData: File | null;
@@ -28,15 +30,10 @@ const MapView: React.FC<TMapViewProps> = ({ fileData }) => {
         />
         <ZoomControl position="bottomleft" />
       </MapContainer>
-      {/* <CustomComponent /> */}
-      <RiCommunityLine className="custom-left" size={30} />
-      <BiSearch className="custom-right" size={30} />
-
-      {/* <div id="map-portal"></div>
-        {ReactDOM.createPortal(
-          <RiCommunityLine />,
-          document.getElementById("map-portal")
-        )} */}
+      <TopLeft />
+      <TopRight />
+      <BottomRight />
+      <BottomLeft />
     </div>
   );
 };
