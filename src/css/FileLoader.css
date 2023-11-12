@@ -29,3 +29,19 @@
     height: 100vh;
     width: 100vw;
 }
+
+.custom-left {
+    position: absolute;
+    top: 2vw;
+    left: 2vw;
+    z-index: 1000;
+    /* Add more styles as needed */
+  }
+
+.custom-right {
+    position: absolute;
+    top: 2vw;
+    left: 7vw;
+    z-index: 1000;
+    /* Add more styles as needed */
+}
