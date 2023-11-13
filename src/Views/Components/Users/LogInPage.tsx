@@ -3,7 +3,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 const schema = z.object({
-  username: z
+  userName: z
     .string()
     .min(3, { message: "Name should be at least 3 characters" })
     .max(40),
@@ -35,13 +35,13 @@ const LogInPage = () => {
           User Name
         </label>
         <input
-          {...register("username")}
+          {...register("userName")}
           id="userName"
           type="text"
           className="form-control"
         />
-        {errors.username && (
-          <p className="text-danger">{errors.username.message}</p>
+        {errors.userName && (
+          <p className="text-danger">{errors.userName.message}</p>
         )}
       </div>
 
