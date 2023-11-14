@@ -1,6 +1,7 @@
 import { useState } from "react";
 import SearchBar from "../Elements/SearchBar";
-import  IUserProfileProps from "./Interfaces/IUserProfileProps";
+import IUserProfileProps from "./Interfaces/IUserProfileProps";
+import { HiEye, HiEyeOff } from "react-icons/hi";
 
 const UserProfile = (userProfile: IUserProfileProps) => {
   const [items, setItems] = useState(userProfile.projectList);
@@ -16,7 +17,7 @@ const UserProfile = (userProfile: IUserProfileProps) => {
   return (
     <div>
       <p>{userProfile.userName}</p>
-      <p>{userProfile.userType}</p>
+      <p>Permissions: {userProfile.userType}</p>
 
       <SearchBar />
       <table className="table">
@@ -37,8 +38,12 @@ const UserProfile = (userProfile: IUserProfileProps) => {
               <td>{item.userName}</td>
               <td>{item.tags}</td>
               <td>{item.view}</td>
-              <td onClick={() => (setItemsPublic(item.id))}>
-                {item.viewPublic}
+              <td style={{textAlign: "center"}}>
+                {item.viewPublic ? (
+                  <HiEye onClick={() => setItemsPublic(item.id)} color="6A738B"/>
+                ) : (
+                  <HiEyeOff onClick={() => setItemsPublic(item.id)} color="6A738B"/>
+                )}
               </td>
               <td className="text-danger">Delete</td>
             </tr>
