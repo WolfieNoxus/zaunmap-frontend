@@ -1,9 +1,9 @@
 import { useState } from "react";
-import FileLoaderView from "./Views/FileLoaderView";
+import FileLoaderView from "../Views/FileLoaderView";
 
-import './App.css';
+import '../css/root.css';
 
-function App() {
+function Root() {
 
   const [geoPackage, setGeoPackage] = useState<File>();
 
@@ -24,4 +24,4 @@ function App() {
   );
 }
 
-export default App;
+export default Root;
