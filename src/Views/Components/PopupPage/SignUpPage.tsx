@@ -22,7 +22,11 @@ const schema = z
 
 type TFormData = z.infer<typeof schema>;
 
-const SignUpPage = () => {
+interface ILogInPageProps {
+  onChangePage: (page: "logIn" | "forgotPassword") => void;
+}
+
+const SignUpPage = ({onChangePage}: ILogInPageProps) => {
   const {
     register,
     handleSubmit,
@@ -99,6 +103,13 @@ const SignUpPage = () => {
       >
         Sign Up
       </button>
+
+      <div>
+        <span onClick={() => onChangePage("logIn")}>Log in</span>
+        <span onClick={() => onChangePage("forgotPassword")}>
+          Forgot Password
+        </span>
+      </div>
     </form>
   );
 };

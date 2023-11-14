@@ -1,9 +1,12 @@
-import React from 'react'
+import { BiSearch } from "react-icons/bi";
 
 const SearchBar = () => {
   return (
-    <div>SearchBar</div>
-  )
-}
+    <div>
+      <BiSearch />
+      <input type="text" />
+    </div>
+  );
+};
 
-export default SearchBar
+export default SearchBar;
