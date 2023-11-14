@@ -1,36 +1,12 @@
 import { MapContainer, TileLayer, GeoJSON, ZoomControl } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { GeoJsonObject } from "geojson";
-import { useState } from "react";
-import Popup from "./Components/Popup";
-
-// Icons Part
-// import TopLeft from "./Components/TopLeft";
-// import TopRight from "./Components/TopRight";
-// import BottomRight from "./Components/BottomRight";
-// import BottomLeft from "./Components/BottomLeft";
-
-// Icons Button
-import { RiCommunityLine } from "react-icons/ri"; // TopLeft
-import { BiSolidUserCircle } from "react-icons/bi"; // TopRight
-import { BiInfoCircle } from "react-icons/bi"; // BottomLeft
-import { MdAddCircle, MdChatBubbleOutline } from "react-icons/md"; // BottomRight
 
 type TGeoJSONMapViewProps = {
   geoJSONData: GeoJsonObject[];
 };
 
 const GeoJSONMapView: React.FC<TGeoJSONMapViewProps> = ({ geoJSONData }) => {
-  const [showPopup, setShowPopup] = useState<boolean>(false);
-  const [popupPage, setPopupPage] = useState<
-    | "community"
-    | "userProfile"
-    | "comments"
-    | "mapInfo"
-    | "logIn"
-    | "signUp"
-    | "forgotPassword"
-  >("community");
 
   return (
     <div>

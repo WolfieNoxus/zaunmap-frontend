@@ -1,4 +1,3 @@
-import { useState } from "react";
 import SearchBar from "../Elements/SearchBar";
 // import ProjectItem from "../Elements/ProjectItem";
 

@@ -126,7 +126,7 @@ const MapView: React.FC<TMapViewProps> = ({ fileData }) => {
       <div className="component-bottom-right">
         <MdChatBubbleOutline
           className="component-bottom-right-comment"
-          size={38}
+          size={40}
           color="F35D74"
           onClick={() => {
             setPopupPage({
@@ -139,7 +139,7 @@ const MapView: React.FC<TMapViewProps> = ({ fileData }) => {
         />
         <MdAddCircle
           className="component-bottom-right-add"
-          size={40}
+          size={50}
           color="BB2649"
         />
       </div>
