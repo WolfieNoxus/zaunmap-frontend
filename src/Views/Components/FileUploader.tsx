@@ -13,6 +13,7 @@ const FileUploader = () => {
         * 
         * @returns void
     */
+    
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         // For now, it only consists the parsing of the GeoJSON file into readable data,
@@ -75,10 +76,12 @@ const FileUploader = () => {
     };
     const handleSubmit = () => {
         // Logic for handling submit action
+        console.log(fileData);
     };
     
     const handleCancel = () => {
         // Logic for handling cancel action
+        console.log(fileType);
     };
 
 return (
