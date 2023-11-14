@@ -18,7 +18,7 @@ const UserProfile = (userProfile: IUserProfileProps) => {
   return (
     <div>
       <p>{userProfile.userName}</p>
-      <p>Permissions: {userProfile.userType}</p>
+      <p>Permission: {userProfile.userType}</p>
 
       <SearchBar />
       <table className="table">
