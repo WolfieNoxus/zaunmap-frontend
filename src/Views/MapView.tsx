@@ -1,9 +1,5 @@
 import { MapContainer, TileLayer, ZoomControl } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-// import TopLeft from "./Components/TopLeft";
-// import TopRight from "./Components/TopRight";
-// import BottomRight from "./Components/BottomRight";
-// import BottomLeft from "./Components/BottomLeft";
 import Popup from "./Components/Popup";
 import { useState } from "react";
 

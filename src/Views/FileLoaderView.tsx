@@ -82,7 +82,7 @@ export default function FileLoaderView({
     <div>
       <MapWrapper fileType={fileType} fileData={fileData} />
 
-      <div className="loader-container" onDragOver={onDragOver} onDrop={onDrop}>
+      <div className="loader-container" onDragOver={onDragOver} onDrop={onDrop} hidden>
         <input
           ref={fileInputRef}
           type="file"
@@ -99,7 +99,7 @@ export default function FileLoaderView({
           </p>
         </div>
       </div>
-      <div className="file-loader-prompt">
+      <div className="file-loader-prompt" hidden>
         <span>
           Supported file types for conversion are GeoJSON, Shapefile, Shapefile
           Zip, KML
