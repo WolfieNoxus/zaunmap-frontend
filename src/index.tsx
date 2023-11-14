@@ -4,8 +4,6 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import "bootstrap/dist/css/bootstrap.css";
-// import IconCheckList from './Views/IconCheckList';
-import CommunityList from "./Views/Components/PopupPage/CommunityList";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
