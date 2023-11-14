@@ -66,6 +66,7 @@ const ForgotPasswordPage = ({ onChangePage }: ILogInPageProps) => {
 
       <div>
         <span onClick={() => onChangePage("logIn")}>Log in</span>
+        <span> | </span>
         <span onClick={() => onChangePage("signUp")}>Sign Up</span>
       </div>
     </form>
