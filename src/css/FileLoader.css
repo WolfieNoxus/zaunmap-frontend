@@ -29,7 +29,7 @@
     padding-top: 60px;
 }
   
-.submit-button, .cancel-button {
+/* .submit-button, .cancel-button {
     padding: 10px 20px;
     margin: 0 10px;
     border: none;
@@ -40,7 +40,7 @@
 
 .cancel-button {
     background-color: #dc3545;
-}
+} */
 
 .file-input {
     display: none;

@@ -1,7 +1,7 @@
 import CommunityList from "./PopupPage/CommunityList";
 import UserProfile from "./PopupPage/UserProfile";
 import IPopupProps from "./PopupPage/Interfaces/IPopupProps";
-import FileUploader from "./FileUploader";
+import FileUploader from "./PopupPage/FileUploader";
 const Popup: React.FC<IPopupProps> = ({ page, user, onClose}) => {
 
   const changePage = (type: string) => {

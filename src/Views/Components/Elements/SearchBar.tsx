@@ -4,7 +4,7 @@ const SearchBar = () => {
   return (
     <div>
       <BiSearch />
-      <input type="text" />
+      <input className="ms-2 mb-3" type="text" />
     </div>
   );
 };
