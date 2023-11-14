@@ -76,6 +76,7 @@ export default function FileLoaderView({ children, setGeoPackage }: { children: 
 
     return (
         <div>
+            <MapWrapper fileType={fileType} fileData={fileData} />
             <div className="loader-container" onDragOver={onDragOver} onDrop={onDrop}>
                 <input
                     ref={fileInputRef}
@@ -91,7 +92,6 @@ export default function FileLoaderView({ children, setGeoPackage }: { children: 
             <div className='file-loader-prompt'>
                 <span>Supported file types for conversion are GeoJSON, Shapefile, Shapefile Zip, KML</span>
             </div>
-            <MapWrapper fileType={fileType} fileData={fileData} />
         </div>
     );
 };
