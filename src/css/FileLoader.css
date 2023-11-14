@@ -7,6 +7,41 @@
     position: relative;
 }
 
+.file-uploader-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%; 
+}
+
+.project-name-input {
+    margin-bottom: 50px; 
+}
+
+.file-uploader-buttons {
+    display: flex;
+    justify-content: space-evenly;
+    padding-top: 60px;
+}
+  
+.submit-button, .cancel-button {
+    padding: 10px 20px;
+    margin: 0 10px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+}
+
+.cancel-button {
+    background-color: #dc3545;
+}
+
 .file-input {
     display: none;
 }
@@ -133,8 +168,28 @@
 }
 
 .popup-content {
+    position: relative;
     background-color: white;
+    width: 50%;
+    height: 500px;
     padding: 20px;
     border-radius: 5px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.25);
 }
+
+.btn-close {
+    position: absolute;
+    top: 10px;     
+    right: 10px;   
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.no-interaction {
+    pointer-events: none;
+}
+
+.greyed-out {
+    color: grey;
+  }
