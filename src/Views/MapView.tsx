@@ -54,13 +54,17 @@ const MapView: React.FC<TMapViewProps> = ({ fileData }) => {
   };
 
   const [showPopup, setShowPopup] = useState<boolean>(false);
-
+  const [disableOtherComponents, setDisableOtherComponents] = useState<boolean>(false);
   const [popupPage, setPopupPage] = useState<IPopupProps>({
     page: "community",
     user: userSample,
     onClose: () => {},
   });
 
+  const handleClosePopup = () => {
+    setShowPopup(false);
+    setDisableOtherComponents(false);
+  };
   return (
     <div>
       <MapContainer
@@ -81,84 +85,100 @@ const MapView: React.FC<TMapViewProps> = ({ fileData }) => {
         />
         <ZoomControl position="bottomleft" />
       </MapContainer>
-
+      
       {/* popup page */}
       {showPopup && (
         <Popup
           user={userSample}
           page={popupPage.page}
-          onClose={() => setShowPopup(false)}
+          onClose={() => handleClosePopup()}
         />
+          
       )}
 
-      {/* <TopLeft /> */}
-      <div className="component-top-left">
-        <RiCommunityLine
-          size={30}
-          color="F35D74"
-          onClick={() => {
-            setPopupPage({
-              page: "community",
-              user: userSample,
-              onClose: () => {},
-            });
-            setShowPopup(true);
-          }}
-        />
-      </div>
+      <div className={disableOtherComponents ? "no-interaction greyed-out" : ""}>
+        {/* <TopLeft /> */}
+        <div className="component-top-left">
+          <RiCommunityLine
+            size={30}
+            color={showPopup ? "grey" : "F35D74"}
+            onClick={() => {
+              setPopupPage({
+                page: "community",
+                user: userSample,
+                onClose: () => {},
+              });
+              setShowPopup(true);
+              setDisableOtherComponents(true);
+            }}
+          />
+        </div>
 
-      {/* <TopRight /> */}
-      <BiSolidUserCircle
-        className="component-top-right"
-        color="BB2649"
-        size={40}
-        onClick={() => {
-          setPopupPage({
-            page: "userProfile",
-            user: userSample,
-            onClose: () => {},
-          });
-          setShowPopup(true);
-        }}
-      />
-
-      {/* <BottomRight /> */}
-      <div className="component-bottom-right">
-        <MdChatBubbleOutline
-          className="component-bottom-right-comment"
-          size={38}
-          color="F35D74"
-          onClick={() => {
-            setPopupPage({
-              page: "comments",
-              user: userSample,
-              onClose: () => {},
-            });
-            setShowPopup(true);
-          }}
-        />
-        <MdAddCircle
-          className="component-bottom-right-add"
+        {/* <TopRight /> */}
+        <BiSolidUserCircle
+          className="component-top-right"
+          color={showPopup ? "grey" : "BB2649"}
           size={40}
-          color="BB2649"
-        />
-      </div>
-
-      {/* <BottomLeft /> */}
-      <div>
-        <BiInfoCircle
-          className="component-bottom-left"
-          size={40}
-          color="4B4F5D"
           onClick={() => {
             setPopupPage({
-              page: "mapInfo",
+              page: "userProfile",
               user: userSample,
               onClose: () => {},
             });
             setShowPopup(true);
+            setDisableOtherComponents(true);
           }}
         />
+
+        {/* <BottomRight /> */}
+        <div className="component-bottom-right">
+          <MdChatBubbleOutline
+            className="component-bottom-right-comment"
+            size={40}
+            color={showPopup ? "grey" : "F35D74"}
+            onClick={() => {
+              setPopupPage({
+                page: "comments",
+                user: userSample,
+                onClose: () => {},
+              });
+              setShowPopup(true);
+              setDisableOtherComponents(true);
+            }}
+          />
+          <MdAddCircle
+            className="component-bottom-right-add"
+            size={50}
+            color={showPopup ? "grey" : "BB2649"}
+            onClick={() => {
+              setPopupPage({
+                page: "addProject",
+                user: userSample,
+                onClose: () => {},
+              });
+              setShowPopup(true);
+              setDisableOtherComponents(true);
+            }}
+          />
+        </div>
+
+        {/* <BottomLeft /> */}
+        <div>
+          <BiInfoCircle
+            className="component-bottom-left"
+            size={40}
+            color={showPopup ? "grey" : "4B4F5D"}
+            onClick={() => {
+              setPopupPage({
+                page: "mapInfo",
+                user: userSample,
+                onClose: () => {},
+              });
+              setShowPopup(true);
+              setDisableOtherComponents(true);
+            }}
+          />
+        </div>
       </div>
     </div>
   );
