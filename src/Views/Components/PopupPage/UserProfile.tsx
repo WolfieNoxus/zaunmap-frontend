@@ -2,6 +2,7 @@ import { useState } from "react";
 import SearchBar from "../Elements/SearchBar";
 import IUserProfileProps from "./Interfaces/IUserProfileProps";
 import { HiEye, HiEyeOff } from "react-icons/hi";
+import { Link } from "react-router-dom";
 
 const UserProfile = (userProfile: IUserProfileProps) => {
   const [items, setItems] = useState(userProfile.projectList);
@@ -34,7 +35,7 @@ const UserProfile = (userProfile: IUserProfileProps) => {
         <tbody className="table-group-divider">
           {items.map((item) => (
             <tr key={item.id}>
-              <td>{item.projecNname}</td>
+              <td><Link reloadDocument to={"/map/"+item.id}>{item.projecNname}</Link></td>
               <td>{item.userName}</td>
               <td>{item.tags}</td>
               <td>{item.view}</td>

@@ -72,6 +72,7 @@ const LogInPage = ({ onChangePage }: ILogInPageProps) => {
       </button>
       <div>
         <span onClick={() => onChangePage("signUp")}>Sign Up</span>
+        <span> | </span>
         <span onClick={() => onChangePage("forgotPassword")}>
           Forgot Password
         </span>
