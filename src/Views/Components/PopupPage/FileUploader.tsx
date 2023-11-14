@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import '../../css/FileLoader.css';
+import '../../../css/FileLoader.css';
 
 const FileUploader = () => {
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -110,8 +110,8 @@ return (
             <span>Supported file types for conversion are GeoJSON, Shapefile, Shapefile Zip, KML</span>
         </div>
         <div className="file-uploader-buttons">
-            <button onClick={handleSubmit} className="submit-button">Submit</button>
-            <button onClick={handleCancel} className="cancel-button">Cancel</button>
+            <button onClick={handleSubmit} className="btn btn-primary">Submit</button>
+            <button onClick={handleCancel} className="btn btn-danger ms-3">Cancel</button>
       </div>
     </div>
 );};
