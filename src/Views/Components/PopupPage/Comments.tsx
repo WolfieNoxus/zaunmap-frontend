@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { set } from "react-hook-form";
 import { AiFillLike, AiOutlineLike } from "react-icons/ai";
 
 interface ICommentsProps {
