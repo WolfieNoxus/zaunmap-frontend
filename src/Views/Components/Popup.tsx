@@ -2,6 +2,7 @@ import CommunityList from "./PopupPage/CommunityList";
 import UserProfile from "./PopupPage/UserProfile";
 import IPopupProps from "./PopupPage/Interfaces/IPopupProps";
 import FileUploader from "./PopupPage/FileUploader";
+import Comments from "./PopupPage/Comments";
 const Popup: React.FC<IPopupProps> = ({ page, user, onClose}) => {
 
   const changePage = (type: string) => {
@@ -18,6 +19,9 @@ const Popup: React.FC<IPopupProps> = ({ page, user, onClose}) => {
     } 
     else if (type === "addProject") {
       return <FileUploader />;
+    }
+    else if (type === "comments") {
+      return <Comments />;
     }
   };
 
