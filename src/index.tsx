@@ -26,33 +26,39 @@ const router = createBrowserRouter([
   },
   {
     path: "/login",
-    element: <LogInPage onChangePage={(page) => {
-      if (page === "signUp") {
-        router.navigate("/signup");
-      } else if (page === "forgotPassword") {
-        router.navigate("/forgot");
-      };
-    }} />,
+    element: <div className="login-page">
+      <LogInPage onChangePage={(page) => {
+        if (page === "signUp") {
+          router.navigate("/signup");
+        } else if (page === "forgotPassword") {
+          router.navigate("/forgot");
+        };
+      }} />
+    </div>,
   },
   {
     path: "/signup",
-    element: <SignUpPage onChangePage={(page) => {
-      if (page === "logIn") {
-        router.navigate("/login");
-      } else if (page === "forgotPassword") {
-        router.navigate("/forgot");
-      };
-    }} />,
+    element: <div className="login-page">
+      <SignUpPage onChangePage={(page) => {
+        if (page === "logIn") {
+          router.navigate("/login");
+        } else if (page === "forgotPassword") {
+          router.navigate("/forgot");
+        };
+      }} />
+    </div>,
   },
   {
     path: "/forgot",
-    element: <ForgotPasswordPage onChangePage={(page) => {
-      if (page === "logIn") {
-        router.navigate("/login");
-      } else if (page === "signUp") {
-        router.navigate("/signup");
-      };
-    }} />,
+    element: <div className="login-page">
+      <ForgotPasswordPage onChangePage={(page) => {
+        if (page === "logIn") {
+          router.navigate("/login");
+        } else if (page === "signUp") {
+          router.navigate("/signup");
+        };
+      }} />
+    </div>,
   },
 ]);
 
