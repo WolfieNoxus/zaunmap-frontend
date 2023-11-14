@@ -1,10 +1,10 @@
-import React from "react";
+import { useState } from "react";
 import { RiCommunityLine } from "react-icons/ri";
-import CommunityList from "./Elements/CommunityList";
+import CommunityList from "./PopupPage/CommunityList";
 
 // const CommunityIcon = () => {
 //   return (
-//       <svg 
+//       <svg
 //         xmlns="http://www.w3.org/2000/svg"
 //         viewBox="0 0 24 24"
 //         width="30"
@@ -17,8 +17,8 @@ import CommunityList from "./Elements/CommunityList";
 // };
 
 const TopLeft = () => {
-  // const [searchBar, setSearchBar] = React.useState(false);
-  const [communityListShown, setCommunityListShown] = React.useState(false);
+  // const [searchBar, setSearchBar] = useState(false);
+  const [communityListShown, setCommunityListShown] = useState(false);
 
   return (
     <div className="component-top-left">

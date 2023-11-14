@@ -15,14 +15,16 @@ const schema = z.object({
 
 type TFormData = z.infer<typeof schema>;
 
-const LogInPage = () => {
+interface ILogInPageProps {
+  onChangePage: (page: "signUp" | "forgotPassword") => void;
+}
+
+const LogInPage = ({ onChangePage }: ILogInPageProps) => {
   const {
     register,
     handleSubmit,
     formState: { errors, isValid },
-  } = useForm<TFormData>({
-    resolver: zodResolver(schema),
-  });
+  } = useForm<TFormData>({ resolver: zodResolver(schema) });
 
   const onSubmit = (data: TFormData) => {
     console.log(data);
@@ -68,6 +70,12 @@ const LogInPage = () => {
       >
         Log In
       </button>
+      <div>
+        <span onClick={() => onChangePage("signUp")}>Sign Up</span>
+        <span onClick={() => onChangePage("forgotPassword")}>
+          Forgot Password
+        </span>
+      </div>
     </form>
   );
 };
