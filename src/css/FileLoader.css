@@ -26,6 +26,115 @@
 }
 
 .structure-of-map {
-    height: 700px;
+    height: 100vh;
+    width: 100vw;
+}
+
+.leaflet-control-zoom {
+    /* position: absolute !important; Override the default position */
+    top: -8vh !important; /* Adjust this value to move it vertically */
+    left: 1vh !important; /* Adjust this value to move it horizontally */
+}
+
+.shadow-icon {
+    box-shadow: 5px 3px 10px 0px rgba(0, 0, 0, 0.75);
+}
+
+.component-top-left {
+    position: absolute;
+    top: 2vh;
+    left: 2vh;
+    z-index: 1000;
+    background-color: white;
+    padding: 5px;
+    border-radius: 25px;
+    box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.75);    
+}
+
+.component-top-left-search {
+    position: absolute;
+    top: 2vh;
+    left: 2vh;
+    z-index: 1000;
+    background-color: white;
+    padding: 5px;
+    border-radius: 25px;
+    box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.75);    
+}
+
+.component-top-left-content {
+    position: absolute;
+    top: 2vh;
+    left: 2vh;
+    z-index: 1000;
+    background-color: white;
+    padding: 5px;
+    border-radius: 25px;
+    box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.75);    
+}
+
+.component-top-right {
+    position: absolute;
+    top: 2vh;
+    right: 2vh;
+    z-index: 1000;
+    background-color: white;
+    padding: -10px;
+    border-radius: 25px;
+    box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.75);    
+}
+
+.component-bottom-left {
+    position: absolute;
+    bottom: 2vh;
+    left: 2vh;
+    z-index: 1000;
+    border-radius: 25px;
+    /* background-color: white; */
+    /* box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.75);     */
+}
+
+.component-bottom-right {
+    position: absolute;
+    bottom: 4vh;
+    right: 2%;
+    z-index: 1000;
+    /* padding: 5px; */
+    border-radius: 25px;
+}
+
+.component-bottom-right-comment {
+    position: relative;
+    z-index: 1000;
+    background-color: white;
+    padding: 5px;
+    border-radius: 25px;
+    right: 10px;
+    box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.75);    
+}
+.component-bottom-right-add {
+    z-index: 1000;
+    background-color: white;
+    border-radius: 25px;
+    box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.75);    
+}
+
+.popup-background {
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.popup-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.25);
 }

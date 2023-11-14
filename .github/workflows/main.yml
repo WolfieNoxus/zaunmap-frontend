@@ -1,0 +1,17 @@
+name: Cypress Test
+on: [push, pull_request]
+jobs:
+  cypress-run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Cypress Test with Chrome
+        uses: cypress-io/github-action@v6
+        with:
+          build: npm run build
+          start: npm start
+          record: true
+        env:
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
