@@ -8,9 +8,9 @@ export default interface IPopupProps {
       | "mapInfo"
       | "logIn"
       | "signUp"
+      | "addProject"
       | "forgotPassword";
   
     user: IUserProfileProps;
-  
     onClose: () => void;
   }

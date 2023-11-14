@@ -1,18 +1,19 @@
-import { useRef, useState } from 'react';
-import '../css/FileLoader.css';
-import { MapWrapper } from './MapWrapper';
-export default function FileLoaderView({ children, setGeoPackage }: { children: any, setGeoPackage: (geoPackage: File) => void }) {
+import React, { useRef, useState } from 'react';
+import '../../css/FileLoader.css';
 
+const FileUploader = () => {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [fileData, setFileData] = useState<File | null>(null);
-    const [fileType, setFileType] = useState<string | null>(null)
+    const [fileType, setFileType] = useState<string | null>(null);
+    const [projectName, setProjectName] = useState('');
     /**
-     * Handle File Load / Change, Send to Controller for Conversion
-     * 
-     * @param event: React.ChangeEvent<HTMLInputElement>
-     * 
-     * @returns void
-     */
+        * Handle File Load / Change, Send to Controller for Conversion
+        * 
+        * @param event: React.ChangeEvent<HTMLInputElement>
+        * 
+        * @returns void
+    */
+    
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         // For now, it only consists the parsing of the GeoJSON file into readable data,
@@ -73,25 +74,46 @@ export default function FileLoaderView({ children, setGeoPackage }: { children: 
             }
         }
     };
+    const handleSubmit = () => {
+        // Logic for handling submit action
+        console.log(fileData);
+    };
+    
+    const handleCancel = () => {
+        // Logic for handling cancel action
+        console.log(fileType);
+    };
 
-    return (
-        <div>
-            <MapWrapper fileType={fileType} fileData={fileData} />
-            <div className="loader-container" onDragOver={onDragOver} onDrop={onDrop}>
-                <input
-                    ref={fileInputRef}
-                    type="file"
-                    multiple
-                    onChange={handleFileChange}
-                    className="file-input"
-                />
-                <div className="drop-zone">
-                    <p>Drag and drop files here or <span onClick={() => fileInputRef.current?.click()}>select files</span></p>
-                </div>
-            </div>
-            <div className='file-loader-prompt'>
-                <span>Supported file types for conversion are GeoJSON, Shapefile, Shapefile Zip, KML</span>
+return (
+    <div className="file-uploader-container"> {/* Flex container */}
+        <div className="project-name-input">
+            <span style={{ marginRight: '20px' }}>Enter Project Name:</span>
+            <input
+                type="text"
+                value={projectName}
+                onChange={(e) => setProjectName(e.target.value)}
+            />
+        </div>
+        <div className="loader-container" onDragOver={onDragOver} onDrop={onDrop}>
+            <input
+                ref={fileInputRef}
+                type="file"
+                multiple
+                onChange={handleFileChange}
+                className="file-input"
+            />
+            <div className="drop-zone">
+                <p>Drag and drop files here or <span onClick={() => fileInputRef.current?.click()}>select files</span></p>
             </div>
         </div>
-    );
-};
+        <div className='file-loader-prompt'>
+            <span>Supported file types for conversion are GeoJSON, Shapefile, Shapefile Zip, KML</span>
+        </div>
+        <div className="file-uploader-buttons">
+            <button onClick={handleSubmit} className="submit-button">Submit</button>
+            <button onClick={handleCancel} className="cancel-button">Cancel</button>
+      </div>
+    </div>
+);};
+
+export default FileUploader;
