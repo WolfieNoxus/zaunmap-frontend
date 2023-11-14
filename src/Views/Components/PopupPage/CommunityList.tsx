@@ -1,4 +1,5 @@
 import SearchBar from "../Elements/SearchBar";
+import { Link } from "react-router-dom";
 // import ProjectItem from "../Elements/ProjectItem";
 
 const CommunityList = () => {
@@ -54,7 +55,7 @@ const CommunityList = () => {
         <tbody className="table-group-divider">
           {items.map((item) => (
             <tr key={item.id}>
-              <td>{item.projecNname}</td>
+              <td><Link reloadDocument to={"/map/"+item.id}>{item.projecNname}</Link></td>
               <td>{item.userName}</td>
               <td>{item.tags}</td>
               <td>{item.view}</td>
