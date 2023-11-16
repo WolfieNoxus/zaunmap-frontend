@@ -1,13 +1,12 @@
 import { MapContainer, TileLayer, ZoomControl } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import "../css/reset.css"
 import Popup from "./Components/Popup";
 import { useState } from "react";
 
 // Icons Button
 import { RiCommunityLine } from "react-icons/ri"; // TopLeft
 import { BiSolidUserCircle } from "react-icons/bi"; // TopRight
-// import { BiInfoCircle } from "react-icons/bi"; // BottomLeft
+import { BiInfoCircle } from "react-icons/bi"; // BottomLeft
 import { MdAddCircle, MdChatBubbleOutline } from "react-icons/md"; // BottomRight
 import IPopupProps from "./Components/PopupPage/Interfaces/IPopupProps";
 import IUserProfileProps from "./Components/PopupPage/Interfaces/IUserProfileProps";
@@ -160,7 +159,7 @@ const MapView: React.FC<TMapViewProps> = ({ fileData }) => {
         </div>
 
         {/* <BottomLeft /> */}
-        {/* <div>
+        <div>
           <BiInfoCircle
             className="component-bottom-left"
             size={40}
@@ -175,7 +174,7 @@ const MapView: React.FC<TMapViewProps> = ({ fileData }) => {
               setDisableOtherComponents(true);
             }}
           />
-        </div> */}
+        </div>
       </div>
     </div>
   );
