@@ -224,6 +224,7 @@ const EditBar: React.FC<IEditProps> = ({ onClose, mapProject }) => {
               </tbody>
             </table>
           )}
+          <button className="export-button btn btn-secondary">Export JPEG</button>
         </div>
       </div>
     </div>

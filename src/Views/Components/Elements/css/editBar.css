@@ -135,3 +135,17 @@
   height: 19px;
   width: 40px;
 }
+
+.export-button {
+  position: absolute;
+  width: 70%;
+  bottom: 30px ;
+  /* height: 40px; */
+  /* background-color: #4b4f5d;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer; */
+}

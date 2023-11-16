@@ -6,7 +6,7 @@ import Comments from "./PopupPage/Comments";
 const Popup: React.FC<IPopupProps> = ({ page, user, onClose }) => {
   const changePage = (type: string) => {
     if (type === "community") {
-      return <CommunityList />;
+      return <CommunityList userType={user.userType} />;
     } else if (type === "userProfile") {
       return (
         <UserProfile

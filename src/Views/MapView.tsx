@@ -20,7 +20,7 @@ const MapView: React.FC<TMapViewProps> = ({ fileData }) => {
   const userSample:IUserProfileProps = {
     userName: "John Doe",
     email: "123456@sample.com",
-    userType: "User",
+    userType: "admin",
     projectList: [
       {
         id: 1,
