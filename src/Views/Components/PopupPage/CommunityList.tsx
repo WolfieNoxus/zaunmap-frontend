@@ -1,6 +1,5 @@
 import SearchBar from "../Elements/SearchBar";
 import { Link } from "react-router-dom";
-// import ProjectItem from "../Elements/ProjectItem";
 
 const CommunityList = () => {
   const items = [
@@ -32,16 +31,6 @@ const CommunityList = () => {
 
   return (
     <div>
-      {/* {items.map((item) => (
-      <ProjectItem
-        key={item.id}
-        projecNname={item.projecNname}
-        tags={item.tags}
-        userName={item.userName}
-        view={item.view}
-        viewPublic={item.viewPublic}
-      />
-    ))} */}
       <SearchBar />
       <table className="table">
         <thead>

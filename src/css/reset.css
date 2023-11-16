@@ -1,0 +1,5 @@
+.leaflet-control-zoom {
+    /* position: absolute !important; Override the default position */
+    top:0 !important; /* Adjust this value to move it vertically */
+    left: 0 !important; /* Adjust this value to move it horizontally */
+}
