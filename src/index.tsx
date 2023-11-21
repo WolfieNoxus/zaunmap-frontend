@@ -1,7 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import { Auth0Provider } from "@auth0/auth0-react";
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 import "bootstrap/dist/css/bootstrap.css";
@@ -11,12 +10,6 @@ import LogInPage from "./Views/Components/PopupPage/LogInPage";
 import SignUpPage from "./Views/Components/PopupPage/SignUpPage";
 import ForgotPasswordPage from "./Views/Components/PopupPage/ForgotPasswordPage";
 import Map from "./routers/map";
-
-const auth0Config = {
-  domain: "your-auth0-domain",
-  clientId: "your-client-id",
-  redirectUri: window.location.origin,
-};
 
 const router = createBrowserRouter([
   {
@@ -71,9 +64,7 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <Auth0Provider {...auth0Config}> {/* Wrap your app with Auth0Provider */}
-      <RouterProvider router={router} />
-    </Auth0Provider>
+    <RouterProvider router={router} />
   </React.StrictMode>
 );
 
