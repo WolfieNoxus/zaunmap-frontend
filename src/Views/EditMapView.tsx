@@ -1,4 +1,4 @@
-import { MapContainer, TileLayer } from "react-leaflet";
+import { MapContainer, Marker, TileLayer, useMapEvents } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import EditBar from "./Components/Elements/EditBar";
 import IMapProject from "./Components/PopupPage/Interfaces/IMapProject";
@@ -7,6 +7,23 @@ import "./Components/Elements/css/editBar.css";
 type TMapViewProps = {
   fileData: File | null;
   onChange: () => void;
+};
+
+interface IMarker {
+  position: [number, number];
+  popup: string;
+}
+
+const MyComponent = () => {
+  const map = useMapEvents({
+    click: () => {
+      map.locate();
+    },
+    locationfound: (location) => {
+      console.log("location found:", location);
+    },
+  });
+  return null;
 };
 
 const EditMapView: React.FC<TMapViewProps> = ({ fileData, onChange }) => {
@@ -45,6 +62,17 @@ const EditMapView: React.FC<TMapViewProps> = ({ fileData, onChange }) => {
     ],
   };
 
+  const markers: IMarker[] = [
+    {
+      position: [0, 0],
+      popup: "Hello",
+    },
+    // {
+    //   position: [40.912690375404175, -73.12368321901101],
+    //   popup: "New Computer Science Building",
+    // },
+  ];
+
   return (
     <div>
       <MapContainer
@@ -61,7 +89,16 @@ const EditMapView: React.FC<TMapViewProps> = ({ fileData, onChange }) => {
         />
       </MapContainer>
 
+      {/* {markers.map((marker) => (
+        <Marker position={marker.position}>{marker.popup} </Marker>
+      ))} */}
+
+      {/* <Marker position={[0,0]}>{} </Marker> */}
+
+      {/* <MyComponent /> */}
+
       <EditBar mapProject={mapSample} onClose={onChange} />
+      {/* {markers.map((marker) => (<p>{marker.position}</p>))} */}
     </div>
   );
 };

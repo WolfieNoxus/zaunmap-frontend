@@ -27,7 +27,21 @@ const LogInPage = ({ onChangePage }: ILogInPageProps) => {
   } = useForm<TFormData>({ resolver: zodResolver(schema) });
 
   const onSubmit = (data: TFormData) => {
-    console.log(data);
+    // console.log(data);
+
+    // try {
+    //   const response = await axios.post('https://yourapi.com/login', {
+    //     data.userName,
+    //     data.password,
+    //   });
+    //   console.log('Login successful', response.data);
+    //   // Handle successful login here (e.g., save token, redirect user)
+    // } catch (error) {
+    //   console.error('Login failed', error);
+    //   // Handle login error here
+    // }
+
+
   };
 
   return (
@@ -63,7 +77,7 @@ const LogInPage = ({ onChangePage }: ILogInPageProps) => {
       </div>
 
       <button
-        disabled={!isValid}
+        // disabled={!isValid}
         className={isValid ? "btn btn-primary" : "btn btn-secondary"}
         // className="btn btn-primary"
         type="submit"
