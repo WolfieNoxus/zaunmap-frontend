@@ -1,4 +1,4 @@
-import { MapContainer, Marker, TileLayer, useMapEvents } from "react-leaflet";
+import { MapContainer, TileLayer } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import EditBar from "./Components/Elements/EditBar";
 import IMapProject from "./Components/PopupPage/Interfaces/IMapProject";
@@ -9,22 +9,22 @@ type TMapViewProps = {
   onChange: () => void;
 };
 
-interface IMarker {
-  position: [number, number];
-  popup: string;
-}
+// interface IMarker {
+//   position: [number, number];
+//   popup: string;
+// }
 
-const MyComponent = () => {
-  const map = useMapEvents({
-    click: () => {
-      map.locate();
-    },
-    locationfound: (location) => {
-      console.log("location found:", location);
-    },
-  });
-  return null;
-};
+// const MyComponent = () => {
+//   const map = useMapEvents({
+//     click: () => {
+//       map.locate();
+//     },
+//     locationfound: (location) => {
+//       console.log("location found:", location);
+//     },
+//   });
+//   return null;
+// };
 
 const EditMapView: React.FC<TMapViewProps> = ({ fileData, onChange }) => {
   const mapSample: IMapProject = {
@@ -62,16 +62,16 @@ const EditMapView: React.FC<TMapViewProps> = ({ fileData, onChange }) => {
     ],
   };
 
-  const markers: IMarker[] = [
-    {
-      position: [0, 0],
-      popup: "Hello",
-    },
-    // {
-    //   position: [40.912690375404175, -73.12368321901101],
-    //   popup: "New Computer Science Building",
-    // },
-  ];
+  // const markers: IMarker[] = [
+  //   {
+  //     position: [0, 0],
+  //     popup: "Hello",
+  //   },
+  //   // {
+  //   //   position: [40.912690375404175, -73.12368321901101],
+  //   //   popup: "New Computer Science Building",
+  //   // },
+  // ];
 
   return (
     <div>
