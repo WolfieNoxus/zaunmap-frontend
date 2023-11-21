@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const schema = z.object({
   userName: z
@@ -20,6 +21,7 @@ interface ILogInPageProps {
 }
 
 const LogInPage = ({ onChangePage }: ILogInPageProps) => {
+  const { loginWithRedirect } = useAuth0();
   const {
     register,
     handleSubmit,
@@ -27,6 +29,7 @@ const LogInPage = ({ onChangePage }: ILogInPageProps) => {
   } = useForm<TFormData>({ resolver: zodResolver(schema) });
 
   const onSubmit = (data: TFormData) => {
+    loginWithRedirect();
     console.log(data);
   };
 
