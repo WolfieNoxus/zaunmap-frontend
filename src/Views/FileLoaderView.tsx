@@ -20,6 +20,7 @@ export default function FileLoaderView({
    *
    * @returns void
    */
+  // wentaohe
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     // For now, it only consists the parsing of the GeoJSON file into readable data,
