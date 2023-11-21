@@ -19,7 +19,11 @@ const UserProfile = (userProfile: IUserProfileProps) => {
     <div>
       <p>{userProfile.userName}</p>
       <p>Permission: {userProfile.userType}</p>
-
+      <div>
+        <span><Link reloadDocument to={"/signup"}>Sign Up</Link></span>
+        <span> | </span>
+        <span><Link reloadDocument to={"/login"}>Login</Link></span>
+      </div>
       <SearchBar />
       <table className="table">
         <thead>
@@ -35,15 +39,25 @@ const UserProfile = (userProfile: IUserProfileProps) => {
         <tbody className="table-group-divider">
           {items.map((item) => (
             <tr key={item.id}>
-              <td><Link reloadDocument to={"/map/"+item.id}>{item.projecNname}</Link></td>
+              <td>
+                <Link reloadDocument to={"/map/" + item.id}>
+                  {item.projecName}
+                </Link>
+              </td>
               <td>{item.userName}</td>
               <td>{item.tags}</td>
               <td>{item.view}</td>
-              <td style={{textAlign: "center"}}>
+              <td style={{ textAlign: "center" }}>
                 {item.viewPublic ? (
-                  <HiEye onClick={() => setItemsPublic(item.id)} color="6A738B"/>
+                  <HiEye
+                    onClick={() => setItemsPublic(item.id)}
+                    color="6A738B"
+                  />
                 ) : (
-                  <HiEyeOff onClick={() => setItemsPublic(item.id)} color="6A738B"/>
+                  <HiEyeOff
+                    onClick={() => setItemsPublic(item.id)}
+                    color="6A738B"
+                  />
                 )}
               </td>
               <td className="text-danger">Delete</td>

@@ -16,7 +16,7 @@ const schema = z.object({
 type TFormData = z.infer<typeof schema>;
 
 interface ILogInPageProps {
-  onChangePage: (page: "signUp" | "forgotPassword") => void;
+  onChangePage: (page: "signUp" | "forgotPassword" | "home") => void;
 }
 
 const LogInPage = ({ onChangePage }: ILogInPageProps) => {
@@ -63,7 +63,7 @@ const LogInPage = ({ onChangePage }: ILogInPageProps) => {
       </div>
 
       <button
-        disabled={!isValid}
+        // disabled={!isValid}
         className={isValid ? "btn btn-primary" : "btn btn-secondary"}
         // className="btn btn-primary"
         type="submit"
@@ -76,6 +76,8 @@ const LogInPage = ({ onChangePage }: ILogInPageProps) => {
         <span onClick={() => onChangePage("forgotPassword")}>
           Forgot Password
         </span>
+        <span> | </span>
+        <span onClick={() => onChangePage("home")}>Home</span>
       </div>
     </form>
   );
