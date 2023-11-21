@@ -10,14 +10,14 @@ import { BiInfoCircle } from "react-icons/bi"; // BottomLeft
 import { MdAddCircle, MdChatBubbleOutline } from "react-icons/md"; // BottomRight
 import IPopupProps from "./Components/PopupPage/Interfaces/IPopupProps";
 import IUserProfileProps from "./Components/PopupPage/Interfaces/IUserProfileProps";
+import { useAuth0 } from "@auth0/auth0-react";
 
 type TMapViewProps = {
   fileData: File | null;
 };
 
 const MapView: React.FC<TMapViewProps> = ({ fileData }) => {
-
-  const userSample:IUserProfileProps = {
+  const userSample: IUserProfileProps = {
     userName: "John Doe",
     email: "123456@sample.com",
     userType: "admin",
@@ -49,8 +49,10 @@ const MapView: React.FC<TMapViewProps> = ({ fileData }) => {
     ],
   };
 
+  const { isAuthenticated, loginWithRedirect } = useAuth0();
   const [showPopup, setShowPopup] = useState<boolean>(false);
-  const [disableOtherComponents, setDisableOtherComponents] = useState<boolean>(false);
+  const [disableOtherComponents, setDisableOtherComponents] =
+    useState<boolean>(false);
   const [popupPage, setPopupPage] = useState<IPopupProps>({
     page: "community",
     user: userSample,
@@ -81,7 +83,7 @@ const MapView: React.FC<TMapViewProps> = ({ fileData }) => {
         />
         <ZoomControl position="bottomleft" />
       </MapContainer>
-      
+
       {/* popup page */}
       {showPopup && (
         <Popup
@@ -89,10 +91,11 @@ const MapView: React.FC<TMapViewProps> = ({ fileData }) => {
           page={popupPage.page}
           onClose={() => handleClosePopup()}
         />
-          
       )}
 
-      <div className={disableOtherComponents ? "no-interaction greyed-out" : ""}>
+      <div
+        className={disableOtherComponents ? "no-interaction greyed-out" : ""}
+      >
         {/* <TopLeft /> */}
         <div className="component-top-left">
           <RiCommunityLine
@@ -116,13 +119,17 @@ const MapView: React.FC<TMapViewProps> = ({ fileData }) => {
           color={showPopup ? "grey" : "BB2649"}
           size={40}
           onClick={() => {
-            setPopupPage({
-              page: "userProfile",
-              user: userSample,
-              onClose: () => {},
-            });
-            setShowPopup(true);
-            setDisableOtherComponents(true);
+            if (!isAuthenticated) {
+              loginWithRedirect();
+            } else {
+              setPopupPage({
+                page: "userProfile",
+                user: userSample,
+                onClose: () => {},
+              });
+              setShowPopup(true);
+              setDisableOtherComponents(true);
+            }
           }}
         />
 
