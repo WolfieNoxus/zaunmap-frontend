@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@auth0/auth0-react": "^2.2.3",
     "@hookform/resolvers": "^3.3.2",
     "@mapbox/togeojson": "^0.16",
     "@types/react-router-dom": "^5.3.3",
