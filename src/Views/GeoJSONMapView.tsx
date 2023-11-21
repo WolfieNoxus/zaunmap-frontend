@@ -11,38 +11,38 @@ import { BiInfoCircle } from "react-icons/bi"; // BottomLeft
 import { MdAddCircle, MdChatBubbleOutline } from "react-icons/md"; // BottomRight
 import IPopupProps from "./Components/PopupPage/Interfaces/IPopupProps";
 import IUserProfileProps from "./Components/PopupPage/Interfaces/IUserProfileProps";
+import { Link } from "react-router-dom";
 
 type TGeoJSONMapViewProps = {
   geoJSONData: GeoJsonObject[];
 };
 
 const GeoJSONMapView: React.FC<TGeoJSONMapViewProps> = ({ geoJSONData }) => {
-
-  const userSample:IUserProfileProps = {
+  const userSample: IUserProfileProps = {
     userName: "John Doe",
     email: "123456@sample.com",
-    userType: "User",
+    userType: "user",
     projectList: [
       {
         id: 1,
-        projecNname: "London Subway",
-        tags: "England, Europe",
+        projecName: "London Subway",
+        tags: ["England", "Europe"],
         userName: "John",
         view: 1240,
         viewPublic: true,
       },
       {
         id: 2,
-        projecNname: "Long Island",
-        tags: "USA, North America",
+        projecName: "Long Island",
+        tags: ["USA", "North America"],
         userName: "John",
         view: 1240,
         viewPublic: true,
       },
       {
         id: 3,
-        projecNname: "Paris",
-        tags: "French, Europe",
+        projecName: "Paris",
+        tags: ["French", "Europe"],
         userName: "John",
         view: 1240,
         viewPublic: true,
@@ -51,7 +51,8 @@ const GeoJSONMapView: React.FC<TGeoJSONMapViewProps> = ({ geoJSONData }) => {
   };
 
   const [showPopup, setShowPopup] = useState<boolean>(false);
-  const [disableOtherComponents, setDisableOtherComponents] = useState<boolean>(false);
+  const [disableOtherComponents, setDisableOtherComponents] =
+    useState<boolean>(false);
   const [popupPage, setPopupPage] = useState<IPopupProps>({
     page: "community",
     user: userSample,
@@ -94,10 +95,11 @@ const GeoJSONMapView: React.FC<TGeoJSONMapViewProps> = ({ geoJSONData }) => {
           page={popupPage.page}
           onClose={() => handleClosePopup()}
         />
-
       )}
 
-      <div className={disableOtherComponents ? "no-interaction greyed-out" : ""}>
+      <div
+        className={disableOtherComponents ? "no-interaction greyed-out" : ""}
+      >
         {/* <TopLeft /> */}
         <div className="component-top-left">
           <RiCommunityLine
@@ -107,7 +109,7 @@ const GeoJSONMapView: React.FC<TGeoJSONMapViewProps> = ({ geoJSONData }) => {
               setPopupPage({
                 page: "community",
                 user: userSample,
-                onClose: () => { },
+                onClose: () => {},
               });
               setShowPopup(true);
               setDisableOtherComponents(true);
@@ -124,7 +126,7 @@ const GeoJSONMapView: React.FC<TGeoJSONMapViewProps> = ({ geoJSONData }) => {
             setPopupPage({
               page: "userProfile",
               user: userSample,
-              onClose: () => { },
+              onClose: () => {},
             });
             setShowPopup(true);
             setDisableOtherComponents(true);
@@ -141,7 +143,7 @@ const GeoJSONMapView: React.FC<TGeoJSONMapViewProps> = ({ geoJSONData }) => {
               setPopupPage({
                 page: "comments",
                 user: userSample,
-                onClose: () => { },
+                onClose: () => {},
               });
               setShowPopup(true);
               setDisableOtherComponents(true);
@@ -155,7 +157,7 @@ const GeoJSONMapView: React.FC<TGeoJSONMapViewProps> = ({ geoJSONData }) => {
               setPopupPage({
                 page: "addProject",
                 user: userSample,
-                onClose: () => { },
+                onClose: () => {},
               });
               setShowPopup(true);
               setDisableOtherComponents(true);
@@ -165,20 +167,22 @@ const GeoJSONMapView: React.FC<TGeoJSONMapViewProps> = ({ geoJSONData }) => {
 
         {/* <BottomLeft /> */}
         <div>
-          <BiInfoCircle
-            className="component-bottom-left"
-            size={40}
-            color={showPopup ? "grey" : "4B4F5D"}
-            onClick={() => {
-              setPopupPage({
-                page: "mapInfo",
-                user: userSample,
-                onClose: () => { },
-              });
-              setShowPopup(true);
-              setDisableOtherComponents(true);
-            }}
-          />
+          <Link reloadDocument to={"/edit"}>
+            <BiInfoCircle
+              className="component-bottom-left"
+              size={40}
+              color={showPopup ? "grey" : "4B4F5D"}
+              // onClick={() => {
+              //   setPopupPage({
+              //     page: "mapInfo",
+              //     user: userSample,
+              //     onClose: () => {},
+              //   });
+              //   setShowPopup(true);
+              //   setDisableOtherComponents(true);
+              // }}
+            />
+          </Link>
         </div>
       </div>
     </div>

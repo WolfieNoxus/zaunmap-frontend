@@ -3,25 +3,32 @@ import UserProfile from "./PopupPage/UserProfile";
 import IPopupProps from "./PopupPage/Interfaces/IPopupProps";
 import FileUploader from "./PopupPage/FileUploader";
 import Comments from "./PopupPage/Comments";
-const Popup: React.FC<IPopupProps> = ({ page, user, onClose}) => {
-
+const Popup: React.FC<IPopupProps> = ({ page, user, onClose }) => {
   const changePage = (type: string) => {
     if (type === "community") {
-      return <CommunityList />;
-    } 
-    else if (type === "userProfile") {
-        return <UserProfile
+      return <CommunityList userType={user.userType} />;
+    } else if (type === "userProfile") {
+      return (
+        <UserProfile
           userName={user.userName}
           userType={user.userType}
           projectList={user.projectList}
           email={user.email}
-        />;
-    } 
-    else if (type === "addProject") {
+        />
+      );
+    } else if (type === "addProject") {
       return <FileUploader />;
-    }
-    else if (type === "comments") {
+    } else if (type === "comments") {
       return <Comments />;
+    } else if (type === "mapInfo") {
+      return (
+        <div>
+          <h2 className="mb-4 mt-3">Map Info</h2>
+          <p className="text text-danger" style={{ fontStyle: "italic" }}>
+            *You need to set up project to view map infomation.
+          </p>
+        </div>
+      );
     }
   };
 
