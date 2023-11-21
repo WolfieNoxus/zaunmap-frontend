@@ -13,7 +13,7 @@ const schema = z.object({
 type TFormData = z.infer<typeof schema>;
 
 interface ILogInPageProps {
-  onChangePage: (page: "logIn" | "signUp") => void;
+  onChangePage: (page: "logIn" | "signUp" | "home") => void;
 }
 
 const ForgotPasswordPage = ({ onChangePage }: ILogInPageProps) => {
@@ -68,6 +68,8 @@ const ForgotPasswordPage = ({ onChangePage }: ILogInPageProps) => {
         <span onClick={() => onChangePage("logIn")}>Log in</span>
         <span> | </span>
         <span onClick={() => onChangePage("signUp")}>Sign Up</span>
+        <span> | </span>
+        <span onClick={() => onChangePage("home")}>Home</span>
       </div>
     </form>
   );
