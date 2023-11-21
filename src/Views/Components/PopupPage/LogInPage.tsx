@@ -63,7 +63,7 @@ const LogInPage = ({ onChangePage }: ILogInPageProps) => {
       </div>
 
       <button
-        disabled={!isValid}
+        // disabled={!isValid}
         className={isValid ? "btn btn-primary" : "btn btn-secondary"}
         // className="btn btn-primary"
         type="submit"
