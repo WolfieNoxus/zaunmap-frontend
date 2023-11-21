@@ -20,7 +20,7 @@ const UserProfile = (userProfile: IUserProfileProps) => {
   return (
     <div>
       <div>
-        <p>{user?.name}</p>
+        <p>{user?.nickname}</p>
         {/* <p>Permission: {userProfile.userType}</p> */}
         <span
           onClick={() =>
