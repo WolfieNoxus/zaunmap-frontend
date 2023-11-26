@@ -1,8 +1,12 @@
 import SearchBar from "../Elements/SearchBar";
 import { Link } from "react-router-dom";
-// import ProjectItem from "../Elements/ProjectItem";
 
-const CommunityList = () => {
+interface IUserType {
+  userType: string;
+}
+
+const CommunityList = ({userType}: IUserType) => {
+  
   const items = [
     {
       id: 1,
@@ -32,17 +36,8 @@ const CommunityList = () => {
 
   return (
     <div>
-      {/* {items.map((item) => (
-      <ProjectItem
-        key={item.id}
-        projecNname={item.projecNname}
-        tags={item.tags}
-        userName={item.userName}
-        view={item.view}
-        viewPublic={item.viewPublic}
-      />
-    ))} */}
       <SearchBar />
+      <span>View type: {userType === "user" ? "User" : "Admin"}</span>
       <table className="table">
         <thead>
           <tr>
@@ -50,6 +45,7 @@ const CommunityList = () => {
             <th>User</th>
             <th>tags</th>
             <th>view</th>
+            {userType === "admin" ? (<th>Delete</th>) : null}
           </tr>
         </thead>
         <tbody className="table-group-divider">
@@ -59,6 +55,7 @@ const CommunityList = () => {
               <td>{item.userName}</td>
               <td>{item.tags}</td>
               <td>{item.view}</td>
+              {userType === "admin" ? (<th className="text text-danger">Delete</th>) : null}
             </tr>
           ))}
         </tbody>

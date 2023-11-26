@@ -3,8 +3,10 @@ import SearchBar from "../Elements/SearchBar";
 import IUserProfileProps from "./Interfaces/IUserProfileProps";
 import { HiEye, HiEyeOff } from "react-icons/hi";
 import { Link } from "react-router-dom";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const UserProfile = (userProfile: IUserProfileProps) => {
+  const { user, logout } = useAuth0();
   const [items, setItems] = useState(userProfile.projectList);
 
   const setItemsPublic = (id: number) => {
@@ -17,15 +19,24 @@ const UserProfile = (userProfile: IUserProfileProps) => {
 
   return (
     <div>
-      <p>{userProfile.userName}</p>
-      <p>Permissions: {userProfile.userType}</p>
+      <div>
+        <p>{user?.nickname}</p>
+        {/* <p>Permission: {userProfile.userType}</p> */}
+        <span
+          onClick={() =>
+            logout({ logoutParams: { returnTo: window.location.origin } })
+          }
+        >
+          Log Out
+        </span>
+      </div>
 
       <SearchBar />
       <table className="table">
         <thead>
           <tr>
             <th>Project Name</th>
-            <th>User</th>
+            {/* <th>User</th> */}
             <th>tags</th>
             <th>view</th>
             <th>Public</th>
@@ -35,15 +46,25 @@ const UserProfile = (userProfile: IUserProfileProps) => {
         <tbody className="table-group-divider">
           {items.map((item) => (
             <tr key={item.id}>
-              <td><Link reloadDocument to={"/map/"+item.id}>{item.projecNname}</Link></td>
-              <td>{item.userName}</td>
+              <td>
+                <Link reloadDocument to={"/map/" + item.id}>
+                  {item.projecName}
+                </Link>
+              </td>
+              {/* <td>{item.userName}</td> */}
               <td>{item.tags}</td>
               <td>{item.view}</td>
-              <td style={{textAlign: "center"}}>
+              <td style={{ textAlign: "center" }}>
                 {item.viewPublic ? (
-                  <HiEye onClick={() => setItemsPublic(item.id)} color="6A738B"/>
+                  <HiEye
+                    onClick={() => setItemsPublic(item.id)}
+                    color="6A738B"
+                  />
                 ) : (
-                  <HiEyeOff onClick={() => setItemsPublic(item.id)} color="6A738B"/>
+                  <HiEyeOff
+                    onClick={() => setItemsPublic(item.id)}
+                    color="6A738B"
+                  />
                 )}
               </td>
               <td className="text-danger">Delete</td>

@@ -10,6 +10,8 @@ import LogInPage from "./Views/Components/PopupPage/LogInPage";
 import SignUpPage from "./Views/Components/PopupPage/SignUpPage";
 import ForgotPasswordPage from "./Views/Components/PopupPage/ForgotPasswordPage";
 import Map from "./routers/map";
+import EditMapView from "./Views/EditMapView";
+import { Auth0Provider } from "@auth0/auth0-react";
 
 const router = createBrowserRouter([
   {
@@ -20,51 +22,84 @@ const router = createBrowserRouter([
   {
     path: "/map/:mapId",
     loader: async ({ params }) => {
-      return params.mapId
+      return params.mapId;
     },
     element: <Map />,
   },
   {
     path: "/login",
-    element: <div className="login-page">
-      <LogInPage onChangePage={(page) => {
-        if (page === "signUp") {
-          router.navigate("/signup");
-        } else if (page === "forgotPassword") {
-          router.navigate("/forgot");
-        };
-      }} />
-    </div>,
+    element: (
+      <div className="login-page">
+        <LogInPage
+          onChangePage={(page) => {
+            if (page === "signUp") {
+              router.navigate("/signup");
+            } else if (page === "forgotPassword") {
+              router.navigate("/forgot");
+            } else if (page === "home") {
+              router.navigate("/");
+            }
+          }}
+        />
+      </div>
+    ),
   },
   {
     path: "/signup",
-    element: <div className="login-page">
-      <SignUpPage onChangePage={(page) => {
-        if (page === "logIn") {
-          router.navigate("/login");
-        } else if (page === "forgotPassword") {
-          router.navigate("/forgot");
-        };
-      }} />
-    </div>,
+    element: (
+      <div className="login-page">
+        <SignUpPage
+          onChangePage={(page) => {
+            if (page === "logIn") {
+              router.navigate("/login");
+            } else if (page === "forgotPassword") {
+              router.navigate("/forgot");
+            } else if (page === "home") {
+              router.navigate("/");
+            }
+          }}
+        />
+      </div>
+    ),
   },
   {
     path: "/forgot",
-    element: <div className="login-page">
-      <ForgotPasswordPage onChangePage={(page) => {
-        if (page === "logIn") {
-          router.navigate("/login");
-        } else if (page === "signUp") {
-          router.navigate("/signup");
-        };
-      }} />
-    </div>,
+    element: (
+      <div className="login-page">
+        <ForgotPasswordPage
+          onChangePage={(page) => {
+            if (page === "logIn") {
+              router.navigate("/login");
+            } else if (page === "signUp") {
+              router.navigate("/signup");
+            } else if (page === "home") {
+              router.navigate("/");
+            }
+          }}
+        />
+      </div>
+    ),
+  },
+  {
+    path: "/edit",
+    element: (
+      <div>
+        <EditMapView fileData={null} onChange={() => (router.navigate("/"))}/>
+      </div>
+    ),
   },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <Auth0Provider
+      domain="zaunmap.us.auth0.com"
+      clientId="yhRzHbfMGQsJ3Solv4Bgk7U2i3Upz6lI"
+      authorizationParams={{ redirect_uri: window.location.origin }}
+    >
+      <RouterProvider router={router} />
+    </Auth0Provider>
+    {/* <EditMapView fileData={null} /> */}
   </React.StrictMode>
 );
 
