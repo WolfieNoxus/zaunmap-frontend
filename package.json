@@ -55,6 +55,7 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7",
+    "@cloudflare/workers-types": "^4.20231121.0",
     "@types/geojson": "^7946.0.13",
     "@types/leaflet": "^1",
     "@types/react": "^18",
