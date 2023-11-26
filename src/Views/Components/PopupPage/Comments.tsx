@@ -1,13 +1,9 @@
 import { useState } from "react";
 import { AiFillLike, AiOutlineLike } from "react-icons/ai";
+import IComment from "./Interfaces/IComment";
 
 interface ICommentsProps {
-  comments: {
-    id: number;
-    userName: string;
-    comment: string;
-    like: boolean;
-  }[];
+  comments: IComment[];
 }
 
 const commentsSample: ICommentsProps["comments"] = [
@@ -15,12 +11,14 @@ const commentsSample: ICommentsProps["comments"] = [
     id: 1,
     userName: "John",
     comment: "Hello, This is a comment!",
+    date: "2021-06-08",
     like: true,
   },
   {
     id: 2,
     userName: "Jane",
     comment: "Hi",
+    date: "2021-06-08",
     like: false,
   },
 ];

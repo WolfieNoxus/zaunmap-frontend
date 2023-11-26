@@ -1,0 +1,151 @@
+/* Edit bar design */
+.editBar-left {
+  position: fixed;
+  background-color: rgba(255, 255, 255, 0.9);
+  left: 0;
+  top: 0;
+  width: 20%;
+  height: 100%;
+  padding: 20px;
+  border-radius: 0px 8px 8px 0px;
+  box-shadow: 4px 0px 4px 0px rgba(0, 0, 255, 0.1);
+
+  justify-content: center;
+  align-items: center;
+  z-index: 1500;
+}
+
+.editBar-right {
+  position: fixed;
+  background-color: rgba(255, 255, 255, 0.9);
+  right: 0;
+  top: 0;
+  width: 10%;
+  height: 100%;
+  padding: 20px;
+  border-radius: 8px 0px 0px 8px;
+  box-shadow: -4px 0px 4px 0px rgba(0, 0, 255, 0.1);
+  z-index: 1500;
+}
+
+/* Whole bar css */
+.bar-content {
+  margin-right: 1%;
+  overflow: auto;
+}
+.bar-content::-webkit-scrollbar {
+  display: none;
+}
+/* Info Bar css */
+.info-bar {
+  position: relative;
+  margin-right: 1%;
+  padding: 10px;
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+}
+
+.transparent-input-title {
+  border: 0px;
+  text-align: center;
+  background-color: transparent;
+  padding: 5px;
+  font: Arial, sans-serif;
+  font-weight: bold;
+  font-size: 18px;
+  width: 100%;
+}
+
+.no-line-table {
+  /* background-color: grey; */
+  height: 10px;
+  width: 100%;
+  /* width: 100%; Adjust as needed */
+  /* border-collapse: separate; Use 'separate' to use border-spacing */
+  /* border-spacing: 0 15px; First value is for rows, second for columns */
+  /* text-align: center; */
+}
+
+.input-inTable-color {
+  height: 19px;
+  /* width: 50px; */
+}
+
+.tags {
+  display: flex;
+  align-items: flex-start;
+}
+
+.tag-block {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+}
+
+.tag {
+  /* display: inline-block; */
+  /* flex: 1; */
+
+  background-color: #eee;
+  /* border: 1px solid #ccc; */
+  border-radius: 15px;
+  padding: 5px 10px;
+  margin-bottom: 5px;
+  margin-right: 5px;
+  cursor: pointer;
+}
+
+.line {
+  border-bottom: 2px solid #4b4f5d; /* Creates a bottom border that looks like a line */
+  width: 100%; /* Sets the width of the line */
+  /* margin: 20px 0; Adds space above and below the line */
+  border-radius: 10px;
+}
+
+/* Edit bar edit part css */
+.settings-panel {
+  width: 100%;
+  background: transparent;
+  padding: 1%;
+  /* border-radius: 8px; */
+  /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
+}
+
+.select-panel {
+  width: 100%;
+  overflow: auto;
+  position: relative;
+  margin-right: 1%;
+  /* padding: 10px; */
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+}
+
+.title {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* Right side bar */
+.right-side-content {
+  overflow: scroll;
+}
+
+.colorbar-input-color {
+  height: 19px;
+  width: 40px;
+}
+
+.export-button {
+  position: absolute;
+  width: 70%;
+  bottom: 30px ;
+  /* height: 40px; */
+  /* background-color: #4b4f5d;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer; */
+}
