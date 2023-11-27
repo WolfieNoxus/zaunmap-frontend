@@ -1,7 +1,7 @@
-import { MapContainer, TileLayer, ZoomControl, useMap } from "react-leaflet";
+import { MapContainer, TileLayer, ZoomControl } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import Popup from "./Components/Popup";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 
 // Icons Button
 import { RiCommunityLine } from "react-icons/ri"; // TopLeft
