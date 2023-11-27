@@ -1,7 +1,7 @@
 import { MapContainer, TileLayer } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import EditBar from "./Components/Elements/EditBar";
-import IMapProject from "../Interfaces/IMapProject";
+import IMap from "../Interfaces/IMap";
 import "./Components/Elements/css/editBar.css";
 
 type TMapViewProps = {
@@ -27,14 +27,16 @@ type TMapViewProps = {
 // };
 
 const EditMapView: React.FC<TMapViewProps> = ({ fileData, onChange }) => {
-  const mapSample: IMapProject = {
-    map_id: 1,
+  const mapSample: IMap = {
+    id: 1,
     map_name: "Map Name",
+    owner: "John",
     description: "This is a map",
     tags: ["Asia", "Africa", "Europe", "Australia"],
     created_time: "2021-06-08",
     last_modified: "2021-06-08",
     public: true,
+    force_private: false,
     views: 12,
     likes: 133,
     comments: [

@@ -12,7 +12,7 @@ const UserProfile = (userProfile: IUser) => {
   const setItemsPublic = (id: number) => {
     setItems(
       items.map((item) =>
-        item.map_id === id ? { ...item, public: !item.public } : item
+        item.id === id ? { ...item, public: !item.public } : item
       )
     );
   };
@@ -38,9 +38,9 @@ const UserProfile = (userProfile: IUser) => {
         </thead>
         <tbody className="table-group-divider">
           {items.map((item) => (
-            <tr key={item.map_id}>
+            <tr key={item.id}>
               <td>
-                <Link reloadDocument to={"/map/" + item.map_id}>
+                <Link reloadDocument to={"/map/" + item.id}>
                   {item.map_name}
                 </Link>
               </td>
@@ -50,12 +50,12 @@ const UserProfile = (userProfile: IUser) => {
               <td style={{ textAlign: "center" }}>
                 {item.public ? (
                   <HiEye
-                    onClick={() => setItemsPublic(item.map_id)}
+                    onClick={() => setItemsPublic(item.id)}
                     color="6A738B"
                   />
                 ) : (
                   <HiEyeOff
-                    onClick={() => setItemsPublic(item.map_id)}
+                    onClick={() => setItemsPublic(item.id)}
                     color="6A738B"
                   />
                 )}
