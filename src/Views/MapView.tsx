@@ -1,7 +1,7 @@
-import { MapContainer, TileLayer, ZoomControl } from "react-leaflet";
+import { MapContainer, TileLayer, ZoomControl, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import Popup from "./Components/Popup";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 // Icons Button
 import { RiCommunityLine } from "react-icons/ri"; // TopLeft
@@ -70,6 +70,22 @@ const MapView: React.FC<TMapViewProps> = ({ fileData }) => {
     setShowPopup(false);
     setDisableOtherComponents(false);
   };
+
+  // const MovingComponent = () => {
+  //   const map = useMap();
+
+  //   useEffect(() => {
+  //     const interval = setInterval(() => {
+  //       // Update the map center here
+  //       map.setView([map.getCenter().lat, map.getCenter().lng + 0.1]);
+  //     }, 1); // Update every second
+
+  //     return () => clearInterval(interval); // Cleanup on unmount
+  //   }, [map]);
+
+  //   return null; // This component does not render anything itself
+  // };
+
   return (
     <div>
       <MapContainer
@@ -88,8 +104,14 @@ const MapView: React.FC<TMapViewProps> = ({ fileData }) => {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         />
+        {/* <MovingComponent /> */}
         <ZoomControl position="bottomleft" />
       </MapContainer>
+
+      {/* Home page set up */}
+      <div className="home-page">
+        <span className="home-title">Zaun Map</span>
+      </div>
 
       {/* popup page */}
       {showPopup && (
