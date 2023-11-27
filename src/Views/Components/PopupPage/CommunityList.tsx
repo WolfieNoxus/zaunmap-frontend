@@ -1,35 +1,53 @@
 import SearchBar from "../Elements/SearchBar";
 import { Link } from "react-router-dom";
 import IUser from "../../../Interfaces/IUser";
+import useMaps from "../../../hooks/useMaps";
+import mapService from "../../../services/mapService";
+import IMap from "../../../Interfaces/IMap";
 
 type CommunityListProps = Pick<IUser, "permission">;
 
-const CommunityList = ({permission}: CommunityListProps) => {
-  
-  const items = [
+const CommunityList = ({ permission }: CommunityListProps) => {
+  const { maps, error, isLoading, setMaps, setError } = useMaps();
+
+  const updatePublic = (map: IMap) => {
+    const originalMaps: IMap[] = [...maps];
+    const updatedMap: IMap = { ...map, public: false, force_private: true };
+    setMaps(maps.map((m) => (m.id === map.id ? updatedMap : m)));
+
+    mapService.update(updatedMap).catch((err) => {
+      setError(err.message);
+      setMaps(originalMaps);
+    });
+  };
+
+  const items: IMap[] = [
     {
       id: 1,
-      projecNname: "London Subway",
-      tags: "England, Europe",
-      userName: "John",
-      view: 1240,
-      viewPublic: true,
+      map_name: "London Subway",
+      tags: ["England", "Europe"],
+      owner: "John",
+      views: 1240,
+      public: true,
+      force_private: false,
     },
     {
       id: 2,
-      projecNname: "Long Island",
-      tags: "USA, North America",
-      userName: "John",
-      view: 1240,
-      viewPublic: true,
+      map_name: "Long Island",
+      tags: ["USA", "North America"],
+      owner: "John",
+      views: 1240,
+      public: true,
+      force_private: false,
     },
     {
       id: 3,
-      projecNname: "Paris",
-      tags: "French, Europe",
-      userName: "John",
-      view: 1240,
-      viewPublic: true,
+      map_name: "Paris",
+      tags: ["French", "Europe"],
+      owner: "John",
+      views: 1240,
+      public: true,
+      force_private: false,
     },
   ];
 
@@ -37,6 +55,8 @@ const CommunityList = ({permission}: CommunityListProps) => {
     <div>
       <SearchBar />
       <span>View type: {permission === "user" ? "User" : "Admin"}</span>
+      {error && <p className="text-danger">{error}</p>}
+      {isLoading && <div className="spinner-border"></div>}
       <table className="table">
         <thead>
           <tr>
@@ -44,17 +64,30 @@ const CommunityList = ({permission}: CommunityListProps) => {
             <th>User</th>
             <th>tags</th>
             <th>view</th>
-            {permission === "admin" ? (<th>Delete</th>) : null}
+            {permission === "admin" ? <th>Delete</th> : null}
           </tr>
         </thead>
         <tbody className="table-group-divider">
           {items.map((item) => (
             <tr key={item.id}>
-              <td><Link reloadDocument to={"/map/"+item.id}>{item.projecNname}</Link></td>
-              <td>{item.userName}</td>
+              <td>
+                <Link reloadDocument to={"/map/" + item.id}>
+                  {item.map_name}
+                </Link>
+              </td>
+              <td>{item.owner}</td>
               <td>{item.tags}</td>
-              <td>{item.view}</td>
-              {permission === "admin" ? (<th className="text text-danger">Delete</th>) : null}
+              <td>{item.views}</td>
+              {permission === "admin" ? (
+                <th>
+                  <button
+                    className="btn btn-outline-secondary mx-2"
+                    onClick={() => updatePublic(item)}
+                  >
+                    Update
+                  </button>
+                </th>
+              ) : null}
             </tr>
           ))}
         </tbody>

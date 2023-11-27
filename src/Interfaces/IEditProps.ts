@@ -1,7 +1,7 @@
-import IMapProject from "./IMapProject";
+import IMap from "./IMap";
 
 export default interface IEditProps {
-    mapProject: IMapProject;
+  mapProject: IMap;
 
-    onClose: () => void;
+  onClose: () => void;
 }
