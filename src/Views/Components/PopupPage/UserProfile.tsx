@@ -3,8 +3,10 @@ import SearchBar from "../Elements/SearchBar";
 import IUserProfileProps from "./Interfaces/IUserProfileProps";
 import { HiEye, HiEyeOff } from "react-icons/hi";
 import { Link } from "react-router-dom";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const UserProfile = (userProfile: IUserProfileProps) => {
+  const { user, logout } = useAuth0();
   const [items, setItems] = useState(userProfile.projectList);
 
   const setItemsPublic = (id: number) => {
@@ -17,19 +19,17 @@ const UserProfile = (userProfile: IUserProfileProps) => {
 
   return (
     <div>
-      <p>{userProfile.userName}</p>
-      <p>Permission: {userProfile.userType}</p>
       <div>
-        <span><Link reloadDocument to={"/signup"}>Sign Up</Link></span>
-        <span> | </span>
-        <span><Link reloadDocument to={"/login"}>Login</Link></span>
+        <p>{user?.nickname}</p>
+        {/* <p>Permission: {userProfile.userType}</p> */}
       </div>
+
       <SearchBar />
-      <table className="table">
+      <table className="table mb-3">
         <thead>
           <tr>
             <th>Project Name</th>
-            <th>User</th>
+            {/* <th>User</th> */}
             <th>tags</th>
             <th>view</th>
             <th>Public</th>
@@ -44,7 +44,7 @@ const UserProfile = (userProfile: IUserProfileProps) => {
                   {item.projecName}
                 </Link>
               </td>
-              <td>{item.userName}</td>
+              {/* <td>{item.userName}</td> */}
               <td>{item.tags}</td>
               <td>{item.view}</td>
               <td style={{ textAlign: "center" }}>
@@ -65,6 +65,16 @@ const UserProfile = (userProfile: IUserProfileProps) => {
           ))}
         </tbody>
       </table>
+      <div style={{ textAlign: "center" }}>
+        <button
+          className="btn btn-primary"
+          onClick={() =>
+            logout({ logoutParams: { returnTo: window.location.origin } })
+          }
+        >
+          Log Out
+        </button>
+      </div>
     </div>
   );
 };
