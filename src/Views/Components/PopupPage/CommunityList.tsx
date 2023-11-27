@@ -1,11 +1,10 @@
 import SearchBar from "../Elements/SearchBar";
 import { Link } from "react-router-dom";
+import IUser from "../../../Interfaces/IUser";
 
-interface IUserType {
-  userType: string;
-}
+type CommunityListProps = Pick<IUser, "permission">;
 
-const CommunityList = ({userType}: IUserType) => {
+const CommunityList = ({permission}: CommunityListProps) => {
   
   const items = [
     {
@@ -37,7 +36,7 @@ const CommunityList = ({userType}: IUserType) => {
   return (
     <div>
       <SearchBar />
-      <span>View type: {userType === "user" ? "User" : "Admin"}</span>
+      <span>View type: {permission === "user" ? "User" : "Admin"}</span>
       <table className="table">
         <thead>
           <tr>
@@ -45,7 +44,7 @@ const CommunityList = ({userType}: IUserType) => {
             <th>User</th>
             <th>tags</th>
             <th>view</th>
-            {userType === "admin" ? (<th>Delete</th>) : null}
+            {permission === "admin" ? (<th>Delete</th>) : null}
           </tr>
         </thead>
         <tbody className="table-group-divider">
@@ -55,7 +54,7 @@ const CommunityList = ({userType}: IUserType) => {
               <td>{item.userName}</td>
               <td>{item.tags}</td>
               <td>{item.view}</td>
-              {userType === "admin" ? (<th className="text text-danger">Delete</th>) : null}
+              {permission === "admin" ? (<th className="text text-danger">Delete</th>) : null}
             </tr>
           ))}
         </tbody>

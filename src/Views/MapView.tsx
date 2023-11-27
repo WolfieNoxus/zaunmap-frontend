@@ -8,8 +8,8 @@ import { RiCommunityLine } from "react-icons/ri"; // TopLeft
 import { BiSolidUserCircle } from "react-icons/bi"; // TopRight
 import { BiInfoCircle } from "react-icons/bi"; // BottomLeft
 import { MdAddCircle, MdChatBubbleOutline } from "react-icons/md"; // BottomRight
-import IPopupProps from "./Components/PopupPage/Interfaces/IPopupProps";
-import IUserProfileProps from "./Components/PopupPage/Interfaces/IUserProfileProps";
+import IPopupProps from "../Interfaces/IPopupProps";
+import IUser from "../Interfaces/IUser";
 import { useAuth0 } from "@auth0/auth0-react";
 
 type TMapViewProps = {
@@ -17,34 +17,35 @@ type TMapViewProps = {
 };
 
 const MapView: React.FC<TMapViewProps> = ({ fileData }) => {
-  const userSample: IUserProfileProps = {
-    userName: "John Doe",
+  const userSample: IUser = {
+    user_id: 1,
+    user_name: "John Doe",
     email: "123456@sample.com",
-    userType: "admin",
-    projectList: [
+    permission: "admin",
+    project_list: [
       {
-        id: 1,
-        projecName: "London Subway",
+        map_id: 1,
+        map_name: "London Subway",
         tags: ["England", "Europe"],
-        userName: "John",
-        view: 1240,
-        viewPublic: true,
+        owner: "John",
+        views: 1240,
+        public: true,
       },
       {
-        id: 2,
-        projecName: "Long Island",
+        map_id: 2,
+        map_name: "Long Island",
         tags: ["USA", "North America"],
-        userName: "John",
-        view: 1240,
-        viewPublic: true,
+        owner: "John",
+        views: 1240,
+        public: true,
       },
       {
-        id: 3,
-        projecName: "Paris",
+        map_id: 3,
+        map_name: "Paris",
         tags: ["French", "Europe"],
-        userName: "John",
-        view: 1240,
-        viewPublic: true,
+        owner: "John",
+        views: 1240,
+        public: true,
       },
     ],
   };

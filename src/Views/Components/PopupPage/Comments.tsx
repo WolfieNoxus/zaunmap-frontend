@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { AiFillLike, AiOutlineLike } from "react-icons/ai";
-import IComment from "./Interfaces/IComment";
+import IComment from "../../../Interfaces/IComment";
 
 interface ICommentsProps {
   comments: IComment[];
@@ -24,7 +24,8 @@ const commentsSample: ICommentsProps["comments"] = [
 ];
 
 const Comments = () => {
-  const [comments, setComments] = useState<ICommentsProps["comments"]>(commentsSample);
+  const [comments, setComments] =
+    useState<ICommentsProps["comments"]>(commentsSample);
 
   const setCommentLike = (id: number) => {
     setComments(
