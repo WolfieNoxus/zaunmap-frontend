@@ -1,10 +1,12 @@
 import { BiSearch } from "react-icons/bi";
+import "./css/searchBar.css";
 
 const SearchBar = () => {
   return (
-    <div>
-      <BiSearch />
-      <input className="ms-2 mb-3" type="text" />
+    <div className="outer-line">
+      <BiSearch color="4B4F5D"/>
+      <span className="color-span"> | </span>
+      <input className="search-box" type="text" />
     </div>
   );
 };

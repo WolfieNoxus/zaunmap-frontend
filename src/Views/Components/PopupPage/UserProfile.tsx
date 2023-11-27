@@ -22,17 +22,10 @@ const UserProfile = (userProfile: IUserProfileProps) => {
       <div>
         <p>{user?.nickname}</p>
         {/* <p>Permission: {userProfile.userType}</p> */}
-        <span
-          onClick={() =>
-            logout({ logoutParams: { returnTo: window.location.origin } })
-          }
-        >
-          Log Out
-        </span>
       </div>
 
       <SearchBar />
-      <table className="table">
+      <table className="table mb-3">
         <thead>
           <tr>
             <th>Project Name</th>
@@ -72,6 +65,16 @@ const UserProfile = (userProfile: IUserProfileProps) => {
           ))}
         </tbody>
       </table>
+      <div style={{ textAlign: "center" }}>
+        <button
+          className="btn btn-primary"
+          onClick={() =>
+            logout({ logoutParams: { returnTo: window.location.origin } })
+          }
+        >
+          Log Out
+        </button>
+      </div>
     </div>
   );
 };
