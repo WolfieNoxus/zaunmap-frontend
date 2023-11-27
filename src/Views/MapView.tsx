@@ -31,6 +31,7 @@ const MapView: React.FC<TMapViewProps> = ({ fileData }) => {
         views: 1240,
         public: true,
         force_private: false,
+        reports: 0,
       },
       {
         id: 2,
@@ -40,6 +41,7 @@ const MapView: React.FC<TMapViewProps> = ({ fileData }) => {
         views: 1240,
         public: true,
         force_private: false,
+        reports: 0,
       },
       {
         id: 3,
@@ -49,6 +51,7 @@ const MapView: React.FC<TMapViewProps> = ({ fileData }) => {
         views: 1240,
         public: true,
         force_private: false,
+        reports: 0,
       },
     ],
   };

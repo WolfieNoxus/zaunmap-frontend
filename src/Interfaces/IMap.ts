@@ -10,6 +10,8 @@ export default interface IMap {
   tags: string[];
   public: boolean;
   force_private: boolean;
+  reports: number;
+  rporters_id?: string[];
   views: number;
   likes?: number;
   dislikes?: number;
