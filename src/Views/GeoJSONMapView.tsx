@@ -32,6 +32,7 @@ const GeoJSONMapView: React.FC<TGeoJSONMapViewProps> = ({ geoJSONData }) => {
         views: 1240,
         public: true,
         force_private: false,
+        reports: 0,
       },
       {
         id: 2,
@@ -41,6 +42,7 @@ const GeoJSONMapView: React.FC<TGeoJSONMapViewProps> = ({ geoJSONData }) => {
         views: 1240,
         public: true,
         force_private: false,
+        reports: 0,
       },
       {
         id: 3,
@@ -50,6 +52,7 @@ const GeoJSONMapView: React.FC<TGeoJSONMapViewProps> = ({ geoJSONData }) => {
         views: 1240,
         public: true,
         force_private: false,
+        reports: 0,
       },
     ],
   };

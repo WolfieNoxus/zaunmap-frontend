@@ -10,9 +10,25 @@ type CommunityListProps = Pick<IUser, "permission">;
 const CommunityList = ({ permission }: CommunityListProps) => {
   const { maps, error, isLoading, setMaps, setError } = useMaps();
 
-  const updatePublic = (map: IMap) => {
+  const removePublic = (map: IMap) => {
     const originalMaps: IMap[] = [...maps];
-    const updatedMap: IMap = { ...map, public: false, force_private: true };
+    const updatedMap: IMap = {
+      ...map,
+      public: false,
+      force_private: true,
+      reports: 0,
+    };
+    setMaps(maps.map((m) => (m.id === map.id ? updatedMap : m)));
+
+    mapService.update(updatedMap).catch((err) => {
+      setError(err.message);
+      setMaps(originalMaps);
+    });
+  };
+
+  const report = (map: IMap) => {
+    const originalMaps: IMap[] = [...maps];
+    const updatedMap: IMap = { ...map, reports: map.reports + 1 };
     setMaps(maps.map((m) => (m.id === map.id ? updatedMap : m)));
 
     mapService.update(updatedMap).catch((err) => {
@@ -30,6 +46,7 @@ const CommunityList = ({ permission }: CommunityListProps) => {
       views: 1240,
       public: true,
       force_private: false,
+      reports: 0,
     },
     {
       id: 2,
@@ -39,6 +56,7 @@ const CommunityList = ({ permission }: CommunityListProps) => {
       views: 1240,
       public: true,
       force_private: false,
+      reports: 0,
     },
     {
       id: 3,
@@ -48,6 +66,7 @@ const CommunityList = ({ permission }: CommunityListProps) => {
       views: 1240,
       public: true,
       force_private: false,
+      reports: 0,
     },
   ];
 
@@ -64,7 +83,11 @@ const CommunityList = ({ permission }: CommunityListProps) => {
             <th>User</th>
             <th>tags</th>
             <th>view</th>
-            {permission === "admin" ? <th>Delete</th> : null}
+            {permission === "admin" ? (
+              <th className="text-danger">Ban</th>
+            ) : (
+              <th className="text-warning">Report</th>
+            )}
           </tr>
         </thead>
         <tbody className="table-group-divider">
@@ -81,13 +104,22 @@ const CommunityList = ({ permission }: CommunityListProps) => {
               {permission === "admin" ? (
                 <th>
                   <button
-                    className="btn btn-outline-secondary mx-2"
-                    onClick={() => updatePublic(item)}
+                    className="btn btn-outline-danger"
+                    onClick={() => removePublic(item)}
                   >
-                    Update
+                    Ban
                   </button>
                 </th>
-              ) : null}
+              ) : (
+                <th>
+                  <button
+                    className="btn btn-warning"
+                    onClick={() => report(item)}
+                  >
+                    Report
+                  </button>
+                </th>
+              )}
             </tr>
           ))}
         </tbody>
