@@ -1,25 +1,25 @@
 import { useState } from "react";
 import SearchBar from "../Elements/SearchBar";
-import IUserProfileProps from "./Interfaces/IUserProfileProps";
+import IUser from "../../../Interfaces/IUser";
 import { HiEye, HiEyeOff } from "react-icons/hi";
 import { Link } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 
-const UserProfile = (userProfile: IUserProfileProps) => {
+const UserProfile = (userProfile: IUser) => {
   const { user, logout } = useAuth0();
-  const [items, setItems] = useState(userProfile.projectList);
+  const [items, setItems] = useState(userProfile.project_list);
 
   const setItemsPublic = (id: number) => {
     setItems(
       items.map((item) =>
-        item.id === id ? { ...item, viewPublic: !item.viewPublic } : item
+        item.map_id === id ? { ...item, public: !item.public } : item
       )
     );
   };
 
   return (
     <div>
-      <div>
+      <div style={{ textAlign: "center" }}>
         <p>{user?.nickname}</p>
         {/* <p>Permission: {userProfile.userType}</p> */}
       </div>
@@ -38,24 +38,24 @@ const UserProfile = (userProfile: IUserProfileProps) => {
         </thead>
         <tbody className="table-group-divider">
           {items.map((item) => (
-            <tr key={item.id}>
+            <tr key={item.map_id}>
               <td>
-                <Link reloadDocument to={"/map/" + item.id}>
-                  {item.projecName}
+                <Link reloadDocument to={"/map/" + item.map_id}>
+                  {item.map_name}
                 </Link>
               </td>
               {/* <td>{item.userName}</td> */}
               <td>{item.tags}</td>
-              <td>{item.view}</td>
+              <td>{item.views}</td>
               <td style={{ textAlign: "center" }}>
-                {item.viewPublic ? (
+                {item.public ? (
                   <HiEye
-                    onClick={() => setItemsPublic(item.id)}
+                    onClick={() => setItemsPublic(item.map_id)}
                     color="6A738B"
                   />
                 ) : (
                   <HiEyeOff
-                    onClick={() => setItemsPublic(item.id)}
+                    onClick={() => setItemsPublic(item.map_id)}
                     color="6A738B"
                   />
                 )}
