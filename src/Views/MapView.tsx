@@ -19,7 +19,7 @@ type TMapViewProps = {
 
 const MapView: React.FC<TMapViewProps> = ({ fileData }) => {
   const { isAuthenticated, user, loginWithRedirect } = useAuth0();
-  const [loading, setLoading] = useState(isAuthenticated ? true : false);
+  const [loading, setLoading] = useState(true);
   const [showPopup, setShowPopup] = useState<boolean>(false);
   const [loggedinUser, setLoggedinUser] = useState<IUser>({
     user_id: "",
@@ -51,8 +51,10 @@ const MapView: React.FC<TMapViewProps> = ({ fileData }) => {
 
     if (isAuthenticated && user?.sub) {
       fetchUserData(user.sub);
-    }
-  });
+    } else {
+      setLoading(false);
+    };
+  }, [isAuthenticated, user]);
 
   const [popupPage, setPopupPage] = useState<IPopupProps>({
     page: "community",
