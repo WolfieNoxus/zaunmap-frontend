@@ -71,7 +71,7 @@
   position: absolute;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(255, 255, 255, 0.5);
+  /* background-color: rgba(255, 255, 255, 0.5); */
   /* Allows click events to pass through  */
   pointer-events: none;
   z-index: 500;
@@ -87,8 +87,19 @@
   font-family: "Arial", cursive;
   font-size: 7vw;
   font-style: italic;
+  font-weight: bold;
   color: #F35D74;
   text-shadow: 5px 5px 4px rgba(0, 0, 0, 0.25); /* 50% black */
+}
+
+.home-icon {
+  font-family: "Arial",  cursive;
+  font-size: 1vw min(1vw);
+  font-size: min(1vw);
+  font-style: italic;
+  font-weight: bold;
+  color: #F35D74;
+  text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.25); /* 50% black */
 }
 
 .leaflet-control-zoom {
