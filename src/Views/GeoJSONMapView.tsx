@@ -21,7 +21,7 @@ type TGeoJSONMapViewProps = {
 
 const GeoJSONMapView: React.FC<TGeoJSONMapViewProps> = ({ geoJSONData }) => {
   const { isAuthenticated, user } = useAuth0();
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(isAuthenticated ? true : false);
 
   const [loggedinUser, setLoggedinUser] = useState<IUser>({
     user_id: "",

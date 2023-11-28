@@ -20,7 +20,7 @@ type TMapViewProps = {
 const MapView: React.FC<TMapViewProps> = ({ fileData }) => {
 
   const { isAuthenticated, user, loginWithRedirect } = useAuth0();
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(isAuthenticated ? true : false);
   const [showPopup, setShowPopup] = useState<boolean>(false);
   const [loggedinUser, setLoggedinUser] = useState<IUser>({
     user_id: "",
