@@ -78,72 +78,74 @@ const AdminPortal = () => {
   };
 
   return (
-    <div className="">
-      {error && <p className="text-danger">{error}</p>}
-      {isLoading && <div className="spinner-border"></div>}
-      <table className="table">
-        <thead>
-          <tr>
-            <th>User Name</th>
-            {/* <th>Project Number</th> */}
-            <th>Role</th>
+    <div className="admin-page">
+      <div className="admin-portal-table my-3">
+        {error && <p className="text-danger">{error}</p>}
+        {isLoading && <div className="spinner-border"></div>}
+        <table className="table">
+          <thead>
+            <tr>
+              <th>User Name</th>
+              {/* <th>Project Number</th> */}
+              <th>Role</th>
 
-            <th className="text-warning">Restrict</th>
-            <th className="text-danger">Disabled</th>
-          </tr>
-        </thead>
-        <tbody className="table-group-divider">
-          {users.map((user) => (
-            <tr key={user.user_id}>
-              <td>{user.user_name}</td>
-              {/* <td>{user.project_list.length}</td> */}
-              <td>{user.role}</td>
+              <th className="text-warning">Restrict</th>
+              <th className="text-danger">Disabled</th>
+            </tr>
+          </thead>
+          <tbody className="table-group-divider">
+            {users.map((user) => (
+              <tr key={user.user_id}>
+                <td>{user.user_name}</td>
+                {/* <td>{user.project_list.length}</td> */}
+                <td>{user.role}</td>
 
-              <th>
-                {user.role === "restricted" ? (
-                  <button
-                    className="btn btn-warning"
-                    onClick={() => setRestricted(user, false)}
-                  >
-                    Unrestrict
-                  </button>
-                ) : (
-                  <button
-                    className="btn btn-outline-warning"
-                    onClick={() => setRestricted(user, true)}
-                  >
-                    Restrict
-                  </button>
-                )}
-                {/* <button
+                <th>
+                  {user.role === "restricted" ? (
+                    <button
+                      className="btn btn-warning"
+                      onClick={() => setRestricted(user, false)}
+                    >
+                      Unrestrict
+                    </button>
+                  ) : (
+                    <button
+                      className="btn btn-outline-warning"
+                      onClick={() => setRestricted(user, true)}
+                    >
+                      Restrict
+                    </button>
+                  )}
+                  {/* <button
                   className="btn btn-outline-warning"
                   onClick={() => setRestricted(user)}
                 >
                   Restrict
                 </button> */}
-              </th>
+                </th>
 
-              <th>
-                {user.role === "disabled" ? (
-                  <button
-                    className="btn btn-danger"
-                    onClick={() => setDisabled(user, false)}
-                  >
-                    Enable
-                  </button>
-                ) : (
-                  <button
-                    className="btn btn-outline-danger"
-                    onClick={() => setDisabled(user, true)}
-                  >
-                    Disable
-                  </button>
-                )}
-              </th>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+                <th>
+                  {user.role === "disabled" ? (
+                    <button
+                      className="btn btn-danger"
+                      onClick={() => setDisabled(user, false)}
+                    >
+                      Enable
+                    </button>
+                  ) : (
+                    <button
+                      className="btn btn-outline-danger"
+                      onClick={() => setDisabled(user, true)}
+                    >
+                      Disable
+                    </button>
+                  )}
+                </th>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };
