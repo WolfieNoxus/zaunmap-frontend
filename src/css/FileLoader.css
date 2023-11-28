@@ -219,3 +219,23 @@
 .greyed-out {
   color: grey;
 }
+
+.admin-page{
+  height: 100vh;
+  width: 100vw;
+  background-color: #ffc3d41c;
+  display: flex;
+  /* Vertically centers the child element */
+  /* align-items: center; */
+  /* Horizontally centers the child element */
+  justify-content: center;
+}
+
+.admin-portal-table {
+  width: 50vw;
+  padding: 7px;
+  margin: 5px;
+  background-color: white;
+  border-radius: 8px;
+  display: auto;
+}
