@@ -13,8 +13,7 @@ const Popup: React.FC<IPopupProps> = ({ page, user, onClose }) => {
           user_id={user.user_id}
           user_name={user.user_name}
           role={user.role}
-          project_list={user.project_list}
-          email={user.email}
+          maps={user.maps}
         />
       );
     } else if (type === "addProject") {
