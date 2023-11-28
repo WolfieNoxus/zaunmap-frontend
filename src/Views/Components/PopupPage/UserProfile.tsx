@@ -1,11 +1,10 @@
 import { useState, useEffect } from "react";
 import SearchBar from "../Elements/SearchBar";
-
 import IUser from "../../../Interfaces/IUser";
 import { HiEye, HiEyeOff, HiPencil, HiCheck, HiX } from "react-icons/hi";
-
 import { Link } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
+import apiClient from "../../../services/apiClient";
 import "./css/userProfile.css";
 
 interface IUserResponse {
@@ -15,54 +14,67 @@ interface IUserResponse {
 }
 
 const UserProfile = (userProfile: IUser) => {
-  const { user, logout } = useAuth0();
+  const { user, logout, getAccessTokenSilently } = useAuth0();
 
   const [items, setItems] = useState(userProfile.project_list);
   const [isEditing, setIsEditing] = useState(false); // New state for editing mode
-  const [newUsername, setNewUsername] = useState<string | undefined>(
-    user?.nickname
-  );
-  const [userData, setUserData] = useState<IUserResponse | null>(null);
+  const [newUsername, setNewUsername] = useState<string>("");
+  const [userData, setUserData] = useState<IUserResponse>();
+  const [token, setToken] = useState<string>("");
+  const [error, setError] = useState<string>("");
 
   useEffect(() => {
-    setNewUsername(user?.nickname);
-    console.log(user);
+    getAccessTokenSilently()
+      .then((res) => {
+        setToken(res);
+        console.log(token);
+      })
+      .catch((err) => {
+        setError(err.message);
+      });
+  }, [token, getAccessTokenSilently]);
+
+  useEffect(() => {
+    // console.log(user);
     // Fetch user data when the component mounts and the user object is available
+    
+    apiClient
+      .get(`/user?jwt=${encodeURIComponent(token)}`)
+      .then((res) => setUserData(res.data))
+      .catch((err) => setError(err.message));
 
-    const fetchUserData = async (email: string) => {
-      try {
-        const response = await fetch(
-          `https://zaunmap-6b1455b08c9b.herokuapp.com/api/user?user_id=${encodeURIComponent(
-            email
-          )}`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              // Include any necessary authentication headers
-              Authorization: `Bearer ${user?.token}`, // Replace with actual token from Auth0 if available
-            },
-          }
-        );
-
-        if (response.ok) {
-          const userData: IUserResponse = await response.json();
-          console.log("User data retrieved successfully:", userData);
-          setUserData(userData);
-        } else {
-          console.error("Failed to retrieve user data");
-          // Handle errors
-        }
-      } catch (error) {
-        console.error("Error while fetching user data", error);
-        // Handle errors
-      }
-    };
-    if (user?.email) {
-      fetchUserData(user.email);
-    }
-  }, [user]);
-
+    // const fetchUserData = async (email: string) => {
+    //   try {
+    //     const response = await fetch(
+    //       `https://zaunmap-6b1455b08c9b.herokuapp.com/api/user?user_id=${encodeURIComponent(
+    //         email
+    //       )}`,
+    //       {
+    //         method: "GET",
+    //         headers: {
+    //           "Content-Type": "application/json",
+    //           // Include any necessary authentication headers
+    //           Authorization: `Bearer ${user?.token}`, // Replace with actual token from Auth0 if available
+    //         },
+    //       }
+    //     );
+    //     if (response.ok) {
+    //       const userData: IUserResponse = await response.json();
+    //       // console.log("User data retrieved successfully:", userData);
+    //       setUserData(userData);
+    //     } else {
+    //       console.error("Failed to retrieve user data");
+    //       // Handle errors
+    //     }
+    //   } catch (error) {
+    //     console.error("Error while fetching user data", error);
+    //     // Handle errors
+    //   }
+    // };
+    // if (user?.email) {
+    //   fetchUserData(user.email);
+    // }
+  }, [userData, token]);
 
   const setItemsPublic = (id: number) => {
     setItems(
@@ -122,7 +134,7 @@ const UserProfile = (userProfile: IUser) => {
 
   return (
     <div>
-
+      {error && <p className="text-danger">{error}</p>}
       <div className="username-section">
         {isEditing ? (
           <div className="edit-username">
@@ -147,7 +159,6 @@ const UserProfile = (userProfile: IUser) => {
             />
           </div>
         )}
-
       </div>
 
       <SearchBar />
