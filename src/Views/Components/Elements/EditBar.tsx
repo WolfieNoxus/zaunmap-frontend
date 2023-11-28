@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import IEditProps from "../PopupPage/Interfaces/IEditProps";
+import IEditProps from "../../../Interfaces/IEditProps";
 
 const EditBar: React.FC<IEditProps> = ({ onClose, mapProject }) => {
   const [currentProjecName, setCurrentProjectName] =
@@ -131,11 +131,11 @@ const EditBar: React.FC<IEditProps> = ({ onClose, mapProject }) => {
               <tbody>
                 <tr key={"createTime"}>
                   <td>Create Time:</td>
-                  <td>{mapProject.lastEditTime}</td>
+                  <td>{mapProject.updatedAt}</td>
                 </tr>
                 <tr key={"lastEdit"}>
                   <td>Last Edit:</td>
-                  <td>{mapProject.lastEditTime}</td>
+                  <td>{mapProject.updatedAt}</td>
                 </tr>
                 <tr key={"viewPublic"}>
                   <td>Public:</td>
@@ -224,7 +224,9 @@ const EditBar: React.FC<IEditProps> = ({ onClose, mapProject }) => {
               </tbody>
             </table>
           )}
-          <button className="export-button btn btn-secondary">Export JPEG</button>
+          <button className="export-button btn btn-secondary">
+            Export JPEG
+          </button>
         </div>
       </div>
     </div>
