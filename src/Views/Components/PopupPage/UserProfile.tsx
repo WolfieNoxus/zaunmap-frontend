@@ -119,32 +119,34 @@ const UserProfile = (userProfile: IUser) => {
 
   return (
     <div>
-      <div className="username-section mb-3">
-        {isEditing ? (
-          <div className="edit-username">
-            <input
-              type="text"
-              value={newUsername}
-              onChange={(e) => setNewUsername(e.target.value)}
-              className="edit-username-input"
-            />
-            <HiCheck
-              onClick={() => updateUsername(user?.sub, newUsername)}
-              className="icon-check"
-            />
-            <HiX onClick={() => setIsEditing(false)} className="icon-close" />
-          </div>
-        ) : (
-          <div className="display-username">
-            <p className="username-text">{newUsername}</p>
-            <HiPencil
-              onClick={() => setIsEditing(true)}
-              className="icon-edit"
-            />
-          </div>
-        )}
+      <div className="profile-center">
+        <div className="username-section mb-3">
+          {isEditing ? (
+            <div className="display-username">
+              <input
+                type="text"
+                value={newUsername}
+                onChange={(e) => setNewUsername(e.target.value)}
+                className="edit-username-input"
+              />
+              <HiCheck
+                onClick={() => updateUsername(user?.sub, newUsername)}
+                className="icon-check"
+              />
+              <HiX onClick={() => setIsEditing(false)} className="icon-close" />
+            </div>
+          ) : (
+            <div className="display-username">
+              <span className="text username-text">{newUsername}</span>
+              <HiPencil
+                onClick={() => setIsEditing(true)}
+                className="icon-edit"
+              />
+            </div>
+          )}
+        </div>
       </div>
-      <div className="mb-3 d-flex justify-content-center">
+      <div className="mb-3 profile-center">
         {userData?.role === "admin" ? (
           <button
             className="btn btn-info"
