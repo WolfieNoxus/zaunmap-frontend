@@ -28,42 +28,18 @@ type TMapViewProps = {
 
 const EditMapView: React.FC<TMapViewProps> = ({ fileData, onChange }) => {
   const mapSample: IMap = {
-    id: 1,
-    map_name: "Map Name",
-    owner: "John",
+    _id: '1',
+    name: "Map Name",
+    author: "John",
     description: "This is a map",
     tags: ["Asia", "Africa", "Europe", "Australia"],
-    created_time: "2021-06-08",
-    last_modified: "2021-06-08",
+    createdAt: "2021-06-08",
+    updatedAt: "2021-06-08",
     public: true,
-    force_private: false,
-    reports: 0,
-    views: 12,
-    likes: 133,
-    comments: [
-      {
-        id: 1,
-        userName: "John",
-        comment: "Hello, This is a comment!",
-        date: "2021-06-08",
-        like: true,
-      },
-      {
-        id: 2,
-        userName: "Jane",
-        comment: "Hi",
-        date: "2021-06-08",
-        like: false,
-      },
-    ],
-    attach: [
-      { attachText: "Asia", regionColor: "#F8E431", textColor: "#4B4F5D" },
-      { attachText: "Austraila", regionColor: "#02994C", textColor: "#4B4F5D" },
-      { attachText: "Europe", regionColor: "#0182C7", textColor: "#4B4F5D" },
-      { attachText: "America", regionColor: "#E93753", textColor: "#4B4F5D" },
-      { attachText: "Africa", regionColor: "#4B4F5D", textColor: "#4B4F5D" },
-    ],
-  };
+    likes: 0,
+    dislikes: 0,
+    object_id: "1",
+    };
 
   // const markers: IMarker[] = [
   //   {

@@ -1,20 +1,21 @@
 import IComment from "./IComment";
 
 export default interface IMap {
-  id: number;
-  map_name: string;
-  owner: string;
-  created_time?: string;
-  last_modified?: string;
-  description?: string;
+  _id: string;
+  name: string;
+  author: string;
+  createdAt: string;
+  updatedAt: string;
+  description: string;
   tags: string[];
   public: boolean;
-  force_private: boolean;
-  reports: number;
+  force_private?: boolean;
+  reports?: number;
   rporters_id?: string[];
-  views: number;
-  likes?: number;
-  dislikes?: number;
+  views?: number;
+  likes: number;
+  dislikes: number;
+  object_id: string;
   comments?: IComment[];
   attach?: {
     regionColor: string;

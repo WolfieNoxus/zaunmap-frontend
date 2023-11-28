@@ -14,82 +14,66 @@ interface IUserResponse {
 }
 
 const UserProfile = (userProfile: IUser) => {
-  const { user, logout, getAccessTokenSilently } = useAuth0();
+  const { user, logout } = useAuth0();
 
-  const [items, setItems] = useState(userProfile.project_list);
+  const [items, setItems] = useState(userProfile.maps);
   const [isEditing, setIsEditing] = useState(false); // New state for editing mode
   const [newUsername, setNewUsername] = useState<string>("");
   const [userData, setUserData] = useState<IUserResponse>();
-  const [token, setToken] = useState<string>("");
-  const [error, setError] = useState<string>("");
 
-  useEffect(() => {
-    getAccessTokenSilently()
-      .then((res) => {
-        setToken(res);
-        console.log(token);
-      })
-      .catch((err) => {
-        setError(err.message);
-      });
-  }, [token, getAccessTokenSilently]);
+  // useEffect(() => {
+  //   getAccessTokenSilently()
+  //     .then((res) => {
+  //       setToken(res);
+  //       console.log(token);
+  //     })
+  //     .catch((err) => {
+  //       setError(err.message);
+  //     });
+  // }, [token, getAccessTokenSilently]);
 
   useEffect(() => {
     // console.log(user);
     // Fetch user data when the component mounts and the user object is available
     
-    apiClient
-      .get(`/user?jwt=${encodeURIComponent(token)}`)
-      .then((res) => setUserData(res.data))
-      .catch((err) => setError(err.message));
+    const fetchUserData = async (sub: string) => {
+      try {
+        const response = await apiClient.get(`/user?user_id=${sub}`);
+        if (response.status === 200) {
+          const userData: IUserResponse = response.data;
+          // console.log("User data retrieved successfully:", userData);
+          setUserData(userData);
+          setNewUsername(userData.user_name);
+        } else {
+          console.error("Failed to retrieve user data");
+          // Handle errors
+        }
+      } catch (err) {
+        console.error("Error while fetching user data", err);
+        // Handle errors
+      }
+    };
 
-    // const fetchUserData = async (email: string) => {
-    //   try {
-    //     const response = await fetch(
-    //       `https://zaunmap-6b1455b08c9b.herokuapp.com/api/user?user_id=${encodeURIComponent(
-    //         email
-    //       )}`,
-    //       {
-    //         method: "GET",
-    //         headers: {
-    //           "Content-Type": "application/json",
-    //           // Include any necessary authentication headers
-    //           Authorization: `Bearer ${user?.token}`, // Replace with actual token from Auth0 if available
-    //         },
-    //       }
-    //     );
-    //     if (response.ok) {
-    //       const userData: IUserResponse = await response.json();
-    //       // console.log("User data retrieved successfully:", userData);
-    //       setUserData(userData);
-    //     } else {
-    //       console.error("Failed to retrieve user data");
-    //       // Handle errors
-    //     }
-    //   } catch (error) {
-    //     console.error("Error while fetching user data", error);
-    //     // Handle errors
-    //   }
-    // };
-    // if (user?.email) {
-    //   fetchUserData(user.email);
-    // }
-  }, [userData, token]);
+    if (user?.sub) {
+      fetchUserData(user.sub);
+    }
 
-  const setItemsPublic = (id: number) => {
+  });
+
+  const setItemsPublic = (id: string) => {
     setItems(
       items.map((item) =>
-        item.id === id ? { ...item, public: !item.public } : item
+        item._id === id ? { ...item, public: !item.public } : item
       )
     );
   };
 
   // Function to handle username update
   const updateUsername = async (
-    email: string | undefined,
+    sub: string | undefined,
     new_name: string | undefined
   ) => {
-    if (!email || !new_name) {
+    if (!sub || !new_name) {
       console.error("Email or new username is undefined");
       return;
     }
@@ -100,9 +84,7 @@ const UserProfile = (userProfile: IUser) => {
 
     try {
       const response = await fetch(
-        `https://zaunmap-6b1455b08c9b.herokuapp.com/api/user/rename?user_id=${encodeURIComponent(
-          email
-        )}&new_name=${encodeURIComponent(new_name)}`,
+        `https://zaunmap-6b1455b08c9b.herokuapp.com/api/user/rename?user_id=${sub}&new_name=${encodeURIComponent(new_name)}`,
         {
           method: "PUT",
           headers: {
@@ -110,7 +92,7 @@ const UserProfile = (userProfile: IUser) => {
             Authorization: `Bearer ${user?.token}`, // Make sure you use the correct token
           },
           body: JSON.stringify({
-            user_id: email,
+            user_id: sub,
             new_name: new_name,
           }),
         }
@@ -134,7 +116,6 @@ const UserProfile = (userProfile: IUser) => {
 
   return (
     <div>
-      {error && <p className="text-danger">{error}</p>}
       <div className="username-section">
         {isEditing ? (
           <div className="edit-username">
@@ -145,7 +126,7 @@ const UserProfile = (userProfile: IUser) => {
               className="edit-username-input"
             />
             <HiCheck
-              onClick={() => updateUsername(user?.email, newUsername)}
+              onClick={() => updateUsername(user?.sub, newUsername)}
               className="icon-check"
             />
             <HiX onClick={() => setIsEditing(false)} className="icon-close" />
@@ -175,10 +156,10 @@ const UserProfile = (userProfile: IUser) => {
         </thead>
         <tbody className="table-group-divider">
           {items.map((item) => (
-            <tr key={item.id}>
+            <tr key={item._id}>
               <td>
-                <Link reloadDocument to={"/map/" + item.id}>
-                  {item.map_name}
+                <Link reloadDocument to={"/map/" + item._id}>
+                  {item.name}
                 </Link>
               </td>
               {/* <td>{item.userName}</td> */}
@@ -187,12 +168,12 @@ const UserProfile = (userProfile: IUser) => {
               <td style={{ textAlign: "center" }}>
                 {item.public ? (
                   <HiEye
-                    onClick={() => setItemsPublic(item.id)}
+                    onClick={() => setItemsPublic(item._id)}
                     color="6A738B"
                   />
                 ) : (
                   <HiEyeOff
-                    onClick={() => setItemsPublic(item.id)}
+                    onClick={() => setItemsPublic(item._id)}
                     color="6A738B"
                   />
                 )}
