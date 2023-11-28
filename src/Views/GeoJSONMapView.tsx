@@ -22,7 +22,7 @@ const GeoJSONMapView: React.FC<TGeoJSONMapViewProps> = ({ geoJSONData }) => {
     user_id: 1,
     user_name: "John Doe",
     email: "123456@sample.com",
-    permission: "user",
+    role: "user",
     project_list: [
       {
         id: 1,

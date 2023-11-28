@@ -4,6 +4,6 @@ export default interface IUser {
   user_id: number;
   user_name: string;
   email: string;
-  permission: "user" | "admin";
+  role: "user" | "admin" | "restricted" | "disabled";
   project_list: IMap[];
 }

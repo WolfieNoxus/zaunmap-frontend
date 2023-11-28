@@ -5,9 +5,9 @@ import useMaps from "../../../hooks/useMaps";
 import mapService from "../../../services/mapService";
 import IMap from "../../../Interfaces/IMap";
 
-type CommunityListProps = Pick<IUser, "permission">;
+type CommunityListProps = Pick<IUser, "role">;
 
-const CommunityList = ({ permission }: CommunityListProps) => {
+const CommunityList = ({ role }: CommunityListProps) => {
   const { maps, error, isLoading, setMaps, setError } = useMaps();
 
   const removePublic = (map: IMap) => {
@@ -73,17 +73,17 @@ const CommunityList = ({ permission }: CommunityListProps) => {
   return (
     <div>
       <SearchBar />
-      <span>View type: {permission === "user" ? "User" : "Admin"}</span>
+      <span>View type: {role === "user" ? "User" : "Admin"}</span>
       {error && <p className="text-danger">{error}</p>}
       {isLoading && <div className="spinner-border"></div>}
       <table className="table">
         <thead>
           <tr>
             <th>Project Name</th>
-            <th>User</th>
+            <th>Author</th>
             <th>tags</th>
             <th>view</th>
-            {permission === "admin" ? (
+            {role === "admin" ? (
               <th className="text-danger">Ban</th>
             ) : (
               <th className="text-warning">Report</th>
@@ -101,7 +101,7 @@ const CommunityList = ({ permission }: CommunityListProps) => {
               <td>{item.owner}</td>
               <td>{item.tags}</td>
               <td>{item.views}</td>
-              {permission === "admin" ? (
+              {role === "admin" ? (
                 <th>
                   <button
                     className="btn btn-outline-danger"
