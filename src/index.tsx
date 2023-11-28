@@ -6,12 +6,16 @@ import reportWebVitals from "./reportWebVitals";
 import "bootstrap/dist/css/bootstrap.css";
 import Root from "./routers/root";
 import ErrorPage from "./errorPage";
-import LogInPage from "./Views/Components/PopupPage/LogInPage";
-import SignUpPage from "./Views/Components/PopupPage/SignUpPage";
-import ForgotPasswordPage from "./Views/Components/PopupPage/ForgotPasswordPage";
+// import LogInPage from "./Views/Components/PopupPage/LogInPage";
+// import SignUpPage from "./Views/Components/PopupPage/SignUpPage";
+// import ForgotPasswordPage from "./Views/Components/PopupPage/ForgotPasswordPage";
 import Map from "./routers/map";
 import EditMapView from "./Views/EditMapView";
 import { Auth0Provider } from "@auth0/auth0-react";
+import { Provider } from 'react-redux';
+import store from './store/store';
+import AdminPortal from "./Views/AdminPortal";
+
 
 const router = createBrowserRouter([
   {
@@ -27,58 +31,9 @@ const router = createBrowserRouter([
     element: <Map />,
   },
   {
-    path: "/login",
-    element: (
-      <div className="login-page">
-        <LogInPage
-          onChangePage={(page) => {
-            if (page === "signUp") {
-              router.navigate("/signup");
-            } else if (page === "forgotPassword") {
-              router.navigate("/forgot");
-            } else if (page === "home") {
-              router.navigate("/");
-            }
-          }}
-        />
-      </div>
-    ),
-  },
-  {
-    path: "/signup",
-    element: (
-      <div className="login-page">
-        <SignUpPage
-          onChangePage={(page) => {
-            if (page === "logIn") {
-              router.navigate("/login");
-            } else if (page === "forgotPassword") {
-              router.navigate("/forgot");
-            } else if (page === "home") {
-              router.navigate("/");
-            }
-          }}
-        />
-      </div>
-    ),
-  },
-  {
-    path: "/forgot",
-    element: (
-      <div className="login-page">
-        <ForgotPasswordPage
-          onChangePage={(page) => {
-            if (page === "logIn") {
-              router.navigate("/login");
-            } else if (page === "signUp") {
-              router.navigate("/signup");
-            } else if (page === "home") {
-              router.navigate("/");
-            }
-          }}
-        />
-      </div>
-    ),
+    path: "/admin",
+    element: <AdminPortal />,
+    errorElement: <ErrorPage />,
   },
   {
     path: "/edit",
@@ -92,14 +47,15 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <Auth0Provider
-      domain="zaunmap.us.auth0.com"
-      clientId="yhRzHbfMGQsJ3Solv4Bgk7U2i3Upz6lI"
-      authorizationParams={{ redirect_uri: window.location.origin }}
-    >
-      <RouterProvider router={router} />
-    </Auth0Provider>
-    {/* <EditMapView fileData={null} /> */}
+    <Provider store={store}>
+      <Auth0Provider
+        domain="zaunmap.us.auth0.com"
+        clientId="yhRzHbfMGQsJ3Solv4Bgk7U2i3Upz6lI"
+        authorizationParams={{ redirect_uri: window.location.origin }}
+      >
+        <RouterProvider router={router} />
+      </Auth0Provider>
+    </Provider>
   </React.StrictMode>
 );
 

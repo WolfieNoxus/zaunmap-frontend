@@ -1,18 +1,19 @@
 import CommunityList from "./PopupPage/CommunityList";
 import UserProfile from "./PopupPage/UserProfile";
-import IPopupProps from "./PopupPage/Interfaces/IPopupProps";
+import IPopupProps from "../../Interfaces/IPopupProps";
 import FileUploader from "./PopupPage/FileUploader";
 import Comments from "./PopupPage/Comments";
 const Popup: React.FC<IPopupProps> = ({ page, user, onClose }) => {
   const changePage = (type: string) => {
     if (type === "community") {
-      return <CommunityList userType={user.userType} />;
+      return <CommunityList role={user.role} />;
     } else if (type === "userProfile") {
       return (
         <UserProfile
-          userName={user.userName}
-          userType={user.userType}
-          projectList={user.projectList}
+          user_id={user.user_id}
+          user_name={user.user_name}
+          role={user.role}
+          project_list={user.project_list}
           email={user.email}
         />
       );
