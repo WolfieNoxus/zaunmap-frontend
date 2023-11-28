@@ -12,6 +12,8 @@ import ForgotPasswordPage from "./Views/Components/PopupPage/ForgotPasswordPage"
 import Map from "./routers/map";
 import EditMapView from "./Views/EditMapView";
 import { Auth0Provider } from "@auth0/auth0-react";
+import { Provider } from 'react-redux';
+import store from './store/store';
 
 const router = createBrowserRouter([
   {
@@ -92,14 +94,15 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <Auth0Provider
-      domain="zaunmap.us.auth0.com"
-      clientId="yhRzHbfMGQsJ3Solv4Bgk7U2i3Upz6lI"
-      authorizationParams={{ redirect_uri: window.location.origin }}
-    >
-      <RouterProvider router={router} />
-    </Auth0Provider>
-    {/* <EditMapView fileData={null} /> */}
+    <Provider store={store}>
+      <Auth0Provider
+        domain="zaunmap.us.auth0.com"
+        clientId="yhRzHbfMGQsJ3Solv4Bgk7U2i3Upz6lI"
+        authorizationParams={{ redirect_uri: window.location.origin }}
+      >
+        <RouterProvider router={router} />
+      </Auth0Provider>
+    </Provider>
   </React.StrictMode>
 );
 
