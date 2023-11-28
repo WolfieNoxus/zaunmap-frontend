@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import SearchBar from "../Elements/SearchBar";
 import IUser from "../../../Interfaces/IUser";
 import { HiEye, HiEyeOff, HiPencil, HiCheck, HiX } from "react-icons/hi";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import apiClient from "../../../services/apiClient";
 import "./css/userProfile.css";
@@ -21,6 +21,8 @@ const UserProfile = (userProfile: IUser) => {
   const [newUsername, setNewUsername] = useState<string>("");
   const [userData, setUserData] = useState<IUserResponse>();
 
+  let navigate = useNavigate();
+
   // useEffect(() => {
   //   getAccessTokenSilently()
   //     .then((res) => {
@@ -35,7 +37,7 @@ const UserProfile = (userProfile: IUser) => {
   useEffect(() => {
     // console.log(user);
     // Fetch user data when the component mounts and the user object is available
-    
+
     const fetchUserData = async (sub: string) => {
       try {
         const response = await apiClient.get(`/user?user_id=${sub}`);
@@ -57,8 +59,8 @@ const UserProfile = (userProfile: IUser) => {
     if (user?.sub) {
       fetchUserData(user.sub);
     }
-
   }, [user]);
+
 
   const setItemsPublic = (id: string) => {
     setItems(
@@ -84,7 +86,9 @@ const UserProfile = (userProfile: IUser) => {
 
     try {
       const response = await fetch(
-        `https://zaunmap-6b1455b08c9b.herokuapp.com/api/user/rename?user_id=${sub}&new_name=${encodeURIComponent(new_name)}`,
+        `https://zaunmap-6b1455b08c9b.herokuapp.com/api/user/rename?user_id=${sub}&new_name=${encodeURIComponent(
+          new_name
+        )}`,
         {
           method: "PUT",
           headers: {
@@ -116,7 +120,7 @@ const UserProfile = (userProfile: IUser) => {
 
   return (
     <div>
-      <div className="username-section">
+      <div className="username-section mb-3">
         {isEditing ? (
           <div className="edit-username">
             <input
@@ -140,6 +144,18 @@ const UserProfile = (userProfile: IUser) => {
             />
           </div>
         )}
+      </div>
+      <div className="mb-3 d-flex justify-content-center">
+        {userData?.role === "admin" ? (
+          <button
+            className="btn btn-info"
+            onClick={() => {
+              navigate("/admin/");
+            }}
+          >
+            Admin Portal
+          </button>
+        ) : null}
       </div>
 
       <SearchBar />
