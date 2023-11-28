@@ -131,11 +131,11 @@ const EditBar: React.FC<IEditProps> = ({ onClose, mapProject }) => {
               <tbody>
                 <tr key={"createTime"}>
                   <td>Create Time:</td>
-                  <td>{mapProject.last_modified}</td>
+                  <td>{mapProject.updatedAt}</td>
                 </tr>
                 <tr key={"lastEdit"}>
                   <td>Last Edit:</td>
-                  <td>{mapProject.last_modified}</td>
+                  <td>{mapProject.updatedAt}</td>
                 </tr>
                 <tr key={"viewPublic"}>
                   <td>Public:</td>
