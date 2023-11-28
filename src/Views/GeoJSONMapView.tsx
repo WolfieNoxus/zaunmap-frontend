@@ -51,8 +51,10 @@ const GeoJSONMapView: React.FC<TGeoJSONMapViewProps> = ({ geoJSONData }) => {
     
     if (isAuthenticated && user?.sub) {
       fetchUserData(user.sub);
-    }
-  });
+    } else {
+      setLoading(false);
+    };
+  }, [isAuthenticated, user]);
 
   const [showPopup, setShowPopup] = useState<boolean>(false);
   const [disableOtherComponents, setDisableOtherComponents] =

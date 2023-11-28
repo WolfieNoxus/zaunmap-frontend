@@ -51,8 +51,10 @@ const MapView: React.FC<TMapViewProps> = ({ fileData }) => {
     
     if (isAuthenticated && user?.sub) {
       fetchUserData(user.sub);
-    }
-  });
+    } else {
+      setLoading(false);
+    };
+  }, [isAuthenticated, user]);
 
   const [popupPage, setPopupPage] = useState<IPopupProps>({
     page: "community",
@@ -103,9 +105,18 @@ const MapView: React.FC<TMapViewProps> = ({ fileData }) => {
       </MapContainer>
 
       {/* Home page set up */}
-      <div className="home-page">
-        <span className="home-title">Zaun Map</span>
-      </div>
+      {!isAuthenticated ? (
+        <div
+          className="home-page"
+          style={{ backgroundColor: "rgba(255, 255, 255, 0.5)" }}
+        >
+          <span className="home-title">Zaun Map</span>
+        </div>
+      ) : (
+        <div className="home-page" style={{alignItems: "end"}}>
+          <span className="home-icon mb-3">Zaun Map</span>
+        </div>
+      )}
 
       {/* popup page */}
       {loading ? (
