@@ -22,6 +22,8 @@ function Map() {
 
     const mapId = useLoaderData();
 
+    console.log(mapId);
+
     const [fileData, setFileData] = useState<File | null>(null);
     const fileType = "kml";
 
