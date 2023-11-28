@@ -58,7 +58,7 @@ const UserProfile = (userProfile: IUser) => {
       fetchUserData(user.sub);
     }
 
-  });
+  }, [user]);
 
   const setItemsPublic = (id: string) => {
     setItems(
