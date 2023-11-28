@@ -133,7 +133,7 @@ const CommunityList = ({ role }: CommunityListProps) => {
                 ) : (
                   <th>
                     <button
-                      className="btn btn-warning"
+                      className="btn btn-outline-warning"
                       onClick={() => report(item)}
                     >
                       Report
