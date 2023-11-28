@@ -3,7 +3,7 @@ import "leaflet/dist/leaflet.css";
 import { GeoJsonObject } from "geojson";
 
 import Popup from "./Components/Popup";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { RiCommunityLine } from "react-icons/ri"; // TopLeft
 import { BiSolidUserCircle } from "react-icons/bi"; // TopRight
@@ -12,57 +12,54 @@ import { MdAddCircle, MdChatBubbleOutline } from "react-icons/md"; // BottomRigh
 import IPopupProps from "../Interfaces/IPopupProps";
 import IUser from "../Interfaces/IUser";
 import { Link } from "react-router-dom";
+import { useAuth0 } from "@auth0/auth0-react";
+import apiClient from "../services/apiClient";
 
 type TGeoJSONMapViewProps = {
   geoJSONData: GeoJsonObject[];
 };
 
 const GeoJSONMapView: React.FC<TGeoJSONMapViewProps> = ({ geoJSONData }) => {
-  const userSample: IUser = {
-    user_id: 1,
-    user_name: "John Doe",
-    email: "123456@sample.com",
+  const { isAuthenticated, user } = useAuth0();
+  const [loading, setLoading] = useState(true);
+
+  const [loggedinUser, setLoggedinUser] = useState<IUser>({
+    user_id: "",
+    user_name: "",
     role: "user",
-    project_list: [
-      {
-        id: 1,
-        map_name: "London Subway",
-        tags: ["England", "Europe"],
-        owner: "John",
-        views: 1240,
-        public: true,
-        force_private: false,
-        reports: 0,
-      },
-      {
-        id: 2,
-        map_name: "Long Island",
-        tags: ["USA", "North America"],
-        owner: "John",
-        views: 1240,
-        public: true,
-        force_private: false,
-        reports: 0,
-      },
-      {
-        id: 3,
-        map_name: "Paris",
-        tags: ["French", "Europe"],
-        owner: "John",
-        views: 1240,
-        public: true,
-        force_private: false,
-        reports: 0,
-      },
-    ],
-  };
+    maps: [],
+  });
+
+  useEffect(() => {
+    const fetchUserData = async (sub: string) => {
+      try {
+        const response = await apiClient.get(`/user?user_id=${sub}`);
+        if (response.status === 200) {
+          const userData: IUser = response.data;
+          // console.log("User data retrieved successfully:", userData);
+          setLoggedinUser(userData);
+        } else {
+          console.error("Failed to retrieve user data");
+          // Handle errors
+        }
+      } catch (err) {
+        console.error("Error while fetching user data", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    if (isAuthenticated && user?.sub) {
+      fetchUserData(user.sub);
+    }
+  });
 
   const [showPopup, setShowPopup] = useState<boolean>(false);
   const [disableOtherComponents, setDisableOtherComponents] =
     useState<boolean>(false);
   const [popupPage, setPopupPage] = useState<IPopupProps>({
     page: "community",
-    user: userSample,
+    user: loggedinUser,
     onClose: () => {},
   });
 
@@ -96,13 +93,17 @@ const GeoJSONMapView: React.FC<TGeoJSONMapViewProps> = ({ geoJSONData }) => {
       </MapContainer>
 
       {/* popup page */}
-      {showPopup && (
+      {loading ? (
+        <div className="spinner-border" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      ) : (showPopup && (
         <Popup
-          user={userSample}
+          user={loggedinUser}
           page={popupPage.page}
           onClose={() => handleClosePopup()}
         />
-      )}
+      ))}
 
       <div
         className={disableOtherComponents ? "no-interaction greyed-out" : ""}
@@ -115,7 +116,7 @@ const GeoJSONMapView: React.FC<TGeoJSONMapViewProps> = ({ geoJSONData }) => {
             onClick={() => {
               setPopupPage({
                 page: "community",
-                user: userSample,
+                user: loggedinUser,
                 onClose: () => {},
               });
               setShowPopup(true);
@@ -132,7 +133,7 @@ const GeoJSONMapView: React.FC<TGeoJSONMapViewProps> = ({ geoJSONData }) => {
           onClick={() => {
             setPopupPage({
               page: "userProfile",
-              user: userSample,
+              user: loggedinUser,
               onClose: () => {},
             });
             setShowPopup(true);
@@ -149,7 +150,7 @@ const GeoJSONMapView: React.FC<TGeoJSONMapViewProps> = ({ geoJSONData }) => {
             onClick={() => {
               setPopupPage({
                 page: "comments",
-                user: userSample,
+                user: loggedinUser,
                 onClose: () => {},
               });
               setShowPopup(true);
@@ -163,7 +164,7 @@ const GeoJSONMapView: React.FC<TGeoJSONMapViewProps> = ({ geoJSONData }) => {
             onClick={() => {
               setPopupPage({
                 page: "addProject",
-                user: userSample,
+                user: loggedinUser,
                 onClose: () => {},
               });
               setShowPopup(true);
@@ -182,7 +183,7 @@ const GeoJSONMapView: React.FC<TGeoJSONMapViewProps> = ({ geoJSONData }) => {
               // onClick={() => {
               //   setPopupPage({
               //     page: "mapInfo",
-              //     user: userSample,
+              //     user: loggedinUser,
               //     onClose: () => {},
               //   });
               //   setShowPopup(true);
