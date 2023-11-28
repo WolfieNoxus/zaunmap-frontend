@@ -18,7 +18,6 @@ type TMapViewProps = {
 };
 
 const MapView: React.FC<TMapViewProps> = ({ fileData }) => {
-
   const { isAuthenticated, user, loginWithRedirect } = useAuth0();
   const [loading, setLoading] = useState(isAuthenticated ? true : false);
   const [showPopup, setShowPopup] = useState<boolean>(false);
@@ -28,8 +27,9 @@ const MapView: React.FC<TMapViewProps> = ({ fileData }) => {
     role: "user",
     maps: [],
   });
-  const [disableOtherComponents, setDisableOtherComponents] = useState<boolean>(false);
-  
+  const [disableOtherComponents, setDisableOtherComponents] =
+    useState<boolean>(false);
+
   useEffect(() => {
     const fetchUserData = async (sub: string) => {
       try {
@@ -48,7 +48,7 @@ const MapView: React.FC<TMapViewProps> = ({ fileData }) => {
         setLoading(false);
       }
     };
-    
+
     if (isAuthenticated && user?.sub) {
       fetchUserData(user.sub);
     }
@@ -111,7 +111,7 @@ const MapView: React.FC<TMapViewProps> = ({ fileData }) => {
           <span className="home-title">Zaun Map</span>
         </div>
       ) : (
-        <div className="home-page" style={{alignItems: "end"}}>
+        <div className="home-page" style={{ alignItems: "end" }}>
           <span className="home-icon mb-3">Zaun Map</span>
         </div>
       )}
@@ -121,13 +121,15 @@ const MapView: React.FC<TMapViewProps> = ({ fileData }) => {
         <div className="spinner-border" role="status">
           <span className="visually-hidden">Loading...</span>
         </div>
-      ) : (showPopup && (
-        <Popup
-          user={loggedinUser}
-          page={popupPage.page}
-          onClose={() => handleClosePopup()}
-        />
-      ))}
+      ) : (
+        showPopup && (
+          <Popup
+            user={loggedinUser}
+            page={popupPage.page}
+            onClose={() => handleClosePopup()}
+          />
+        )
+      )}
 
       <div
         className={disableOtherComponents ? "no-interaction greyed-out" : ""}
