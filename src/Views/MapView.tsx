@@ -8,8 +8,8 @@ import { RiCommunityLine } from "react-icons/ri"; // TopLeft
 import { BiSolidUserCircle } from "react-icons/bi"; // TopRight
 import { BiInfoCircle } from "react-icons/bi"; // BottomLeft
 import { MdAddCircle, MdChatBubbleOutline } from "react-icons/md"; // BottomRight
-import IPopupProps from "./Components/PopupPage/Interfaces/IPopupProps";
-import IUserProfileProps from "./Components/PopupPage/Interfaces/IUserProfileProps";
+import IPopupProps from "../Interfaces/IPopupProps";
+import IUser from "../Interfaces/IUser";
 import { useAuth0 } from "@auth0/auth0-react";
 
 type TMapViewProps = {
@@ -17,34 +17,41 @@ type TMapViewProps = {
 };
 
 const MapView: React.FC<TMapViewProps> = ({ fileData }) => {
-  const userSample: IUserProfileProps = {
-    userName: "John Doe",
+  const userSample: IUser = {
+    user_id: 1,
+    user_name: "John Doe",
     email: "123456@sample.com",
-    userType: "admin",
-    projectList: [
+    role: "admin",
+    project_list: [
       {
         id: 1,
-        projecName: "London Subway",
+        map_name: "London Subway",
         tags: ["England", "Europe"],
-        userName: "John",
-        view: 1240,
-        viewPublic: true,
+        owner: "John",
+        views: 1240,
+        public: true,
+        force_private: false,
+        reports: 0,
       },
       {
         id: 2,
-        projecName: "Long Island",
+        map_name: "Long Island",
         tags: ["USA", "North America"],
-        userName: "John",
-        view: 1240,
-        viewPublic: true,
+        owner: "John",
+        views: 1240,
+        public: true,
+        force_private: false,
+        reports: 0,
       },
       {
         id: 3,
-        projecName: "Paris",
+        map_name: "Paris",
         tags: ["French", "Europe"],
-        userName: "John",
-        view: 1240,
-        viewPublic: true,
+        owner: "John",
+        views: 1240,
+        public: true,
+        force_private: false,
+        reports: 0,
       },
     ],
   };
@@ -63,6 +70,22 @@ const MapView: React.FC<TMapViewProps> = ({ fileData }) => {
     setShowPopup(false);
     setDisableOtherComponents(false);
   };
+
+  // const MovingComponent = () => {
+  //   const map = useMap();
+
+  //   useEffect(() => {
+  //     const interval = setInterval(() => {
+  //       // Update the map center here
+  //       map.setView([map.getCenter().lat, map.getCenter().lng + 0.1]);
+  //     }, 1); // Update every second
+
+  //     return () => clearInterval(interval); // Cleanup on unmount
+  //   }, [map]);
+
+  //   return null; // This component does not render anything itself
+  // };
+
   return (
     <div>
       <MapContainer
@@ -81,8 +104,14 @@ const MapView: React.FC<TMapViewProps> = ({ fileData }) => {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         />
+        {/* <MovingComponent /> */}
         <ZoomControl position="bottomleft" />
       </MapContainer>
+
+      {/* Home page set up */}
+      <div className="home-page">
+        <span className="home-title">Zaun Map</span>
+      </div>
 
       {/* popup page */}
       {showPopup && (

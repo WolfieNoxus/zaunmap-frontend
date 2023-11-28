@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
 import SearchBar from "../Elements/SearchBar";
-import IUserProfileProps from "./Interfaces/IUserProfileProps";
+
+import IUser from "../../../Interfaces/IUser";
 import { HiEye, HiEyeOff, HiPencil, HiCheck, HiX } from "react-icons/hi";
+
 import { Link } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import "./css/userProfile.css";
@@ -12,9 +14,10 @@ interface IUserResponse {
   role: string;
 }
 
-const UserProfile = (userProfile: IUserProfileProps) => {
+const UserProfile = (userProfile: IUser) => {
   const { user, logout } = useAuth0();
-  const [items, setItems] = useState(userProfile.projectList);
+
+  const [items, setItems] = useState(userProfile.project_list);
   const [isEditing, setIsEditing] = useState(false); // New state for editing mode
   const [newUsername, setNewUsername] = useState<string | undefined>(
     user?.nickname
@@ -60,10 +63,11 @@ const UserProfile = (userProfile: IUserProfileProps) => {
     }
   }, [user]);
 
+
   const setItemsPublic = (id: number) => {
     setItems(
       items.map((item) =>
-        item.id === id ? { ...item, viewPublic: !item.viewPublic } : item
+        item.id === id ? { ...item, public: !item.public } : item
       )
     );
   };
@@ -118,6 +122,7 @@ const UserProfile = (userProfile: IUserProfileProps) => {
 
   return (
     <div>
+
       <div className="username-section">
         {isEditing ? (
           <div className="edit-username">
@@ -142,6 +147,7 @@ const UserProfile = (userProfile: IUserProfileProps) => {
             />
           </div>
         )}
+
       </div>
 
       <SearchBar />
@@ -161,14 +167,14 @@ const UserProfile = (userProfile: IUserProfileProps) => {
             <tr key={item.id}>
               <td>
                 <Link reloadDocument to={"/map/" + item.id}>
-                  {item.projecName}
+                  {item.map_name}
                 </Link>
               </td>
               {/* <td>{item.userName}</td> */}
               <td>{item.tags}</td>
-              <td>{item.view}</td>
+              <td>{item.views}</td>
               <td style={{ textAlign: "center" }}>
-                {item.viewPublic ? (
+                {item.public ? (
                   <HiEye
                     onClick={() => setItemsPublic(item.id)}
                     color="6A738B"
