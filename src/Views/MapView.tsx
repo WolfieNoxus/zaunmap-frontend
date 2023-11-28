@@ -21,7 +21,7 @@ const MapView: React.FC<TMapViewProps> = ({ fileData }) => {
     user_id: 1,
     user_name: "John Doe",
     email: "123456@sample.com",
-    permission: "admin",
+    role: "admin",
     project_list: [
       {
         id: 1,
