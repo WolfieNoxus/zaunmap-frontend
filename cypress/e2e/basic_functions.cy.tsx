@@ -6,21 +6,82 @@ describe('Home Page Accessibility', () => {
   })
 })
 
-describe('File Decode Test', () => {
+describe('Community Pop-Up Test', () => {
 
-  it('should upload a file to the input element', () => {
+  it('Should open Community Pop-Up and ', () => {
     // Visit the test page
     cy.visit('/');
 
-    cy.get('input[type="file"]').as('fileInput');
-    cy.fixture('AFG_adm0.kml').then(fileContent => {
-      cy.get('@fileInput').attachFile({
-        fileContent: fileContent,
-        fileName: 'AFG_adm0.kml'
-      });
-    });
+    cy.get('.component-top-left').click();
 
     cy.wait(5000);
+
+  });
+});
+
+describe('Login Test', () => {
+
+  it('Should login the test account and open user profile.', () => {
+    // Visit the test page
+    cy.visit('/');
+
+    cy.get('.component-top-right').click();
+
+    cy.wait(2000);
+
+    cy.origin('https://zaunmap.us.auth0.com', () => {
+      cy.get('#username').type('example@example.com');
+      cy.get('#password').type('QraHcL^3NG8AETW%');
+      cy.get('button[type="submit"][name="action"][data-action-button-primary="true"]').click();
+    })
+
+    cy.wait(5000);
+
+    cy.get('.component-top-right').click();
+
+    cy.wait(1000);
+
+    cy.get('.admin-page').should('not.exist');
+
+  });
+});
+
+describe('Unauthorized Access to Admin Portal without login', () => {
+
+  it('Attempt to access Admin Portal while not logged in.', () => {
+    // Visit the test page
+
+    cy.visit('/');
+    cy.visit('/admin');
+    cy.wait(1000);
+
+    cy.get('.admin-page').should('not.exist');
+
+  });
+});
+
+
+describe('Unauthorized Access to Admin Portal with normal user', () => {
+
+  it('Attempt to access Admin Portal while not logged in.', () => {
+    // Visit the test page
+    cy.visit('/');
+
+    cy.get('.component-top-right').click();
+
+    cy.wait(2000);
+
+    cy.origin('https://zaunmap.us.auth0.com', () => {
+      cy.get('#username').type('example@example.com');
+      cy.get('#password').type('QraHcL^3NG8AETW%');
+      cy.get('button[type="submit"][name="action"][data-action-button-primary="true"]').click();
+    })
+
+    cy.wait(5000);
+
+    cy.visit('/admin');
+
+    cy.get('.admin-page').should('not.exist');
 
   });
 });
