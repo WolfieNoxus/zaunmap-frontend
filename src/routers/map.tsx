@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useLoaderData } from 'react-router-dom';
 import GeomanWrapper from '../Views/MapEditor';
-import { MapContainer, ZoomControl } from 'react-leaflet';
+import { MapContainer, TileLayer, ZoomControl } from 'react-leaflet';
 import IMap from '../Interfaces/IMap';
 import apiClient from '../services/apiClient';
 import fileClient from '../services/fileClient';
@@ -93,6 +93,26 @@ function Map() {
         }
     }, [map]);
 
+    useEffect(() => {
+        const putMapData = async (sub: IMap, geojson: GeoJSON.FeatureCollection<GeoJSON.GeometryObject>) => {
+            try {
+                const response = await fileClient.put(`?user_id=${sub.author}&object_id=${sub.object_id}`, geojson);
+                if (response.status === 200) {
+                    console.log("Successfully updated map data");
+                } else {
+                    console.error("Failed to update map data");
+                }
+            } catch (err) {
+                console.error("Error while updating map data", err);
+            }
+        };
+
+        if (map.author && map.object_id) {
+            putMapData(map, geojson);
+        };
+        // eslint-disable-next-line
+    }, [geojson]);
+
     if (loading) {
         return (
             <div>
@@ -114,6 +134,10 @@ function Map() {
                 maxBoundsViscosity={1}
                 zoomControl={false}
             >
+                <TileLayer
+                    attribution="Map data <a href='https://www.openstreetmap.org'>OpenStreetMap</a> contributors"
+                    url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}{r}.png"
+                />
                 <GeomanWrapper geojson={geojson} setGeojson={setGeojson} />
                 <ZoomControl position="bottomleft" />
             </MapContainer>
