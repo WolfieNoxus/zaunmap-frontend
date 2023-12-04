@@ -16,7 +16,7 @@ export const onRequest: PagesFunction<Env> = async (context) => {
             var object_id = url.searchParams.get('object_id')
             var key = `${user_id}/${object_id}`;
             await context.env.ZAUNMAP_BUCKET.put(key, context.request.body);
-            return new Response(`Put ${key} successfully!`);
+            return new Response(`Put ${key} successfully!`, {status: 200, headers: {'Content-Type': 'text/plain', 'Access-Control-Allow-Origin': '*'}});
         case 'GET':
             var object_id = url.searchParams.get('object_id')
             var key = `${user_id}/${object_id}`;
@@ -39,12 +39,20 @@ export const onRequest: PagesFunction<Env> = async (context) => {
             var key = `${user_id}/${object_id}`;
             await context.env.ZAUNMAP_BUCKET.delete(key);
             return new Response('Deleted!');
+        case 'OPTIONS':
+            return new Response(null, {
+                headers: {
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Methods': 'PUT, GET, DELETE, POST, OPTIONS',
+                'Access-Control-Allow-Headers': 'Content-Type',
+                },
+            });
     
         default:
             return new Response('Method Not Allowed', {
                 status: 405,
                 headers: {
-                Allow: 'PUT, GET, DELETE, POST',
+                Allow: 'PUT, GET, DELETE, POST, OPTIONS',
                 },
             });
     }
