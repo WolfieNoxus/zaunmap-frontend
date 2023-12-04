@@ -161,21 +161,24 @@ const CommunityList = ({ role }: CommunityListProps) => {
           </tbody>
         </table>
       )}
-
-      <button
-        className="btn"
-        onClick={goToPreviousPage}
-        disabled={currentPage === 1}
-      >
-        <MdChevronLeft />
-      </button>
-      <button
-        className="btn"
-        onClick={goToNextPage}
-        disabled={currentPage === maxPage}
-      >
-        <MdChevronRight />
-      </button>
+      {items.length > itemsPerPage ? (
+        <div>
+          <button
+            className="btn"
+            onClick={goToPreviousPage}
+            disabled={currentPage === 1}
+          >
+            <MdChevronLeft />
+          </button>
+          <button
+            className="btn"
+            onClick={goToNextPage}
+            disabled={currentPage === maxPage}
+          >
+            <MdChevronRight />
+          </button>
+        </div>
+      ) : null}
     </div>
   );
 };
