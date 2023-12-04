@@ -26,7 +26,7 @@ const GeoJSONMapView: React.FC<TGeoJSONMapViewProps> = ({ geoJSONData }) => {
   const [loading, setLoading] = useState(true);
 
   const [loggedinUser, setLoggedinUser] = useState<IUser>({
-    user_id: "",
+    userId: "",
     user_name: "",
     role: "user",
     maps: [],
@@ -35,7 +35,7 @@ const GeoJSONMapView: React.FC<TGeoJSONMapViewProps> = ({ geoJSONData }) => {
   useEffect(() => {
     const fetchUserData = async (sub: string) => {
       try {
-        const response = await apiClient.get(`/user?user_id=${sub}`);
+        const response = await apiClient.get(`/user?userId=${sub}`);
         if (response.status === 200) {
           const userData: IUser = response.data;
           // console.log("User data retrieved successfully:", userData);
