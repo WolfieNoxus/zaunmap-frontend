@@ -41,7 +41,7 @@ const UserProfile = (userProfile: IUser) => {
 
     const fetchUserData = async (sub: string) => {
       try {
-        const response = await apiClient.get(`/user?user_id=${sub}`);
+        const response = await apiClient.get(`/user?userId=${sub}`);
         if (response.status === 200) {
           const userData: IUserResponse = response.data;
           // console.log("User data retrieved successfully:", userData);

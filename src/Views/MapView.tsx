@@ -22,7 +22,7 @@ const MapView: React.FC<TMapViewProps> = ({ fileData }) => {
   const [loading, setLoading] = useState(true);
   const [showPopup, setShowPopup] = useState<boolean>(false);
   const [loggedinUser, setLoggedinUser] = useState<IUser>({
-    user_id: "",
+    userId: "",
     user_name: "",
     role: "user",
     maps: [],
@@ -33,7 +33,7 @@ const MapView: React.FC<TMapViewProps> = ({ fileData }) => {
   useEffect(() => {
     const fetchUserData = async (sub: string) => {
       try {
-        const response = await apiClient.get(`/user?user_id=${sub}`);
+        const response = await apiClient.get(`/user?useId=${sub}`);
         if (response.status === 200) {
           const userData: IUser = response.data;
           // console.log("User data retrieved successfully:", userData);
@@ -53,7 +53,7 @@ const MapView: React.FC<TMapViewProps> = ({ fileData }) => {
       fetchUserData(user.sub);
     } else {
       setLoading(false);
-    };
+    }
   }, [isAuthenticated, user]);
 
   const [popupPage, setPopupPage] = useState<IPopupProps>({
@@ -175,7 +175,7 @@ const MapView: React.FC<TMapViewProps> = ({ fileData }) => {
 
         {/* <BottomRight /> */}
         <div className="component-bottom-right">
-          <MdChatBubbleOutline
+          {/* <MdChatBubbleOutline
             className="component-bottom-right-comment"
             size={40}
             color={showPopup ? "grey" : "F35D74"}
@@ -188,7 +188,7 @@ const MapView: React.FC<TMapViewProps> = ({ fileData }) => {
               setShowPopup(true);
               setDisableOtherComponents(true);
             }}
-          />
+          /> */}
           <MdAddCircle
             className="component-bottom-right-add"
             size={50}
