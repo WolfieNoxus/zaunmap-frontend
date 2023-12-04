@@ -29,6 +29,7 @@ export const onRequest: PagesFunction<Env> = async (context) => {
             const headers = new Headers();
             object.writeHttpMetadata(headers);
             headers.set('etag', object.httpEtag);
+            headers.set('Access-Control-Allow-Origin', '*');
         
             return new Response(object.body, {
                 headers,
