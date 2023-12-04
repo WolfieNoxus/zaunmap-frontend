@@ -6,6 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import apiClient from "../../../services/apiClient";
 import "./css/userProfile.css";
+import { MdChevronLeft, MdChevronRight } from "react-icons/md";
 
 interface IUserResponse {
   user_id: string;
@@ -60,7 +61,6 @@ const UserProfile = (userProfile: IUser) => {
       fetchUserData(user.sub);
     }
   }, [user]);
-
 
   const setItemsPublic = (id: string) => {
     setItems(
@@ -118,6 +118,20 @@ const UserProfile = (userProfile: IUser) => {
     }
   };
 
+  const itemsPerPage = 6;
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const maxPage = Math.ceil(items.length / itemsPerPage);
+
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentItems = items.slice(startIndex, endIndex);
+
+  const goToNextPage = () =>
+    setCurrentPage((page) => Math.min(page + 1, maxPage));
+  const goToPreviousPage = () =>
+    setCurrentPage((page) => Math.max(page - 1, 1));
+
   return (
     <div>
       <div className="profile-center">
@@ -173,7 +187,7 @@ const UserProfile = (userProfile: IUser) => {
           </tr>
         </thead>
         <tbody className="table-group-divider">
-          {items.map((item) => (
+          {currentItems.map((item) => (
             <tr key={item._id}>
               <td>
                 <Link reloadDocument to={"/map/" + item._id}>
@@ -201,6 +215,24 @@ const UserProfile = (userProfile: IUser) => {
           ))}
         </tbody>
       </table>
+      {items.length > itemsPerPage ? (
+        <div>
+          <button
+            className="btn"
+            onClick={goToPreviousPage}
+            disabled={currentPage === 1}
+          >
+            <MdChevronLeft />
+          </button>
+          <button
+            className="btn"
+            onClick={goToNextPage}
+            disabled={currentPage === maxPage}
+          >
+            <MdChevronRight />
+          </button>
+        </div>
+      ) : null}
       <div style={{ textAlign: "center" }}>
         <button
           className="btn btn-primary"
