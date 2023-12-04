@@ -6,6 +6,8 @@ import IUser from "../../../Interfaces/IUser";
 import IMap from "../../../Interfaces/IMap";
 import apiClient from "../../../services/apiClient";
 import { useEffect, useState } from "react";
+// import FlipPage from "react-flip-page";
+import { MdChevronLeft, MdChevronRight } from "react-icons/md";
 
 type CommunityListProps = Pick<IUser, "role">;
 
@@ -59,7 +61,7 @@ const CommunityList = ({ role }: CommunityListProps) => {
       return null;
     });
     return items;
-  };
+  }
 
   async function getUsername(user_id: string): Promise<string> {
     const response = await apiClient.get(`/user?user_id=${user_id}`);
@@ -76,7 +78,7 @@ const CommunityList = ({ role }: CommunityListProps) => {
         }
         setItems(fetchedItems);
       } catch (err) {
-        setError('Failed to fetch maps');
+        setError("Failed to fetch maps");
         // If the error is an instance of an Error, you could set it as setError(err.message)
       } finally {
         setLoading(false);
@@ -85,6 +87,20 @@ const CommunityList = ({ role }: CommunityListProps) => {
 
     fetchMaps();
   }, []);
+
+  const itemsPerPage = 6;
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const maxPage = Math.ceil(items.length / itemsPerPage);
+
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentItems = items.slice(startIndex, endIndex);
+
+  const goToNextPage = () =>
+    setCurrentPage((page) => Math.min(page + 1, maxPage));
+  const goToPreviousPage = () =>
+    setCurrentPage((page) => Math.max(page - 1, 1));
 
   return (
     <div>
@@ -111,7 +127,7 @@ const CommunityList = ({ role }: CommunityListProps) => {
             </tr>
           </thead>
           <tbody className="table-group-divider">
-            {items.map((item) => (
+            {currentItems.map((item) => (
               <tr key={item._id}>
                 <td>
                   <Link reloadDocument to={"/map/" + item._id}>
@@ -145,6 +161,21 @@ const CommunityList = ({ role }: CommunityListProps) => {
           </tbody>
         </table>
       )}
+
+      <button
+        className="btn"
+        onClick={goToPreviousPage}
+        disabled={currentPage === 1}
+      >
+        <MdChevronLeft />
+      </button>
+      <button
+        className="btn"
+        onClick={goToNextPage}
+        disabled={currentPage === maxPage}
+      >
+        <MdChevronRight />
+      </button>
     </div>
   );
 };
