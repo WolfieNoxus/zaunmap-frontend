@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { AiFillLike, AiOutlineLike } from "react-icons/ai";
 import IComment from "../../../Interfaces/IComment";
 
@@ -7,7 +7,6 @@ interface ICommentsProps {
   mapId: string;
   comments: IComment[];
 }
-
 
 const commentsSample: ICommentsProps["comments"] = [
   {
@@ -38,9 +37,9 @@ const Comments = () => {
     );
   };
 
-  useEffect(() => {
-    const fetchCommentsData = async () => {}
-  })
+  // useEffect(() => {
+  //   const fetchCommentsData = async () => {}
+  // })
 
   return (
     <div>

@@ -7,7 +7,8 @@ import { useEffect, useState } from "react";
 import { RiCommunityLine } from "react-icons/ri"; // TopLeft
 import { BiSolidUserCircle } from "react-icons/bi"; // TopRight
 import { BiInfoCircle } from "react-icons/bi"; // BottomLeft
-import { MdAddCircle, MdChatBubbleOutline } from "react-icons/md"; // BottomRight
+import { MdAddCircle } from "react-icons/md"; // BottomRight
+// import { MdChatBubbleOutline } from "react-icons/md"; // BottomRight
 import IPopupProps from "../Interfaces/IPopupProps";
 import IUser from "../Interfaces/IUser";
 import { useAuth0 } from "@auth0/auth0-react";
@@ -33,7 +34,7 @@ const MapView: React.FC<TMapViewProps> = ({ fileData }) => {
   useEffect(() => {
     const fetchUserData = async (sub: string) => {
       try {
-        const response = await apiClient.get(`/user?useId=${sub}`);
+        const response = await apiClient.get(`/user?userId=${sub}`);
         if (response.status === 200) {
           const userData: IUser = response.data;
           // console.log("User data retrieved successfully:", userData);
