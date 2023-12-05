@@ -51,7 +51,7 @@ function Map() {
     useEffect(() => {
         const fetchMapMeta = async (sub: string) => {
             try {
-                const response = await apiClient.get(`/map?_id=${mapId}`);
+                const response = await apiClient.get(`/map?mapId=${mapId}`);
                 if (response.status === 200) {
                     const userData: IMap = response.data;
                     // console.log("User data retrieved successfully:", userData);

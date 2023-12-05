@@ -63,8 +63,8 @@ const CommunityList = ({ role }: CommunityListProps) => {
     return items;
   }
 
-  async function getUsername(user_id: string): Promise<string> {
-    const response = await apiClient.get(`/user?user_id=${user_id}`);
+  async function getUsername(userId: string): Promise<string> {
+    const response = await apiClient.get(`/user?userId=${userId}`);
     return response.data.user_name;
   }
 

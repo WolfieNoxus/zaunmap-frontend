@@ -41,7 +41,7 @@ const UserProfile = (userProfile: IUser) => {
 
     const fetchUserData = async (sub: string) => {
       try {
-        const response = await apiClient.get(`/user?user_id=${sub}`);
+        const response = await apiClient.get(`/user?userId=${sub}`);
         if (response.status === 200) {
           const userData: IUserResponse = response.data;
           // console.log("User data retrieved successfully:", userData);
@@ -86,7 +86,7 @@ const UserProfile = (userProfile: IUser) => {
 
     try {
       const response = await fetch(
-        `https://zaunmap-6b1455b08c9b.herokuapp.com/api/user/rename?user_id=${sub}&new_name=${encodeURIComponent(
+        `https://zaunmap-6b1455b08c9b.herokuapp.com/api/user/rename?userId=${sub}&new_name=${encodeURIComponent(
           new_name
         )}`,
         {

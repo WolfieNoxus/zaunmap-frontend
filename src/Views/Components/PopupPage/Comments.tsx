@@ -3,6 +3,8 @@ import { AiFillLike, AiOutlineLike } from "react-icons/ai";
 import IComment from "../../../Interfaces/IComment";
 
 interface ICommentsProps {
+  userId: string;
+  mapId: string;
   comments: IComment[];
 }
 
@@ -34,6 +36,10 @@ const Comments = () => {
       )
     );
   };
+
+  // useEffect(() => {
+  //   const fetchCommentsData = async () => {}
+  // })
 
   return (
     <div>
