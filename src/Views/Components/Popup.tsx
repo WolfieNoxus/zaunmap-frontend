@@ -10,7 +10,7 @@ const Popup: React.FC<IPopupProps> = ({ page, user, onClose }) => {
     } else if (type === "userProfile") {
       return (
         <UserProfile
-          user_id={user.user_id}
+          userId={user.userId}
           user_name={user.user_name}
           role={user.role}
           maps={user.maps}

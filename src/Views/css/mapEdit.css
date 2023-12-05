@@ -1,0 +1,9 @@
+.edit-map-view {
+    position: relative;
+    background-color: gray;
+    height: 100%;
+    width: 71%;
+    /* margin-left: 20%; */
+    left: 19.75%;
+    z-index: 1000;
+}
