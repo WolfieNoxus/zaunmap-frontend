@@ -96,7 +96,11 @@ function Map() {
     useEffect(() => {
         const putMapData = async (sub: IMap, geojson: GeoJSON.FeatureCollection<GeoJSON.GeometryObject>) => {
             try {
-                const response = await fileClient.put(`?user_id=${sub.owner}&object_id=${sub.objectId}`, geojson);
+                const response = await fileClient.put(`?user_id=${sub.owner}&object_id=${sub.objectId}`, geojson, {
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                });
                 if (response.status === 200) {
                     console.log("Successfully updated map data");
                 } else {
