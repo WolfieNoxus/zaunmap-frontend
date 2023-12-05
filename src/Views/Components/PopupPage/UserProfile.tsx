@@ -86,7 +86,7 @@ const UserProfile = (userProfile: IUser) => {
 
     try {
       const response = await fetch(
-        `https://zaunmap-6b1455b08c9b.herokuapp.com/api/user/rename?user_id=${sub}&new_name=${encodeURIComponent(
+        `https://zaunmap-6b1455b08c9b.herokuapp.com/api/user/rename?userId=${sub}&new_name=${encodeURIComponent(
           new_name
         )}`,
         {
