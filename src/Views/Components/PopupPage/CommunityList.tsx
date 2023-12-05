@@ -74,7 +74,7 @@ const CommunityList = ({ role }: CommunityListProps) => {
       try {
         const fetchedItems = await getPublic();
         for (let i = 0; i < fetchedItems.length; i++) {
-          fetchedItems[i].author = await getUsername(fetchedItems[i].author);
+          fetchedItems[i].owner = await getUsername(fetchedItems[i].owner);
         }
         setItems(fetchedItems);
       } catch (err) {
@@ -134,9 +134,9 @@ const CommunityList = ({ role }: CommunityListProps) => {
                     {item.name}
                   </Link>
                 </td>
-                <td>{item.author}</td>
+                <td>{item.owner}</td>
                 <td>{item.tags.toString()}</td>
-                <td>{item.likes}</td>
+                <td>{item.averageRating}</td>
                 {role === "admin" ? (
                   <th>
                     <button
