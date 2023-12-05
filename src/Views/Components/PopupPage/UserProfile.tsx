@@ -9,8 +9,8 @@ import "./css/userProfile.css";
 import { MdChevronLeft, MdChevronRight } from "react-icons/md";
 
 interface IUserResponse {
-  user_id: string;
-  user_name: string;
+  userId: string;
+  name: string;
   role: string;
 }
 
@@ -44,9 +44,9 @@ const UserProfile = (userProfile: IUser) => {
         const response = await apiClient.get(`/user?userId=${sub}`);
         if (response.status === 200) {
           const userData: IUserResponse = response.data;
-          // console.log("User data retrieved successfully:", userData);
+          console.log("User data retrieved successfully:", userData);
           setUserData(userData);
-          setNewUsername(userData.user_name);
+          setNewUsername(userData.name);
         } else {
           console.error("Failed to retrieve user data");
           // Handle errors
@@ -86,7 +86,7 @@ const UserProfile = (userProfile: IUser) => {
 
     try {
       const response = await fetch(
-        `https://zaunmap-6b1455b08c9b.herokuapp.com/api/user/rename?userId=${sub}&new_name=${encodeURIComponent(
+        `https://zaunmap-6b1455b08c9b.herokuapp.com/api/user/rename?userId=${sub}&newName=${encodeURIComponent(
           new_name
         )}`,
         {
@@ -96,15 +96,15 @@ const UserProfile = (userProfile: IUser) => {
             Authorization: `Bearer ${user?.token}`, // Make sure you use the correct token
           },
           body: JSON.stringify({
-            user_id: sub,
-            new_name: new_name,
+            userId: sub,
+            name: new_name,
           }),
         }
       );
 
       if (response.ok) {
         console.log("Username updated successfully");
-        setUserData({ ...userData, user_name: new_name });
+        setUserData({ ...userData, name: new_name });
         setNewUsername(new_name);
       } else {
         console.error("Failed to update username");
