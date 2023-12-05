@@ -65,7 +65,7 @@ const UserProfile = (userProfile: IUser) => {
   const setItemsPublic = (id: string) => {
     setItems(
       items.map((item) =>
-        item._id === id ? { ...item, public: !item.public } : item
+        item._id === id ? { ...item, public: !item.isPublic } : item
       )
     );
   };
@@ -196,9 +196,9 @@ const UserProfile = (userProfile: IUser) => {
               </td>
               {/* <td>{item.userName}</td> */}
               <td>{item.tags}</td>
-              <td>{item.views}</td>
+              {/* <td>{item.views}</td> */}
               <td style={{ textAlign: "center" }}>
-                {item.public ? (
+                {item.isPublic ? (
                   <HiEye
                     onClick={() => setItemsPublic(item._id)}
                     color="6A738B"
