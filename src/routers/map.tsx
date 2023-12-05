@@ -33,13 +33,13 @@ function Map() {
         _id: "",
         name: "",
         tags: [],
-        author: "",
-        public: false,
-        object_id: "",
+        owner: "",
+        isPublic: false,
+        objectId: "",
         createdAt: "",
         updatedAt: "",
-        likes: 0,
-        dislikes: 0,
+        averageRating: 0,
+        ratingsCount: 0,
         description: "",
     });
 
@@ -73,7 +73,7 @@ function Map() {
     useEffect(() => {
         const fetchMapData = async (sub: IMap) => {
             try {
-                const response = await fileClient.get(`?user_id=${sub.author}&object_id=${sub.object_id}`);
+                const response = await fileClient.get(`?user_id=${sub.owner}&object_id=${sub.objectId}`);
                 if (response.status === 200) {
                     const geoJson: GeoJSON.FeatureCollection<GeoJSON.GeometryObject> = response.data;
                     setGeojson(geoJson);
@@ -88,7 +88,7 @@ function Map() {
             }
         };
 
-        if (map.author && map.object_id) {
+        if (map.owner && map.objectId) {
             fetchMapData(map);
         }
     }, [map]);
@@ -96,7 +96,7 @@ function Map() {
     useEffect(() => {
         const putMapData = async (sub: IMap, geojson: GeoJSON.FeatureCollection<GeoJSON.GeometryObject>) => {
             try {
-                const response = await fileClient.put(`?user_id=${sub.author}&object_id=${sub.object_id}`, geojson);
+                const response = await fileClient.put(`?user_id=${sub.owner}&object_id=${sub.objectId}`, geojson);
                 if (response.status === 200) {
                     console.log("Successfully updated map data");
                 } else {
@@ -107,7 +107,7 @@ function Map() {
             }
         };
 
-        if (map.author && map.object_id) {
+        if (map.owner && map.objectId) {
             putMapData(map, geojson);
         };
         // eslint-disable-next-line
