@@ -1,5 +1,5 @@
 import axios from "axios";
 
 export default axios.create({
-  baseURL: "https://mingka-dev.zaunmap.pages.dev/file",
+  baseURL: "https://zaunmap.pages.dev/file",
 });
