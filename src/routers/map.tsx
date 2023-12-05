@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useLoaderData } from "react-router-dom";
 import GeomanWrapper from "../Views/MapEditor";
 import { MapContainer, TileLayer, ZoomControl } from "react-leaflet";
@@ -43,7 +43,7 @@ function Map() {
     createdAt: "",
     updatedAt: "",
     averageRating: 0,
-    ratingsCount: 0,
+    ratingCount: 0,
     description: "",
   });
 
