@@ -6,6 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import apiClient from "../../../services/apiClient";
 import "./css/userProfile.css";
+import { MdChevronLeft, MdChevronRight } from "react-icons/md";
 
 interface IUserResponse {
   user_id: string;
@@ -40,7 +41,7 @@ const UserProfile = (userProfile: IUser) => {
 
     const fetchUserData = async (sub: string) => {
       try {
-        const response = await apiClient.get(`/user?user_id=${sub}`);
+        const response = await apiClient.get(`/user?userId=${sub}`);
         if (response.status === 200) {
           const userData: IUserResponse = response.data;
           // console.log("User data retrieved successfully:", userData);
@@ -60,7 +61,6 @@ const UserProfile = (userProfile: IUser) => {
       fetchUserData(user.sub);
     }
   }, [user]);
-
 
   const setItemsPublic = (id: string) => {
     setItems(
@@ -86,7 +86,7 @@ const UserProfile = (userProfile: IUser) => {
 
     try {
       const response = await fetch(
-        `https://zaunmap-6b1455b08c9b.herokuapp.com/api/user/rename?user_id=${sub}&new_name=${encodeURIComponent(
+        `https://zaunmap-6b1455b08c9b.herokuapp.com/api/user/rename?userId=${sub}&new_name=${encodeURIComponent(
           new_name
         )}`,
         {
@@ -118,34 +118,50 @@ const UserProfile = (userProfile: IUser) => {
     }
   };
 
+  const itemsPerPage = 6;
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const maxPage = Math.ceil(items.length / itemsPerPage);
+
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentItems = items.slice(startIndex, endIndex);
+
+  const goToNextPage = () =>
+    setCurrentPage((page) => Math.min(page + 1, maxPage));
+  const goToPreviousPage = () =>
+    setCurrentPage((page) => Math.max(page - 1, 1));
+
   return (
     <div>
-      <div className="username-section mb-3">
-        {isEditing ? (
-          <div className="edit-username">
-            <input
-              type="text"
-              value={newUsername}
-              onChange={(e) => setNewUsername(e.target.value)}
-              className="edit-username-input"
-            />
-            <HiCheck
-              onClick={() => updateUsername(user?.sub, newUsername)}
-              className="icon-check"
-            />
-            <HiX onClick={() => setIsEditing(false)} className="icon-close" />
-          </div>
-        ) : (
-          <div className="display-username">
-            <p className="username-text">{newUsername}</p>
-            <HiPencil
-              onClick={() => setIsEditing(true)}
-              className="icon-edit"
-            />
-          </div>
-        )}
+      <div className="profile-center">
+        <div className="username-section mb-3">
+          {isEditing ? (
+            <div className="display-username">
+              <input
+                type="text"
+                value={newUsername}
+                onChange={(e) => setNewUsername(e.target.value)}
+                className="edit-username-input"
+              />
+              <HiCheck
+                onClick={() => updateUsername(user?.sub, newUsername)}
+                className="icon-check"
+              />
+              <HiX onClick={() => setIsEditing(false)} className="icon-close" />
+            </div>
+          ) : (
+            <div className="display-username">
+              <span className="text username-text">{newUsername}</span>
+              <HiPencil
+                onClick={() => setIsEditing(true)}
+                className="icon-edit"
+              />
+            </div>
+          )}
+        </div>
       </div>
-      <div className="mb-3 d-flex justify-content-center">
+      <div className="mb-3 profile-center">
         {userData?.role === "admin" ? (
           <button
             className="btn btn-info"
@@ -171,7 +187,7 @@ const UserProfile = (userProfile: IUser) => {
           </tr>
         </thead>
         <tbody className="table-group-divider">
-          {items.map((item) => (
+          {currentItems.map((item) => (
             <tr key={item._id}>
               <td>
                 <Link reloadDocument to={"/map/" + item._id}>
@@ -199,6 +215,24 @@ const UserProfile = (userProfile: IUser) => {
           ))}
         </tbody>
       </table>
+      {items.length > itemsPerPage ? (
+        <div>
+          <button
+            className="btn"
+            onClick={goToPreviousPage}
+            disabled={currentPage === 1}
+          >
+            <MdChevronLeft />
+          </button>
+          <button
+            className="btn"
+            onClick={goToNextPage}
+            disabled={currentPage === maxPage}
+          >
+            <MdChevronRight />
+          </button>
+        </div>
+      ) : null}
       <div style={{ textAlign: "center" }}>
         <button
           className="btn btn-primary"
