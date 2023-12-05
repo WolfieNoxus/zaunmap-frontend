@@ -39,7 +39,7 @@ function Map() {
         createdAt: "",
         updatedAt: "",
         averageRating: 0,
-        ratingsCount: 0,
+        ratingCount: 0,
         description: "",
     });
 
