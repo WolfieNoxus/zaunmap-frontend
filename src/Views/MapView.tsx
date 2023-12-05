@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 // Icons Button
 import { RiCommunityLine } from "react-icons/ri"; // TopLeft
 import { BiSolidUserCircle } from "react-icons/bi"; // TopRight
-import { BiInfoCircle } from "react-icons/bi"; // BottomLeft
+// import { BiInfoCircle } from "react-icons/bi"; // BottomLeft
 import { MdAddCircle } from "react-icons/md"; // BottomRight
 // import { MdChatBubbleOutline } from "react-icons/md"; // BottomRight
 import IPopupProps from "../Interfaces/IPopupProps";
@@ -207,7 +207,7 @@ const MapView: React.FC<TMapViewProps> = ({ fileData }) => {
         </div>
 
         {/* <BottomLeft /> */}
-        <div>
+        {/* <div>
           <BiInfoCircle
             className="component-bottom-left"
             size={40}
@@ -222,7 +222,7 @@ const MapView: React.FC<TMapViewProps> = ({ fileData }) => {
               setDisableOtherComponents(true);
             }}
           />
-        </div>
+        </div> */}
       </div>
     </div>
   );
