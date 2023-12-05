@@ -17,6 +17,7 @@ const CommunityList = ({ role }: CommunityListProps) => {
   const [items, setItems] = useState<IMap[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [userRating, setUserRating] = useState<number>(0);
 
   const removePublic = (map: IMap) => {
     // const originalMaps: IMap[] = [...maps];
@@ -38,34 +39,39 @@ const CommunityList = ({ role }: CommunityListProps) => {
     return null;
   };
 
-  const report = (map: IMap) => {
-    // const originalMaps: IMap[] = [...maps];
-    // const updatedMap: IMap = { ...map, reports: map.reports + 1 };
-    // setMaps(maps.map((m) => (m._id === map._id ? updatedMap : m)));
-
-    // mapService.update(updatedMap).catch((err) => {
-    //   setError(err.message);
-    //   setMaps(originalMaps);
-    // });
-
-    // NOT IMPLEMENTED YET!
-
-    return null;
+  const rate = async (map: IMap, userRating: number, userId: string) => {
+    try {
+      console.log("print map object in const rate: " + map.name);
+      const response = await apiClient.put(`/map/rate?userId=${userId}&mapId=${map._id}$rating=${userRating}`);
+      const updatedMap = response.data;
+      
+      // Update local state with the updated map data
+      setItems(items.map(item => item._id === updatedMap._id ? updatedMap : item));
+  
+    } catch (error) {
+      // Handle any errors
+      console.error("Error updating rating:", error);
+    }
   };
+  
 
   async function getPublic(): Promise<IMap[]> {
-    const response = await apiClient.get("/map/public");
+    const response = await apiClient.get(`/map/search`);
+    // console.log("response from getPublic(): " + response.data);
     const items: IMap[] = [];
     response.data.map((map: IMap) => {
       items.push(map);
       return null;
     });
+    // console.log("items list: " + items);
     return items;
   }
 
   async function getUsername(userId: string): Promise<string> {
     const response = await apiClient.get(`/user?userId=${userId}`);
-    return response.data.user_name;
+    // console.log(userId);
+    // console.log(response);
+    return response.data.name;
   }
 
   useEffect(() => {
@@ -73,7 +79,9 @@ const CommunityList = ({ role }: CommunityListProps) => {
       setLoading(true);
       try {
         const fetchedItems = await getPublic();
+        console.log(fetchedItems);
         for (let i = 0; i < fetchedItems.length; i++) {
+          console.log("item owner: " + fetchedItems[i].owner);
           fetchedItems[i].owner = await getUsername(fetchedItems[i].owner);
         }
         setItems(fetchedItems);
@@ -122,7 +130,7 @@ const CommunityList = ({ role }: CommunityListProps) => {
               {role === "admin" ? (
                 <th className="text-danger">Ban</th>
               ) : (
-                <th className="text-warning">Report</th>
+                <th className="text-warning">Rate</th>
               )}
             </tr>
           </thead>
@@ -148,11 +156,17 @@ const CommunityList = ({ role }: CommunityListProps) => {
                   </th>
                 ) : (
                   <th>
+                    {item.averageRating.toFixed(1)} ({item.ratingsCount})
+                    <input 
+                      type="number" 
+                      value={userRating} 
+                      onChange={(e) => setUserRating(Number(e.target.value))} 
+                    />
                     <button
-                      className="btn btn-outline-warning"
-                      onClick={() => report(item)}
+                      className="btn btn-outline-primary"
+                      onClick={() => rate(item, userRating, item.owner)}
                     >
-                      Report
+                      Rate
                     </button>
                   </th>
                 )}
