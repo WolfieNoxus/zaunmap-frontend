@@ -158,7 +158,7 @@ const UserProfile = (userProfile: IUser) => {
         // Handle errors
       }
     } catch (err) {
-      setError("Failed to delete map" + err);
+      setError("Failed to delete map: " + (err as AxiosError).message);
       console.error("Error while deleting map", err);
       // Handle errors
     }
