@@ -9,7 +9,11 @@ import EditBar from "../Views/Components/Elements/EditBar";
 import { useNavigate } from "react-router-dom";
 import "./../Views/css/mapEdit.css";
 import { useAuth0 } from "@auth0/auth0-react";
-import { BiInfoCircle } from "react-icons/bi";
+// Icons Button
+import { RiCommunityLine } from "react-icons/ri"; // TopLeft
+import { BiSolidUserCircle } from "react-icons/bi"; // TopRight
+import { BiInfoCircle } from "react-icons/bi"; // BottomLeft
+import { MdAddCircle, MdChatBubbleOutline } from "react-icons/md"; // BottomRight
 import IPopupProps from "../Interfaces/IPopupProps";
 import IUser from "../Interfaces/IUser";
 import Popup from "../Views/Components/Popup";
@@ -32,7 +36,7 @@ import Popup from "../Views/Components/Popup";
 function Map() {
   const navigate = useNavigate();
 
-  const { user, isAuthenticated } = useAuth0();
+  const { user, isAuthenticated, loginWithRedirect } = useAuth0();
 
   const mapId = useLoaderData();
   if (typeof mapId !== "string") {
@@ -258,15 +262,53 @@ function Map() {
           )
         )}
 
-        {/* <BottomLeft /> */}
-        <div>
-          <BiInfoCircle
-            className="component-bottom-left"
+        {/* <div className={"no-interaction greyed-out"}> */}
+          {/* <TopLeft /> */}
+          <div className="component-top-left">
+            <RiCommunityLine
+              size={30}
+              color={showPopup ? "grey" : "F35D74"}
+              onClick={() => {
+                setPopupPage({
+                  page: "community",
+                  user: loggedinUser,
+                  onClose: () => {},
+                });
+                setShowPopup(true);
+                // setDisableOtherComponents(true);
+              }}
+            />
+          </div>
+
+          {/* <TopRight /> */}
+          <BiSolidUserCircle
+            className="component-top-right"
+            color={showPopup ? "grey" : "BB2649"}
             size={40}
-            color={showPopup ? "grey" : "4B4F5D"}
+            onClick={() => {
+              if (!isAuthenticated) {
+                loginWithRedirect();
+              } else {
+                setPopupPage({
+                  page: "userProfile",
+                  user: loggedinUser,
+                  onClose: () => {},
+                });
+                setShowPopup(true);
+                // setDisableOtherComponents(true);
+              }
+            }}
+          />
+
+          {/* <BottomRight /> */}
+          <div className="component-bottom-right">
+            <MdChatBubbleOutline
+            className="component-bottom-right-comment"
+            size={40}
+            color={showPopup ? "grey" : "F35D74"}
             onClick={() => {
               setPopupPage({
-                page: "mapInfo",
+                page: "comments", 
                 user: loggedinUser,
                 onClose: () => {},
               });
@@ -274,7 +316,44 @@ function Map() {
               // setDisableOtherComponents(true);
             }}
           />
-        </div>
+            <MdAddCircle
+              className="component-bottom-right-add"
+              size={50}
+              color={showPopup ? "grey" : "BB2649"}
+              onClick={() => {
+                if (!isAuthenticated) {
+                  loginWithRedirect();
+                } else {
+                  setPopupPage({
+                    page: "addProject",
+                    user: loggedinUser,
+                    onClose: () => {},
+                  });
+                  setShowPopup(true);
+                  // setDisableOtherComponents(true);
+                }
+              }}
+            />
+          </div>
+
+          {/* <BottomLeft /> */}
+          <div>
+            <BiInfoCircle
+              className="component-bottom-left"
+              size={40}
+              color={showPopup ? "grey" : "4B4F5D"}
+              onClick={() => {
+                setPopupPage({
+                  page: "mapInfo",
+                  user: loggedinUser,
+                  onClose: () => {},
+                });
+                setShowPopup(true);
+                // setDisableOtherComponents(true);
+              }}
+            />
+          </div>
+        {/* </div> */}
       </div>
     );
   }
