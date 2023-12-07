@@ -9,6 +9,10 @@ import EditBar from "../Views/Components/Elements/EditBar";
 import { useNavigate } from "react-router-dom";
 import "./../Views/css/mapEdit.css";
 import { useAuth0 } from "@auth0/auth0-react";
+import { BiInfoCircle } from "react-icons/bi";
+import IPopupProps from "../Interfaces/IPopupProps";
+import IUser from "../Interfaces/IUser";
+import Popup from "../Views/Components/Popup";
 
 // async function getFileFromUrl(url: string, filename: string): Promise<File> {
 //     const response = await fetch(url);
@@ -28,13 +32,20 @@ import { useAuth0 } from "@auth0/auth0-react";
 function Map() {
   const navigate = useNavigate();
 
-  const { user } = useAuth0();
+  const { user, isAuthenticated } = useAuth0();
 
   const mapId = useLoaderData();
   if (typeof mapId !== "string") {
     throw new Error("Map ID is not a string");
   }
   const [loading, setLoading] = useState(true);
+  const [showPopup, setShowPopup] = useState<boolean>(false);
+  const [loggedinUser, setLoggedinUser] = useState<IUser>({
+    userId: "",
+    name: "",
+    role: "user",
+    maps: [],
+  });
 
   const [map, setMap] = useState<IMap>({
     _id: "",
@@ -49,6 +60,43 @@ function Map() {
     ratingCount: 0,
     description: "",
   });
+
+  const [popupPage, setPopupPage] = useState<IPopupProps>({
+    page: "community",
+    user: loggedinUser,
+    onClose: () => {},
+  });
+
+  const handleClosePopup = () => {
+    setShowPopup(false);
+    // setDisableOtherComponents(false);
+  };
+
+  useEffect(() => {
+    const fetchUserData = async (sub: string) => {
+      try {
+        const response = await apiClient.get(`/user?userId=${sub}`);
+        if (response.status === 200) {
+          const userData: IUser = response.data;
+          // console.log("User data retrieved successfully:", userData);
+          setLoggedinUser(userData);
+        } else {
+          console.error("Failed to retrieve user data");
+          // Handle errors
+        }
+      } catch (err) {
+        console.error("Error while fetching user data", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (isAuthenticated && user?.sub) {
+      fetchUserData(user.sub);
+    } else {
+      setLoading(false);
+    }
+  }, [isAuthenticated, user]);
 
   const [geojson, setGeojson] = useState<
     GeoJSON.FeatureCollection<GeoJSON.GeometryObject>
@@ -112,12 +160,13 @@ function Map() {
       try {
         const response = await fileClient.put(
           `?user_id=${sub.owner}&object_id=${sub.objectId}`,
-          geojson
-          , {
+          geojson,
+          {
             headers: {
-              "Content-Type": "application/json"
-            }
-          });
+              "Content-Type": "application/json",
+            },
+          }
+        );
         if (response.status === 200) {
           console.log("Successfully updated map data");
         } else {
@@ -128,7 +177,7 @@ function Map() {
       }
     };
 
-    if (map.owner && map.objectId && (map.owner === user?.sub)) {
+    if (map.owner && map.objectId && map.owner === user?.sub) {
       putMapData(map, geojson);
     }
     // eslint-disable-next-line
@@ -140,8 +189,7 @@ function Map() {
         <span className="visually-hidden">Loading...</span>
       </div>
     );
-  }
-  else if (user?.sub === map.owner) {
+  } else if (user?.sub === map.owner) {
     return (
       <div style={{ position: "relative" }}>
         <div className="edit-map-view">
@@ -169,8 +217,7 @@ function Map() {
         <EditBar mapProject={map} onClose={() => navigate("/")} />
       </div>
     );
-  }
-  else {
+  } else {
     return (
       <div style={{ position: "relative" }}>
         {/* <span>hhhhhh</span> */}
@@ -195,6 +242,39 @@ function Map() {
           ))}
           <ZoomControl position="bottomleft" />
         </MapContainer>
+
+        {/* popup page */}
+        {loading ? (
+          <div className="spinner-border" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+        ) : (
+          showPopup && (
+            <Popup
+              user={loggedinUser}
+              page={popupPage.page}
+              onClose={() => handleClosePopup()}
+            />
+          )
+        )}
+
+        {/* <BottomLeft /> */}
+        <div>
+          <BiInfoCircle
+            className="component-bottom-left"
+            size={40}
+            color={showPopup ? "grey" : "4B4F5D"}
+            onClick={() => {
+              setPopupPage({
+                page: "mapInfo",
+                user: loggedinUser,
+                onClose: () => {},
+              });
+              setShowPopup(true);
+              // setDisableOtherComponents(true);
+            }}
+          />
+        </div>
       </div>
     );
   }
