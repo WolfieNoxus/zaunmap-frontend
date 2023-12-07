@@ -10,19 +10,19 @@ import { MdChevronLeft, MdChevronRight } from "react-icons/md";
 import { AxiosError } from "axios";
 import IMap from "../../../Interfaces/IMap";
 
-interface IUserResponse {
-  userId: string;
-  name: string;
-  role: string;
-}
+// interface IUserResponse {
+//   userId: string;
+//   name: string;
+//   role: string;
+// }
 
 const UserProfile = (userProfile: IUser) => {
   const { user, logout } = useAuth0();
 
-  const [items, setItems] = useState(userProfile.maps);
+  const [items, setItems] = useState([] as IMap[]);
   const [isEditing, setIsEditing] = useState(false); // New state for editing mode
   const [newUsername, setNewUsername] = useState<string>("");
-  const [userData, setUserData] = useState<IUserResponse>();
+  const [userData, setUserData] = useState<IUser>();
   const [error, setError] = useState<string>("");
 
   let navigate = useNavigate();
@@ -35,7 +35,7 @@ const UserProfile = (userProfile: IUser) => {
       try {
         const response = await apiClient.get(`/user?userId=${sub}`);
         if (response.status === 200) {
-          const userData: IUserResponse = response.data;
+          const userData: IUser = response.data;
           console.log("User data retrieved successfully:", userData);
           setUserData(userData);
 
@@ -46,10 +46,25 @@ const UserProfile = (userProfile: IUser) => {
           } else {
             setNewUsername(userData.name);
           }
+          const mapList = [];
+          for (let i = 0; i < userData.maps.length; i++) {
+            const response = await apiClient.get(
+              `/map?mapId=${userData.maps[i]}`
+            );
+            if (response.status === 200) {
+              const mapData: IMap = response.data;
+              mapList.push(mapData);
+            } else {
+              console.error("Failed to retrieve map data");
+              // Handle errors
+            }
+          };
+          setItems(mapList);
         } else {
           console.error("Failed to retrieve user data");
           // Handle errors
         }
+
       } catch (err) {
         setError(
           "Failed to retrieve user data: " + (err as AxiosError).message
@@ -63,15 +78,16 @@ const UserProfile = (userProfile: IUser) => {
       fetchUserData(user.sub);
     }
 
-    // return setError("");
+    //eslint-disable-next-line
   }, [user]);
 
   const setItemsPublic = (id: string) => {
-    setItems(
-      items.map((item) =>
-        item._id === id ? { ...item, public: !item.isPublic } : item
-      )
-    );
+    setItems(items.map((i) => (i._id === id ? { ...i, isPublic: !i.isPublic } : i)));
+    apiClient
+      .put(`/map?mapId=${id}`, { isPublic: !items.find((i) => i._id === id)?.isPublic })
+      .catch((err) => {
+        setError(err.message);
+      });
   };
 
   // Function to handle username update
@@ -229,7 +245,6 @@ const UserProfile = (userProfile: IUser) => {
             <th>Project Name</th>
             {/* <th>User</th> */}
             <th>tags</th>
-            <th>view</th>
             <th>Public</th>
             <th>Delete</th>
           </tr>

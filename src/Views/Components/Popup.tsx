@@ -11,7 +11,7 @@ const Popup: React.FC<IPopupProps> = ({ page, user, onClose }) => {
       return (
         <UserProfile
           userId={user.userId}
-          user_name={user.user_name}
+          name={user.name}
           role={user.role}
           maps={user.maps}
         />

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useLoaderData } from "react-router-dom";
 import GeomanWrapper from "../Views/MapEditor";
-import { MapContainer, TileLayer, ZoomControl } from "react-leaflet";
+import { MapContainer, TileLayer, ZoomControl, GeoJSON } from "react-leaflet";
 import IMap from "../Interfaces/IMap";
 import apiClient from "../services/apiClient";
 import fileClient from "../services/fileClient";
@@ -28,7 +28,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 function Map() {
   const navigate = useNavigate();
 
-  const { isAuthenticated } = useAuth0();
+  const { user } = useAuth0();
 
   const mapId = useLoaderData();
   if (typeof mapId !== "string") {
@@ -128,27 +128,20 @@ function Map() {
       }
     };
 
-    if (map.owner && map.objectId) {
+    if (map.owner && map.objectId && (map.owner === user?.sub)) {
       putMapData(map, geojson);
     }
     // eslint-disable-next-line
   }, [geojson]);
 
-  if (!isAuthenticated) {
-    return (
-      <div>
-        <h1>Please log in first to create a map!</h1>
-      </div>
-    );
-  }
-  else if (loading) {
+  if (loading) {
     return (
       <div>
         <h1>Loading...</h1>
       </div>
     );
   }
-  else {
+  else if (user?.sub === map.owner) {
     return (
       <div style={{ position: "relative" }}>
         <div className="edit-map-view">
@@ -174,6 +167,34 @@ function Map() {
           </MapContainer>
         </div>
         <EditBar mapProject={map} onClose={() => navigate("/")} />
+      </div>
+    );
+  }
+  else {
+    return (
+      <div style={{ position: "relative" }}>
+        {/* <span>hhhhhh</span> */}
+        <MapContainer
+          className="structure-of-map"
+          center={[0, 0]}
+          zoom={4}
+          minZoom={1}
+          maxBounds={[
+            [-90, -180],
+            [90, 180],
+          ]}
+          maxBoundsViscosity={1}
+          zoomControl={false}
+        >
+          <TileLayer
+            attribution="Map data <a href='https://www.openstreetmap.org'>OpenStreetMap</a> contributors"
+            url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}{r}.png"
+          />
+          {geojson.features.map((geoJsonObject, index) => (
+            <GeoJSON key={index} data={geoJsonObject} />
+          ))}
+          <ZoomControl position="bottomleft" />
+        </MapContainer>
       </div>
     );
   }
