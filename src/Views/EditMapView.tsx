@@ -37,7 +37,7 @@ const EditMapView: React.FC<TMapViewProps> = ({ fileData, onChange }) => {
     updatedAt: "2021-06-08",
     isPublic: true,
     averageRating: 0,
-    ratingsCount: 0,
+    ratingCount: 0,
     objectId: "1",
     };
 

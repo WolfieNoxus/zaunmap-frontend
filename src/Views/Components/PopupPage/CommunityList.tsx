@@ -1,4 +1,5 @@
 import SearchBar from "../Elements/SearchBar";
+import ReactStars from "react-rating-stars-component";
 import { Link } from "react-router-dom";
 import IUser from "../../../Interfaces/IUser";
 // import useMaps from "../../../hooks/useMaps";
@@ -10,13 +11,23 @@ import { useEffect, useState } from "react";
 import { MdChevronLeft, MdChevronRight } from "react-icons/md";
 
 type CommunityListProps = Pick<IUser, "role">;
-
+type UsernamesMap = {
+  [key: string]: string; // This denotes an object with string keys and string values
+};
 const CommunityList = ({ role }: CommunityListProps) => {
   // const { maps, error, isLoading, setMaps, setError } = useMaps();
 
   const [items, setItems] = useState<IMap[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [userRating, setUserRating] = useState<number>(0);
+  const [usernames, setUsernames] = useState<UsernamesMap>({});
+
+  const handleRatingChange = (newRating: number, item: IMap) => {
+    setUserRating(newRating);
+    console.log(userRating);
+    rate(item, newRating, item.owner); // Assuming 'rate' is your function to submit the rating
+  };
 
   const removePublic = (map: IMap) => {
     // const originalMaps: IMap[] = [...maps];
@@ -38,45 +49,61 @@ const CommunityList = ({ role }: CommunityListProps) => {
     return null;
   };
 
-  const report = (map: IMap) => {
-    // const originalMaps: IMap[] = [...maps];
-    // const updatedMap: IMap = { ...map, reports: map.reports + 1 };
-    // setMaps(maps.map((m) => (m._id === map._id ? updatedMap : m)));
-
-    // mapService.update(updatedMap).catch((err) => {
-    //   setError(err.message);
-    //   setMaps(originalMaps);
-    // });
-
-    // NOT IMPLEMENTED YET!
-
-    return null;
+  const rate = async (map: IMap, userRating: number, userId: string) => {
+    try {
+      console.log("map : ", map);
+      console.log("userRating: ", userRating);
+      console.log("userId: ", userId);
+      const response = await apiClient.put(`/map/rate?userId=${userId}&mapId=${map._id}&rating=${userRating}`);
+      const updatedMap = response.data;
+      
+      // Update local state with the updated map data
+      setItems(items.map(item => item._id === updatedMap._id ? updatedMap : item));
+  
+    } catch (error) {
+      // Handle any errors
+      console.error("Error updating rating:", error);
+    }
   };
+  
 
   async function getPublic(): Promise<IMap[]> {
-    const response = await apiClient.get("/map/public");
+    const response = await apiClient.get(`/map/search`);
+    // console.log("response from getPublic(): " + response.data);
     const items: IMap[] = [];
     response.data.map((map: IMap) => {
       items.push(map);
       return null;
     });
+    // console.log("items list: " + items);
     return items;
   }
 
+  
   async function getUsername(userId: string): Promise<string> {
     const response = await apiClient.get(`/user?userId=${userId}`);
-    return response.data.user_name;
+    return response.data.name;
   }
-
+  
   useEffect(() => {
     const fetchMaps = async () => {
       setLoading(true);
       try {
         const fetchedItems = await getPublic();
-        for (let i = 0; i < fetchedItems.length; i++) {
+        console.log(fetchedItems);
+        
+        /*for (let i = 0; i < fetchedItems.length; i++) {
+          console.log(fetchedItems[i]);
+          console.log("item owner: ", fetchedItems[i].owner);
           fetchedItems[i].owner = await getUsername(fetchedItems[i].owner);
-        }
+        }*/
         setItems(fetchedItems);
+        const newUsernames : UsernamesMap = {};
+        for (const item of fetchedItems) {
+          const username = await getUsername(item.owner);
+          newUsernames[item._id] = username;
+        }
+        setUsernames(newUsernames);
       } catch (err) {
         setError("Failed to fetch maps");
         // If the error is an instance of an Error, you could set it as setError(err.message)
@@ -115,47 +142,40 @@ const CommunityList = ({ role }: CommunityListProps) => {
         <table className="table">
           <thead>
             <tr>
-              <th>Project Name</th>
-              <th>Author</th>
-              <th>Tags</th>
-              <th>Likes</th>
-              {role === "admin" ? (
-                <th className="text-danger">Ban</th>
-              ) : (
-                <th className="text-warning">Report</th>
-              )}
+            <th style={{ width: '25%' }}>Project Name</th>
+            <th style={{ width: '25%' }}>Author</th>
+            <th style={{ width: '25%' }}>Tags</th>
+            <th style={{ width: '25%' }}>{role === "admin" ? "Ban" : "Rate"}</th>
             </tr>
           </thead>
           <tbody className="table-group-divider">
             {currentItems.map((item) => (
               <tr key={item._id}>
-                <td>
+                <td style={{ width: '25%' }}>
                   <Link reloadDocument to={"/map/" + item._id}>
                     {item.name}
                   </Link>
                 </td>
-                <td>{item.owner}</td>
-                <td>{item.tags.toString()}</td>
-                <td>{item.averageRating}</td>
-                {role === "admin" ? (
-                  <th>
+                <td style={{ width: '25%' }}>{usernames[item._id]}</td>
+                <td style={{ width: '25%' }}>{item.tags.toString()}</td>
+                <td style={{ width: '25%' }}>
+                  {role === "admin" ? (
                     <button
                       className="btn btn-outline-danger"
                       onClick={() => removePublic(item)}
                     >
                       Ban
                     </button>
-                  </th>
-                ) : (
-                  <th>
-                    <button
-                      className="btn btn-outline-warning"
-                      onClick={() => report(item)}
-                    >
-                      Report
-                    </button>
-                  </th>
-                )}
+                  ) : (
+                    <ReactStars
+                      count={5}
+                      onChange={(newRating:number) => handleRatingChange(newRating, item)}
+                      size={24}
+                      activeColor="#ffd700"
+                      value={item.averageRating}
+                    />
+                  )}
+                </td>
               </tr>
             ))}
           </tbody>

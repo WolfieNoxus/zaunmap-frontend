@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useLoaderData } from "react-router-dom";
 import GeomanWrapper from "../Views/MapEditor";
 import { MapContainer, TileLayer, ZoomControl } from "react-leaflet";
@@ -8,6 +8,7 @@ import fileClient from "../services/fileClient";
 import EditBar from "../Views/Components/Elements/EditBar";
 import { useNavigate } from "react-router-dom";
 import "./../Views/css/mapEdit.css";
+import { useAuth0 } from "@auth0/auth0-react";
 
 // async function getFileFromUrl(url: string, filename: string): Promise<File> {
 //     const response = await fetch(url);
@@ -27,6 +28,8 @@ import "./../Views/css/mapEdit.css";
 function Map() {
   const navigate = useNavigate();
 
+  const { isAuthenticated } = useAuth0();
+
   const mapId = useLoaderData();
   if (typeof mapId !== "string") {
     throw new Error("Map ID is not a string");
@@ -43,7 +46,7 @@ function Map() {
     createdAt: "",
     updatedAt: "",
     averageRating: 0,
-    ratingsCount: 0,
+    ratingCount: 0,
     description: "",
   });
 
@@ -110,7 +113,11 @@ function Map() {
         const response = await fileClient.put(
           `?user_id=${sub.owner}&object_id=${sub.objectId}`,
           geojson
-        );
+          , {
+            headers: {
+              "Content-Type": "application/json"
+            }
+          });
         if (response.status === 200) {
           console.log("Successfully updated map data");
         } else {
@@ -127,40 +134,49 @@ function Map() {
     // eslint-disable-next-line
   }, [geojson]);
 
-  if (loading) {
+  if (!isAuthenticated) {
+    return (
+      <div>
+        <h1>Please log in first to create a map!</h1>
+      </div>
+    );
+  }
+  else if (loading) {
     return (
       <div>
         <h1>Loading...</h1>
       </div>
     );
   }
-  return (
-    <div style={{ position: "relative" }}>
-      <div className="edit-map-view">
-        {/* <span>hhhhhh</span> */}
-        <MapContainer
-          className="structure-of-map"
-          center={[0, 0]}
-          zoom={4}
-          minZoom={1}
-          maxBounds={[
-            [-90, -180],
-            [90, 180],
-          ]}
-          maxBoundsViscosity={1}
-          zoomControl={false}
-        >
-          <TileLayer
-            attribution="Map data <a href='https://www.openstreetmap.org'>OpenStreetMap</a> contributors"
-            url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}{r}.png"
-          />
-          <GeomanWrapper geojson={geojson} setGeojson={setGeojson} />
-          <ZoomControl position="bottomleft" />
-        </MapContainer>
+  else {
+    return (
+      <div style={{ position: "relative" }}>
+        <div className="edit-map-view">
+          {/* <span>hhhhhh</span> */}
+          <MapContainer
+            className="structure-of-map"
+            center={[0, 0]}
+            zoom={4}
+            minZoom={1}
+            maxBounds={[
+              [-90, -180],
+              [90, 180],
+            ]}
+            maxBoundsViscosity={1}
+            zoomControl={false}
+          >
+            <TileLayer
+              attribution="Map data <a href='https://www.openstreetmap.org'>OpenStreetMap</a> contributors"
+              url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}{r}.png"
+            />
+            <GeomanWrapper geojson={geojson} setGeojson={setGeojson} />
+            <ZoomControl position="bottomleft" />
+          </MapContainer>
+        </div>
+        <EditBar mapProject={map} onClose={() => navigate("/")} />
       </div>
-      <EditBar mapProject={map} onClose={() => navigate("/")} />
-    </div>
-  );
+    );
+  }
 }
 
 export default Map;
