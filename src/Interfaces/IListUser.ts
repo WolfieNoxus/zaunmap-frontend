@@ -1,5 +1,5 @@
 export default interface IListUser {
-  user_id: string;
-  user_name: string;
+  userId: string;
+  name: string;
   role: "user" | "admin" | "restricted" | "disabled";
 }
