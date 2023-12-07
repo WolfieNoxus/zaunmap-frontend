@@ -120,7 +120,9 @@ const FileUploader = () => {
         return (<Link to="/login">Login to create a map</Link>);
     }
     else if (loading) {
-        return (<div>Loading...</div>);
+        return (<div className="spinner-border" role="status">
+            <span className="visually-hidden">Loading...</span>
+        </div>);
     }
     else if (finished) {
         return (<Navigate to={`/map/${newMapId}`} />);
