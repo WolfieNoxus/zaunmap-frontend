@@ -4,7 +4,7 @@ import "./css/searchBar.css";
 
 const SearchBar: FC = () => {
   return (
-    <div className="search-container">
+    <div className="search-container mb-3">
       <div className="search-icon">
         <BiSearch color="#4B4F5D"/>
       </div>
