@@ -10,7 +10,7 @@ export default interface IMap {
   tags: string[];
   isPublic: boolean;
   averageRating: number;
-  ratingsCount: number;
+  ratingCount: number;
   objectId: string;
   comments?: IComment[];
   attach?: {

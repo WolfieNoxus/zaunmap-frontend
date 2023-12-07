@@ -7,6 +7,8 @@ import { useAuth0 } from "@auth0/auth0-react";
 import apiClient from "../../../services/apiClient";
 import "./css/userProfile.css";
 import { MdChevronLeft, MdChevronRight } from "react-icons/md";
+import { AxiosError } from "axios";
+import IMap from "../../../Interfaces/IMap";
 
 interface IUserResponse {
   userId: string;
@@ -21,19 +23,9 @@ const UserProfile = (userProfile: IUser) => {
   const [isEditing, setIsEditing] = useState(false); // New state for editing mode
   const [newUsername, setNewUsername] = useState<string>("");
   const [userData, setUserData] = useState<IUserResponse>();
+  const [error, setError] = useState<string>("");
 
   let navigate = useNavigate();
-
-  // useEffect(() => {
-  //   getAccessTokenSilently()
-  //     .then((res) => {
-  //       setToken(res);
-  //       console.log(token);
-  //     })
-  //     .catch((err) => {
-  //       setError(err.message);
-  //     });
-  // }, [token, getAccessTokenSilently]);
 
   useEffect(() => {
     // console.log(user);
@@ -46,12 +38,22 @@ const UserProfile = (userProfile: IUser) => {
           const userData: IUserResponse = response.data;
           console.log("User data retrieved successfully:", userData);
           setUserData(userData);
-          setNewUsername(userData.name);
+
+          if (user?.nickname !== undefined && userData.name === "") {
+            setNewUsername(
+              userData.name === "" ? user?.nickname : userData.name
+            );
+          } else {
+            setNewUsername(userData.name);
+          }
         } else {
           console.error("Failed to retrieve user data");
           // Handle errors
         }
       } catch (err) {
+        setError(
+          "Failed to retrieve user data: " + (err as AxiosError).message
+        );
         console.error("Error while fetching user data", err);
         // Handle errors
       }
@@ -60,6 +62,8 @@ const UserProfile = (userProfile: IUser) => {
     if (user?.sub) {
       fetchUserData(user.sub);
     }
+
+    // return setError("");
   }, [user]);
 
   const setItemsPublic = (id: string) => {
@@ -85,24 +89,46 @@ const UserProfile = (userProfile: IUser) => {
     }
 
     try {
-      const response = await fetch(
-        `https://zaunmap-6b1455b08c9b.herokuapp.com/api/user/rename?userId=${sub}&newName=${encodeURIComponent(
-          new_name
-        )}`,
+      // const response = await fetch(
+      //   `https://zaunmap-6b1455b08c9b.herokuapp.com/api/user/rename?userId=${sub}&newName=${encodeURIComponent(
+      //     new_name
+      //   )}`,
+      //   {
+      //     method: "PUT",
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //       Authorization: `Bearer ${user?.token}`, // Make sure you use the correct token
+      //     },
+      //     body: JSON.stringify({
+      //       userId: sub,
+      //       name: new_name,
+      //     }),
+      //   }
+      // );
+      // if (response.ok) {
+      //   console.log("Username updated successfully");
+      //   setUserData({ ...userData, name: new_name });
+      //   setNewUsername(new_name);
+      // } else {
+      //   console.error("Failed to update username");
+      //   // Handle errors, possibly by parsing the response JSON
+      // }
+
+      const res = await apiClient.put(
+        `/user/rename?userId=${sub}&newName=${encodeURIComponent(new_name)}`,
         {
-          method: "PUT",
+          userId: sub,
+          name: new_name,
+        },
+        {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${user?.token}`, // Make sure you use the correct token
           },
-          body: JSON.stringify({
-            userId: sub,
-            name: new_name,
-          }),
         }
       );
 
-      if (response.ok) {
+      if (res.status === 200) {
         console.log("Username updated successfully");
         setUserData({ ...userData, name: new_name });
         setNewUsername(new_name);
@@ -110,14 +136,35 @@ const UserProfile = (userProfile: IUser) => {
         console.error("Failed to update username");
         // Handle errors, possibly by parsing the response JSON
       }
-    } catch (error) {
-      console.error("Error while updating username", error);
+    } catch (err) {
+      setError("Failed to update username: " + (err as AxiosError).message);
+      console.error("Error while updating username", err);
       // Handle errors
     } finally {
       setIsEditing(false);
     }
   };
 
+  // Delete map project
+  const deleteMap = async (item: IMap) => {
+    try {
+      const response = await apiClient.delete(`/map?mapId=${item._id}`);
+
+      if (response.status === 200) {
+        console.log("Map deleted successfully");
+        setItems(items.filter((i) => i._id !== item._id));
+      } else {
+        console.error("Failed to delete map");
+        // Handle errors
+      }
+    } catch (err) {
+      setError("Failed to delete map: " + (err as AxiosError).message);
+      console.error("Error while deleting map", err);
+      // Handle errors
+    }
+  };
+
+  // Page Flip Code
   const itemsPerPage = 6;
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -175,6 +222,7 @@ const UserProfile = (userProfile: IUser) => {
       </div>
 
       <SearchBar />
+      <span className="text-danger">{error} </span>
       <table className="table mb-3">
         <thead>
           <tr>
@@ -210,7 +258,9 @@ const UserProfile = (userProfile: IUser) => {
                   />
                 )}
               </td>
-              <td className="text-danger">Delete</td>
+              <td className="text-danger" onClick={() => deleteMap(item)}>
+                Delete
+              </td>
             </tr>
           ))}
         </tbody>
