@@ -1,5 +1,6 @@
 import { MapContainer, TileLayer, GeoJSON, ZoomControl } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
+// import { FeatureCollection,  GeometryObject } from "geojson";
 import { GeoJsonObject } from "geojson";
 
 import Popup from "./Components/Popup";
@@ -17,6 +18,7 @@ import apiClient from "../services/apiClient";
 
 type TGeoJSONMapViewProps = {
   geoJSONData: GeoJsonObject[];
+  // geoJSONData: FeatureCollection<GeometryObject>[];
 };
 
 const GeoJSONMapView: React.FC<TGeoJSONMapViewProps> = ({ geoJSONData }) => {
@@ -24,8 +26,8 @@ const GeoJSONMapView: React.FC<TGeoJSONMapViewProps> = ({ geoJSONData }) => {
   const [loading, setLoading] = useState(true);
 
   const [loggedinUser, setLoggedinUser] = useState<IUser>({
-    user_id: "",
-    user_name: "",
+    userId: "",
+    name: "",
     role: "user",
     maps: [],
   });
@@ -33,7 +35,7 @@ const GeoJSONMapView: React.FC<TGeoJSONMapViewProps> = ({ geoJSONData }) => {
   useEffect(() => {
     const fetchUserData = async (sub: string) => {
       try {
-        const response = await apiClient.get(`/user?user_id=${sub}`);
+        const response = await apiClient.get(`/user?userId=${sub}`);
         if (response.status === 200) {
           const userData: IUser = response.data;
           // console.log("User data retrieved successfully:", userData);
@@ -48,12 +50,12 @@ const GeoJSONMapView: React.FC<TGeoJSONMapViewProps> = ({ geoJSONData }) => {
         setLoading(false);
       }
     };
-    
+
     if (isAuthenticated && user?.sub) {
       fetchUserData(user.sub);
     } else {
       setLoading(false);
-    };
+    }
   }, [isAuthenticated, user]);
 
   const [showPopup, setShowPopup] = useState<boolean>(false);
@@ -91,6 +93,7 @@ const GeoJSONMapView: React.FC<TGeoJSONMapViewProps> = ({ geoJSONData }) => {
         {geoJSONData.map((geoJsonObject, index) => (
           <GeoJSON key={index} data={geoJsonObject} />
         ))}
+        {/* {geoJSONData.map((feature, index) => (<GeoJSON key={index} data={feature} />))} */}
         <ZoomControl position="bottomleft" />
       </MapContainer>
 
@@ -99,13 +102,15 @@ const GeoJSONMapView: React.FC<TGeoJSONMapViewProps> = ({ geoJSONData }) => {
         <div className="spinner-border" role="status">
           <span className="visually-hidden">Loading...</span>
         </div>
-      ) : (showPopup && (
-        <Popup
-          user={loggedinUser}
-          page={popupPage.page}
-          onClose={() => handleClosePopup()}
-        />
-      ))}
+      ) : (
+        showPopup && (
+          <Popup
+            user={loggedinUser}
+            page={popupPage.page}
+            onClose={() => handleClosePopup()}
+          />
+        )
+      )}
 
       <div
         className={disableOtherComponents ? "no-interaction greyed-out" : ""}

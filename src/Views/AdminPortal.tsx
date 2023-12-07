@@ -47,8 +47,8 @@ const AdminPortal = () => {
   const { users, error, isLoading, setUsers, setError } = useManageUsers();
   const [loading, setLoading] = useState(true);
   const [loggedinUser, setLoggedinUser] = useState<IUser>({
-    user_id: "",
-    user_name: "",
+    userId: "",
+    name: "",
     role: "user",
     maps: [],
   });
@@ -57,7 +57,7 @@ const AdminPortal = () => {
   useEffect(() => {
     const fetchUserData = async (sub: string) => {
       try {
-        const response = await apiClient.get(`/user?user_id=${sub}`);
+        const response = await apiClient.get(`/user?userId=${sub}`);
         if (response.status === 200) {
           const userData: IUser = response.data;
           // console.log("User data retrieved successfully:", userData);
@@ -72,10 +72,10 @@ const AdminPortal = () => {
         setLoading(false);
       }
     };
-    
+
     if (isAuthenticated && user?.sub) {
       fetchUserData(user.sub);
-    };
+    }
   }, [isAuthenticated, user]);
 
   const setRestricted = (user: IListUser, status: boolean) => {
@@ -124,7 +124,7 @@ const AdminPortal = () => {
                 <th>User Name</th>
                 {/* <th>Project Number</th> */}
                 <th>Role</th>
-  
+
                 <th className="text-warning">Restrict</th>
                 <th className="text-danger">Disabled</th>
               </tr>
@@ -135,7 +135,7 @@ const AdminPortal = () => {
                   <td>{user.user_name}</td>
                   {/* <td>{user.project_list.length}</td> */}
                   <td>{user.role}</td>
-  
+
                   <th>
                     {user.role === "restricted" ? (
                       <button
@@ -159,7 +159,7 @@ const AdminPortal = () => {
                     Restrict
                   </button> */}
                   </th>
-  
+
                   <th>
                     {user.role === "disabled" ? (
                       <button
@@ -191,8 +191,8 @@ const AdminPortal = () => {
           <span className="visually-hidden">Loading...</span>
         </div>
       );
-    };
-  };
+    }
+  }
 };
 
 export default AdminPortal;

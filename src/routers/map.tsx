@@ -1,10 +1,14 @@
-import { useState, useEffect } from 'react';
-import { useLoaderData } from 'react-router-dom';
-import GeomanWrapper from '../Views/MapEditor';
-import { MapContainer, TileLayer, ZoomControl } from 'react-leaflet';
-import IMap from '../Interfaces/IMap';
-import apiClient from '../services/apiClient';
-import fileClient from '../services/fileClient';
+import React, { useState, useEffect } from "react";
+import { useLoaderData } from "react-router-dom";
+import GeomanWrapper from "../Views/MapEditor";
+import { MapContainer, TileLayer, ZoomControl, GeoJSON } from "react-leaflet";
+import IMap from "../Interfaces/IMap";
+import apiClient from "../services/apiClient";
+import fileClient from "../services/fileClient";
+import EditBar from "../Views/Components/Elements/EditBar";
+import { useNavigate } from "react-router-dom";
+import "./../Views/css/mapEdit.css";
+import { useAuth0 } from "@auth0/auth0-react";
 
 // async function getFileFromUrl(url: string, filename: string): Promise<File> {
 //     const response = await fetch(url);
@@ -22,127 +26,178 @@ import fileClient from '../services/fileClient';
 // }
 
 function Map() {
+  const navigate = useNavigate();
 
-    const mapId = useLoaderData();
-    if (typeof mapId !== "string") {
-        throw new Error("Map ID is not a string");
-    }
-    const [loading, setLoading] = useState(true);
+  const { user } = useAuth0();
 
-    const [map, setMap] = useState<IMap>({
-        _id: "",
-        name: "",
-        tags: [],
-        author: "",
-        public: false,
-        object_id: "",
-        createdAt: "",
-        updatedAt: "",
-        likes: 0,
-        dislikes: 0,
-        description: "",
-    });
+  const mapId = useLoaderData();
+  if (typeof mapId !== "string") {
+    throw new Error("Map ID is not a string");
+  }
+  const [loading, setLoading] = useState(true);
 
-    const [geojson, setGeojson] = useState<GeoJSON.FeatureCollection<GeoJSON.GeometryObject>>({
-        type: "FeatureCollection",
-        features: [],
-    });
+  const [map, setMap] = useState<IMap>({
+    _id: "",
+    name: "",
+    tags: [],
+    owner: "",
+    isPublic: false,
+    objectId: "",
+    createdAt: "",
+    updatedAt: "",
+    averageRating: 0,
+    ratingCount: 0,
+    description: "",
+  });
 
-    useEffect(() => {
-        const fetchMapMeta = async (sub: string) => {
-            try {
-                const response = await apiClient.get(`/map?_id=${mapId}`);
-                if (response.status === 200) {
-                    const userData: IMap = response.data;
-                    // console.log("User data retrieved successfully:", userData);
-                    setMap(userData);
-                } else {
-                    console.error("Failed to retrieve map data");
-                    // Handle errors
-                }
-            } catch (err) {
-                console.error("Error while fetching map data", err);
-            } finally {
-                setLoading(false);
-            }
-        };
+  const [geojson, setGeojson] = useState<
+    GeoJSON.FeatureCollection<GeoJSON.GeometryObject>
+  >({
+    type: "FeatureCollection",
+    features: [],
+  });
 
-        fetchMapMeta(mapId);
-    }, [mapId]);
-
-    useEffect(() => {
-        const fetchMapData = async (sub: IMap) => {
-            try {
-                const response = await fileClient.get(`?user_id=${sub.author}&object_id=${sub.object_id}`);
-                if (response.status === 200) {
-                    const geoJson: GeoJSON.FeatureCollection<GeoJSON.GeometryObject> = response.data;
-                    setGeojson(geoJson);
-                } else {
-                    console.error("Failed to retrieve map data");
-                }
-
-            } catch (err) {
-                console.error("Error while fetching map data", err);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        if (map.author && map.object_id) {
-            fetchMapData(map);
+  useEffect(() => {
+    const fetchMapMeta = async (sub: string) => {
+      try {
+        const response = await apiClient.get(`/map?mapId=${mapId}`);
+        if (response.status === 200) {
+          const userData: IMap = response.data;
+          // console.log("User data retrieved successfully:", userData);
+          setMap(userData);
+        } else {
+          console.error("Failed to retrieve map data");
+          // Handle errors
         }
-    }, [map]);
+      } catch (err) {
+        console.error("Error while fetching map data", err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    useEffect(() => {
-        const putMapData = async (sub: IMap, geojson: GeoJSON.FeatureCollection<GeoJSON.GeometryObject>) => {
-            try {
-                const response = await fileClient.put(`?user_id=${sub.author}&object_id=${sub.object_id}`, geojson);
-                if (response.status === 200) {
-                    console.log("Successfully updated map data");
-                } else {
-                    console.error("Failed to update map data");
-                }
-            } catch (err) {
-                console.error("Error while updating map data", err);
-            }
-        };
+    fetchMapMeta(mapId);
+  }, [mapId]);
 
-        if (map.author && map.object_id) {
-            putMapData(map, geojson);
-        };
-        // eslint-disable-next-line
-    }, [geojson]);
-
-    if (loading) {
-        return (
-            <div>
-                <h1>Loading...</h1>
-            </div>
+  useEffect(() => {
+    const fetchMapData = async (sub: IMap) => {
+      try {
+        const response = await fileClient.get(
+          `?user_id=${sub.owner}&object_id=${sub.objectId}`
         );
+        if (response.status === 200) {
+          const geoJson: GeoJSON.FeatureCollection<GeoJSON.GeometryObject> =
+            response.data;
+          setGeojson(geoJson);
+        } else {
+          console.error("Failed to retrieve map data");
+        }
+      } catch (err) {
+        console.error("Error while fetching map data", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (map.owner && map.objectId) {
+      fetchMapData(map);
     }
+  }, [map]);
+
+  useEffect(() => {
+    const putMapData = async (
+      sub: IMap,
+      geojson: GeoJSON.FeatureCollection<GeoJSON.GeometryObject>
+    ) => {
+      try {
+        const response = await fileClient.put(
+          `?user_id=${sub.owner}&object_id=${sub.objectId}`,
+          geojson
+          , {
+            headers: {
+              "Content-Type": "application/json"
+            }
+          });
+        if (response.status === 200) {
+          console.log("Successfully updated map data");
+        } else {
+          console.error("Failed to update map data");
+        }
+      } catch (err) {
+        console.error("Error while updating map data", err);
+      }
+    };
+
+    if (map.owner && map.objectId && (map.owner === user?.sub)) {
+      putMapData(map, geojson);
+    }
+    // eslint-disable-next-line
+  }, [geojson]);
+
+  if (loading) {
     return (
-        <div>
-            <MapContainer
-                className="structure-of-map"
-                center={[0, 0]}
-                zoom={4}
-                minZoom={1}
-                maxBounds={[
-                    [-90, -180],
-                    [90, 180],
-                ]}
-                maxBoundsViscosity={1}
-                zoomControl={false}
-            >
-                <TileLayer
-                    attribution="Map data <a href='https://www.openstreetmap.org'>OpenStreetMap</a> contributors"
-                    url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}{r}.png"
-                />
-                <GeomanWrapper geojson={geojson} setGeojson={setGeojson} />
-                <ZoomControl position="bottomleft" />
-            </MapContainer>
-        </div>
+      <div>
+        <h1>Loading...</h1>
+      </div>
     );
-};
+  }
+  else if (user?.sub === map.owner) {
+    return (
+      <div style={{ position: "relative" }}>
+        <div className="edit-map-view">
+          {/* <span>hhhhhh</span> */}
+          <MapContainer
+            className="structure-of-map"
+            center={[0, 0]}
+            zoom={4}
+            minZoom={1}
+            maxBounds={[
+              [-90, -180],
+              [90, 180],
+            ]}
+            maxBoundsViscosity={1}
+            zoomControl={false}
+          >
+            <TileLayer
+              attribution="Map data <a href='https://www.openstreetmap.org'>OpenStreetMap</a> contributors"
+              url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}{r}.png"
+            />
+            <GeomanWrapper geojson={geojson} setGeojson={setGeojson} />
+            <ZoomControl position="bottomleft" />
+          </MapContainer>
+        </div>
+        <EditBar mapProject={map} onClose={() => navigate("/")} />
+      </div>
+    );
+  }
+  else {
+    return (
+      <div style={{ position: "relative" }}>
+        {/* <span>hhhhhh</span> */}
+        <MapContainer
+          className="structure-of-map"
+          center={[0, 0]}
+          zoom={4}
+          minZoom={1}
+          maxBounds={[
+            [-90, -180],
+            [90, 180],
+          ]}
+          maxBoundsViscosity={1}
+          zoomControl={false}
+        >
+          <TileLayer
+            attribution="Map data <a href='https://www.openstreetmap.org'>OpenStreetMap</a> contributors"
+            url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}{r}.png"
+          />
+          {geojson.features.map((geoJsonObject, index) => (
+            <GeoJSON key={index} data={geoJsonObject} />
+          ))}
+          <ZoomControl position="bottomleft" />
+        </MapContainer>
+      </div>
+    );
+  }
+}
 
 export default Map;

@@ -30,15 +30,15 @@ const EditMapView: React.FC<TMapViewProps> = ({ fileData, onChange }) => {
   const mapSample: IMap = {
     _id: '1',
     name: "Map Name",
-    author: "John",
+    owner: "John",
     description: "This is a map",
     tags: ["Asia", "Africa", "Europe", "Australia"],
     createdAt: "2021-06-08",
     updatedAt: "2021-06-08",
-    public: true,
-    likes: 0,
-    dislikes: 0,
-    object_id: "1",
+    isPublic: true,
+    averageRating: 0,
+    ratingCount: 0,
+    objectId: "1",
     };
 
   // const markers: IMarker[] = [

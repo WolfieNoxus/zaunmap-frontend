@@ -61,8 +61,10 @@
 }
 
 .structure-of-map {
+  /* height: 100vh;
+  width: 100vw; */
   height: 100vh;
-  width: 100vw;
+  width: 100%;
 }
 
 .home-page {
@@ -88,17 +90,17 @@
   font-size: 7vw;
   font-style: italic;
   font-weight: bold;
-  color: #F35D74;
+  color: #f35d74;
   text-shadow: 5px 5px 4px rgba(0, 0, 0, 0.25); /* 50% black */
 }
 
 .home-icon {
-  font-family: "Arial",  cursive;
+  font-family: "Arial", cursive;
   font-size: 1vw min(1vw);
   font-size: min(1vw);
   font-style: italic;
   font-weight: bold;
-  color: #F35D74;
+  color: #f35d74;
   text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.25); /* 50% black */
 }
 
@@ -231,7 +233,7 @@
   color: grey;
 }
 
-.admin-page{
+.admin-page {
   height: 100vh;
   width: 100vw;
   background-color: #ffc3d41c;

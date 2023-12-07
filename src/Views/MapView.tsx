@@ -6,8 +6,9 @@ import { useEffect, useState } from "react";
 // Icons Button
 import { RiCommunityLine } from "react-icons/ri"; // TopLeft
 import { BiSolidUserCircle } from "react-icons/bi"; // TopRight
-import { BiInfoCircle } from "react-icons/bi"; // BottomLeft
-import { MdAddCircle, MdChatBubbleOutline } from "react-icons/md"; // BottomRight
+// import { BiInfoCircle } from "react-icons/bi"; // BottomLeft
+import { MdAddCircle } from "react-icons/md"; // BottomRight
+// import { MdChatBubbleOutline } from "react-icons/md"; // BottomRight
 import IPopupProps from "../Interfaces/IPopupProps";
 import IUser from "../Interfaces/IUser";
 import { useAuth0 } from "@auth0/auth0-react";
@@ -18,22 +19,22 @@ type TMapViewProps = {
 };
 
 const MapView: React.FC<TMapViewProps> = ({ fileData }) => {
-
   const { isAuthenticated, user, loginWithRedirect } = useAuth0();
   const [loading, setLoading] = useState(true);
   const [showPopup, setShowPopup] = useState<boolean>(false);
   const [loggedinUser, setLoggedinUser] = useState<IUser>({
-    user_id: "",
-    user_name: "",
+    userId: "",
+    name: "",
     role: "user",
     maps: [],
   });
-  const [disableOtherComponents, setDisableOtherComponents] = useState<boolean>(false);
-  
+  const [disableOtherComponents, setDisableOtherComponents] =
+    useState<boolean>(false);
+
   useEffect(() => {
     const fetchUserData = async (sub: string) => {
       try {
-        const response = await apiClient.get(`/user?user_id=${sub}`);
+        const response = await apiClient.get(`/user?userId=${sub}`);
         if (response.status === 200) {
           const userData: IUser = response.data;
           // console.log("User data retrieved successfully:", userData);
@@ -48,18 +49,18 @@ const MapView: React.FC<TMapViewProps> = ({ fileData }) => {
         setLoading(false);
       }
     };
-    
+
     if (isAuthenticated && user?.sub) {
       fetchUserData(user.sub);
     } else {
       setLoading(false);
-    };
+    }
   }, [isAuthenticated, user]);
 
   const [popupPage, setPopupPage] = useState<IPopupProps>({
     page: "community",
     user: loggedinUser,
-    onClose: () => {},
+    onClose: () => { },
   });
 
   const handleClosePopup = () => {
@@ -113,7 +114,7 @@ const MapView: React.FC<TMapViewProps> = ({ fileData }) => {
           <span className="home-title">Zaun Map</span>
         </div>
       ) : (
-        <div className="home-page" style={{alignItems: "end"}}>
+        <div className="home-page" style={{ alignItems: "end" }}>
           <span className="home-icon mb-3">Zaun Map</span>
         </div>
       )}
@@ -123,13 +124,15 @@ const MapView: React.FC<TMapViewProps> = ({ fileData }) => {
         <div className="spinner-border" role="status">
           <span className="visually-hidden">Loading...</span>
         </div>
-      ) : (showPopup && (
-        <Popup
-          user={loggedinUser}
-          page={popupPage.page}
-          onClose={() => handleClosePopup()}
-        />
-      ))}
+      ) : (
+        showPopup && (
+          <Popup
+            user={loggedinUser}
+            page={popupPage.page}
+            onClose={() => handleClosePopup()}
+          />
+        )
+      )}
 
       <div
         className={disableOtherComponents ? "no-interaction greyed-out" : ""}
@@ -143,7 +146,7 @@ const MapView: React.FC<TMapViewProps> = ({ fileData }) => {
               setPopupPage({
                 page: "community",
                 user: loggedinUser,
-                onClose: () => {},
+                onClose: () => { },
               });
               setShowPopup(true);
               setDisableOtherComponents(true);
@@ -163,7 +166,7 @@ const MapView: React.FC<TMapViewProps> = ({ fileData }) => {
               setPopupPage({
                 page: "userProfile",
                 user: loggedinUser,
-                onClose: () => {},
+                onClose: () => { },
               });
               setShowPopup(true);
               setDisableOtherComponents(true);
@@ -173,7 +176,7 @@ const MapView: React.FC<TMapViewProps> = ({ fileData }) => {
 
         {/* <BottomRight /> */}
         <div className="component-bottom-right">
-          <MdChatBubbleOutline
+          {/* <MdChatBubbleOutline
             className="component-bottom-right-comment"
             size={40}
             color={showPopup ? "grey" : "F35D74"}
@@ -186,25 +189,29 @@ const MapView: React.FC<TMapViewProps> = ({ fileData }) => {
               setShowPopup(true);
               setDisableOtherComponents(true);
             }}
-          />
+          /> */}
           <MdAddCircle
             className="component-bottom-right-add"
             size={50}
             color={showPopup ? "grey" : "BB2649"}
             onClick={() => {
-              setPopupPage({
-                page: "addProject",
-                user: loggedinUser,
-                onClose: () => {},
-              });
-              setShowPopup(true);
-              setDisableOtherComponents(true);
+              if (!isAuthenticated) {
+                loginWithRedirect();
+              } else {
+                setPopupPage({
+                  page: "addProject",
+                  user: loggedinUser,
+                  onClose: () => { },
+                });
+                setShowPopup(true);
+                setDisableOtherComponents(true);
+              };
             }}
           />
         </div>
 
         {/* <BottomLeft /> */}
-        <div>
+        {/* <div>
           <BiInfoCircle
             className="component-bottom-left"
             size={40}
@@ -219,7 +226,7 @@ const MapView: React.FC<TMapViewProps> = ({ fileData }) => {
               setDisableOtherComponents(true);
             }}
           />
-        </div>
+        </div> */}
       </div>
     </div>
   );
