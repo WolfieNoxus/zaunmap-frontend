@@ -56,7 +56,7 @@ const FileUploader = () => {
 
     useEffect(() => {
         const createMap = async (userId: string, mapName: string, importFile: File | null) => {
-            var mapId: string|null = null;
+            var mapId: string | null = null;
             try {
                 const response_create = await apiClient.post(`/map?userId=${userId}`);
                 if (response_create.status === 201) {
@@ -68,27 +68,34 @@ const FileUploader = () => {
                     console.error("Failed to create map");
                     // Handle errors
                 }
-                if (!importFile) {
-                    return;
-                }
-                const response_file = await fileClient.post(`?user_id=${userId}`, importFile, {
-                    headers: {
-                        "Content-Type": contentType
+                if (importFile) {
+                    const response_file = await fileClient.post(`?user_id=${userId}`, importFile, {
+                        headers: {
+                            "Content-Type": contentType
+                        }
+                    });
+                    if (response_file.status === 201) {
+                        console.log("File uploaded successfully");
+                        // console.log(response.data);
+                    } else {
+                        console.error("Failed to upload file");
+                        // Handle errors
                     }
-                });
-                if (response_file.status === 201) {
-                    console.log("File uploaded successfully");
-                    // console.log(response.data);
-                } else {
-                    console.error("Failed to upload file");
-                    // Handle errors
+                    const response_import = await apiClient.put(`/map/import?userId=${userId}&mapId=${response_create.data._id}&objectId=${response_file.data.object_id}`);
+                    if (response_import.status === 200) {
+                        console.log("File imported successfully");
+                        // console.log(response.data);
+                    } else {
+                        console.error("Failed to import file");
+                        // Handle errors
+                    }
                 }
-                const response_import = await apiClient.put(`/map/import?userId=${userId}&mapId=${response_create.data._id}&objectId=${response_file.data.object_id}`);
-                if (response_import.status === 200) {
-                    console.log("File imported successfully");
+                const response_rename = await apiClient.put(`/map?mapId=${response_create.data._id}&userId=${userId}`, { name: mapName });
+                if (response_rename.status === 200) {
+                    console.log("File renamed successfully");
                     // console.log(response.data);
                 } else {
-                    console.error("Failed to import file");
+                    console.error("Failed to rename file");
                     // Handle errors
                 }
                 // const response2 = await apiClient.put(`/map/update?userId=${userId}&mapId=${response.data._id}&name=${mapName}`);
@@ -102,7 +109,7 @@ const FileUploader = () => {
                 setFinished(true);
             }
         };
-        if (user?.sub && uploadFile && contentType) {
+        if (user?.sub && uploadFile) {
             setLoading(true);
             createMap(user.sub, projectName, fileData);
         }
