@@ -3,8 +3,9 @@ import IEditProps from "../../../Interfaces/IEditProps";
 import apiClient from "../../../services/apiClient";
 
 const EditBar: React.FC<IEditProps> = ({ onClose, mapProject }) => {
-  const [currentProjecName, setCurrentProjectName] =
-    useState<string>(mapProject.name);
+  const [currentProjecName, setCurrentProjectName] = useState<string>(
+    mapProject.name
+  );
   const [onSelectCategory, setOnSelectCategory] = useState<string>("region");
   const [isPublic, setIsPublic] = useState<boolean>(mapProject.isPublic);
 
@@ -53,6 +54,10 @@ const EditBar: React.FC<IEditProps> = ({ onClose, mapProject }) => {
     // eslint-disable-next-line
   }, [isPublic]);
 
+  // const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   console.log(e.target.value);
+  // };
+
   const changEdit = () => {
     if (onSelectCategory === "region") {
       return (
@@ -82,6 +87,7 @@ const EditBar: React.FC<IEditProps> = ({ onClose, mapProject }) => {
                     className="input-inTable-color"
                     type={"color"}
                     defaultValue="#e66465"
+                    // onChange={handleInputChange}
                   />
                 </td>
               </tr>
@@ -114,6 +120,7 @@ const EditBar: React.FC<IEditProps> = ({ onClose, mapProject }) => {
                     className="input-inTable-color"
                     type={"color"}
                     defaultValue="#f6b73c"
+                    // onChange={handleInputChange}
                   />
                 </td>
               </tr>
@@ -132,7 +139,17 @@ const EditBar: React.FC<IEditProps> = ({ onClose, mapProject }) => {
             <tbody>
               <tr>
                 <td>Border Width:</td>
-                <td>1 px</td>
+                <td>
+                  <input
+                    className="input-inTable-color"
+                    type={"number"}
+                    // min={1}
+                    // max={10}
+                    // step={1}
+                    value={1}
+                    // onChange={handleInputChange}
+                  />
+                </td>
               </tr>
               <tr>
                 <td>Border Color:</td>
@@ -141,6 +158,7 @@ const EditBar: React.FC<IEditProps> = ({ onClose, mapProject }) => {
                     className="input-inTable-color"
                     type={"color"}
                     value="#f6b73c"
+                    // onChange={handleInputChange}
                   />
                 </td>
               </tr>
@@ -194,7 +212,7 @@ const EditBar: React.FC<IEditProps> = ({ onClose, mapProject }) => {
                       name="publicView"
                       defaultChecked={isPublic}
                       onClick={(event) => setIsPublic(!isPublic)}
-                    // onChange={() => {}} // to avoid warning
+                      // onChange={() => {}} // to avoid warning
                     />
                   </td>
                 </tr>
