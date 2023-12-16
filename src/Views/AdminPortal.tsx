@@ -48,7 +48,7 @@ const AdminPortal = () => {
   const [loading, setLoading] = useState(true);
   const [loggedinUser, setLoggedinUser] = useState<IUser>({
     userId: "",
-    user_name: "",
+    name: "",
     role: "user",
     maps: [],
   });
@@ -84,10 +84,10 @@ const AdminPortal = () => {
       ...user,
       role: status ? "restricted" : "user",
     };
-    setUsers(users.map((u) => (u.user_id === user.user_id ? updatedUser : u)));
+    setUsers(users.map((u) => (u.userId === user.userId ? updatedUser : u)));
 
     apiClient
-      .put(`/user/restrict?user_id=${user.user_id}&restrict=${status}`)
+      .put(`/user/role?userId=${user.userId}&newRole=${updatedUser.role}`)
       // .then((res) => {setUsers(res.data)})
       .catch((err) => {
         setError(err.message);
@@ -102,10 +102,10 @@ const AdminPortal = () => {
       role: status ? "disabled" : "user",
     };
 
-    setUsers(users.map((u) => (u.user_id === user.user_id ? updatedUser : u)));
+    setUsers(users.map((u) => (u.userId === user.userId ? updatedUser : u)));
 
     apiClient
-      .put(`/user/disable?user_id=${user.user_id}&disable=${status}`)
+      .put(`/user/role?userId=${user.userId}&newRole=${updatedUser.role}`)
       .catch((err) => {
         setError(err.message);
         setUsers(originalUsers);
@@ -131,8 +131,8 @@ const AdminPortal = () => {
             </thead>
             <tbody className="table-group-divider">
               {users.map((user) => (
-                <tr key={user.user_id}>
-                  <td>{user.user_name}</td>
+                <tr key={user.userId}>
+                  <td>{user.name}</td>
                   {/* <td>{user.project_list.length}</td> */}
                   <td>{user.role}</td>
 

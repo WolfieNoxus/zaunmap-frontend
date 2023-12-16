@@ -1,10 +1,62 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import IEditProps from "../../../Interfaces/IEditProps";
+import apiClient from "../../../services/apiClient";
 
 const EditBar: React.FC<IEditProps> = ({ onClose, mapProject }) => {
-  const [currentProjecName, setCurrentProjectName] =
-    useState<string>("Fake Project Name");
+  const [currentProjecName, setCurrentProjectName] = useState<string>(
+    mapProject.name
+  );
   const [onSelectCategory, setOnSelectCategory] = useState<string>("region");
+  const [isPublic, setIsPublic] = useState<boolean>(mapProject.isPublic);
+
+  useEffect(() => {
+    const updateProjectName = async (newName: string) => {
+      try {
+        const response = await apiClient.put(`/map?mapId=${mapProject._id}`, {
+          name: newName,
+        });
+        if (response.status === 200) {
+          console.log("Project name updated successfully");
+        } else {
+          console.error("Failed to update project name");
+          // Handle errors
+        }
+      } catch (err) {
+        console.error("Error while updating project name", err);
+      }
+    };
+    if (currentProjecName !== mapProject.name) {
+      updateProjectName(currentProjecName);
+    }
+    // eslint-disable-next-line
+  }, [currentProjecName]);
+
+  useEffect(() => {
+    const updateProjectPublic = async (newPublic: boolean) => {
+      try {
+        const response = await apiClient.put(`/map?mapId=${mapProject._id}`, {
+          isPublic: newPublic,
+        });
+        if (response.status === 200) {
+          mapProject.isPublic = newPublic;
+          console.log("Project public updated successfully");
+        } else {
+          console.error("Failed to update project public");
+          // Handle errors
+        }
+      } catch (err) {
+        console.error("Error while updating project public", err);
+      }
+    };
+    if (isPublic !== mapProject.isPublic) {
+      updateProjectPublic(isPublic);
+    }
+    // eslint-disable-next-line
+  }, [isPublic]);
+
+  // const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   console.log(e.target.value);
+  // };
 
   const changEdit = () => {
     if (onSelectCategory === "region") {
@@ -34,7 +86,8 @@ const EditBar: React.FC<IEditProps> = ({ onClose, mapProject }) => {
                   <input
                     className="input-inTable-color"
                     type={"color"}
-                    value="#e66465"
+                    defaultValue="#e66465"
+                    // onChange={handleInputChange}
                   />
                 </td>
               </tr>
@@ -66,7 +119,8 @@ const EditBar: React.FC<IEditProps> = ({ onClose, mapProject }) => {
                   <input
                     className="input-inTable-color"
                     type={"color"}
-                    value="#f6b73c"
+                    defaultValue="#f6b73c"
+                    // onChange={handleInputChange}
                   />
                 </td>
               </tr>
@@ -85,7 +139,17 @@ const EditBar: React.FC<IEditProps> = ({ onClose, mapProject }) => {
             <tbody>
               <tr>
                 <td>Border Width:</td>
-                <td>1 px</td>
+                <td>
+                  <input
+                    className="input-inTable-color"
+                    type={"number"}
+                    // min={1}
+                    // max={10}
+                    // step={1}
+                    value={1}
+                    // onChange={handleInputChange}
+                  />
+                </td>
               </tr>
               <tr>
                 <td>Border Color:</td>
@@ -94,6 +158,7 @@ const EditBar: React.FC<IEditProps> = ({ onClose, mapProject }) => {
                     className="input-inTable-color"
                     type={"color"}
                     value="#f6b73c"
+                    // onChange={handleInputChange}
                   />
                 </td>
               </tr>
@@ -131,7 +196,7 @@ const EditBar: React.FC<IEditProps> = ({ onClose, mapProject }) => {
               <tbody>
                 <tr key={"createTime"}>
                   <td>Create Time:</td>
-                  <td>{mapProject.updatedAt}</td>
+                  <td>{mapProject.createdAt}</td>
                 </tr>
                 <tr key={"lastEdit"}>
                   <td>Last Edit:</td>
@@ -140,13 +205,21 @@ const EditBar: React.FC<IEditProps> = ({ onClose, mapProject }) => {
                 <tr key={"viewPublic"}>
                   <td>Public:</td>
                   <td>
-                    <input type="checkbox" id="publicView" name="publicView" />
+                    {/* <input type="checkbox" id="publicView" name="publicView" /> */}
+                    <input
+                      type="checkbox"
+                      id="publicView"
+                      name="publicView"
+                      defaultChecked={isPublic}
+                      onClick={(event) => setIsPublic(!isPublic)}
+                      // onChange={() => {}} // to avoid warning
+                    />
                   </td>
                 </tr>
                 {
-                  <tr key={"views"}>
-                    <td>View:</td>
-                    <td>-</td>
+                  <tr key={"rating"}>
+                    <td>Ratintg:</td>
+                    <td>{mapProject.averageRating}</td>
                   </tr>
                 }
               </tbody>
