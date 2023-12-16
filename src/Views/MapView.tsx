@@ -24,7 +24,7 @@ const MapView: React.FC<TMapViewProps> = ({ fileData }) => {
   const [showPopup, setShowPopup] = useState<boolean>(false);
   const [loggedinUser, setLoggedinUser] = useState<IUser>({
     userId: "",
-    user_name: "",
+    name: "",
     role: "user",
     maps: [],
   });
@@ -60,7 +60,7 @@ const MapView: React.FC<TMapViewProps> = ({ fileData }) => {
   const [popupPage, setPopupPage] = useState<IPopupProps>({
     page: "community",
     user: loggedinUser,
-    onClose: () => {},
+    onClose: () => { },
   });
 
   const handleClosePopup = () => {
@@ -146,7 +146,7 @@ const MapView: React.FC<TMapViewProps> = ({ fileData }) => {
               setPopupPage({
                 page: "community",
                 user: loggedinUser,
-                onClose: () => {},
+                onClose: () => { },
               });
               setShowPopup(true);
               setDisableOtherComponents(true);
@@ -166,7 +166,7 @@ const MapView: React.FC<TMapViewProps> = ({ fileData }) => {
               setPopupPage({
                 page: "userProfile",
                 user: loggedinUser,
-                onClose: () => {},
+                onClose: () => { },
               });
               setShowPopup(true);
               setDisableOtherComponents(true);
@@ -195,13 +195,17 @@ const MapView: React.FC<TMapViewProps> = ({ fileData }) => {
             size={50}
             color={showPopup ? "grey" : "BB2649"}
             onClick={() => {
-              setPopupPage({
-                page: "addProject",
-                user: loggedinUser,
-                onClose: () => {},
-              });
-              setShowPopup(true);
-              setDisableOtherComponents(true);
+              if (!isAuthenticated) {
+                loginWithRedirect();
+              } else {
+                setPopupPage({
+                  page: "addProject",
+                  user: loggedinUser,
+                  onClose: () => { },
+                });
+                setShowPopup(true);
+                setDisableOtherComponents(true);
+              };
             }}
           />
         </div>

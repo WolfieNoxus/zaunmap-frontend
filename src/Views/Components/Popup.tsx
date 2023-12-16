@@ -11,7 +11,7 @@ const Popup: React.FC<IPopupProps> = ({ page, user, onClose }) => {
       return (
         <UserProfile
           userId={user.userId}
-          user_name={user.user_name}
+          name={user.name}
           role={user.role}
           maps={user.maps}
         />
@@ -24,9 +24,12 @@ const Popup: React.FC<IPopupProps> = ({ page, user, onClose }) => {
       return (
         <div>
           <h2 className="mb-4 mt-3">Map Info</h2>
-          <p className="text text-danger" style={{ fontStyle: "italic" }}>
+          <span className="text text-danger" style={{ fontStyle: "italic" }}>
+            Not implemented yet. Please check back later for more updates.
+          </span>
+          {/* <p className="text text-danger" style={{ fontStyle: "italic" }}>
             *You need to set up project to view map infomation.
-          </p>
+          </p> */}
         </div>
       );
     }
