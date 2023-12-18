@@ -196,7 +196,7 @@ function Map() {
   } else if (user?.sub === map.owner) {
     return (
       <div style={{ position: "relative" }}>
-        <div className="edit-map-view">
+        <div className="edit-map-view-heatmap">
           {/* <span>hhhhhh</span> */}
           <MapContainer
             className="structure-of-map"
