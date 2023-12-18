@@ -1,42 +1,59 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AiFillLike, AiOutlineLike } from "react-icons/ai";
 import IComment from "../../../Interfaces/IComment";
+import apiClient from "../../../services/apiClient";
+import { useParams } from 'react-router-dom';
+import { useAuth0 } from "@auth0/auth0-react";
 
-interface ICommentsProps {
-  userId: string;
-  mapId: string;
-  comments: IComment[];
+interface ICommentForm {
+  mapId: string | undefined;
+  content: string;
 }
 
-const commentsSample: ICommentsProps["comments"] = [
-  {
-    id: 1,
-    userName: "John",
-    comment: "Hello, This is a comment!",
-    date: "2021-06-08",
-    like: true,
-  },
-  {
-    id: 2,
-    userName: "Jane",
-    comment: "Hi",
-    date: "2021-06-08",
-    like: false,
-  },
-];
 
-const Comments = () => {
-  const [comments, setComments] =
-    useState<ICommentsProps["comments"]>(commentsSample);
+const Comments= () => {
+  const [comments, setComments] = useState<IComment[]>([]);
+  const { mapId } = useParams<{ mapId: string }>();
+  const [newComment, setNewComment] = useState<string>("");
+  // const [userId, setUserId] = useState<string>();
+  const { user } = useAuth0();
 
-  const setCommentLike = (id: number) => {
-    setComments(
-      comments.map((comment) =>
-        comment.id === id ? { ...comment, like: !comment.like } : comment
-      )
-    );
+  const addComment = async () => {
+    if (!newComment.trim()) return; // Prevent blank comments
+
+    const payload: ICommentForm = {
+      mapId: mapId,
+      content: newComment
+    };
+
+    try {
+      const response = await apiClient.post('/comment', payload, {
+        params: { userId: user?.sub } // Replace with actual userId from your authentication logic
+      });
+      console.log(response.data);
+      setComments([...comments, response.data]);
+      setNewComment(''); // Clear the input after success
+    } catch (error) {
+      console.error('Error adding comment', error);
+      // Here you could set an error state and show an error message to the user if needed
+    }
   };
 
+  useEffect(() => {
+    console.log('Comments component has re-rendered.');
+    const fetchCommentsData = async () => {
+      try {
+        const response = await apiClient.get(`/map?mapId=${mapId}`);
+        setComments(response.data.comments);
+        console.log(response.data.comments);
+        // console.log(user?.sub);
+      } catch (error) {
+        console.error('Error fetching comments', error);
+      }
+    };
+  
+    fetchCommentsData();
+  }, [mapId]);
   // useEffect(() => {
   //   const fetchCommentsData = async () => {}
   // })
@@ -54,26 +71,30 @@ const Comments = () => {
         </thead>
         <tbody className="table-group-divider">
           {comments.map((comment) => (
-            <tr key={comment.id}>
-              <td>{comment.userName}</td>
-              <td>{comment.comment}</td>
+            <tr key={comment._id}>
+              <td>{comment.postedBy}</td>
+              <td>{comment.content}</td>
               <td>
                 {comment.like ? (
-                  <AiFillLike
-                    onClick={() => setCommentLike(comment.id)}
-                    color="6A738B"
-                  />
+                  <AiFillLike color="blue" />
                 ) : (
-                  <AiOutlineLike
-                    onClick={() => setCommentLike(comment.id)}
-                    color="6A738B"
-                  />
+                  <AiOutlineLike color="grey" />
                 )}
               </td>
             </tr>
           ))}
         </tbody>
       </table>
+      <div>
+        <textarea
+          value={newComment}
+          onChange={(e) => setNewComment(e.target.value)}
+          placeholder="Write a comment..."
+        />
+        <button onClick={addComment} disabled={!newComment.trim()}>
+          Post Comment
+        </button>
+      </div>
     </div>
   );
 };
