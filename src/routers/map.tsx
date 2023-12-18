@@ -217,6 +217,35 @@ function Map() {
             <GeomanWrapper geojson={geojson} setGeojson={setGeojson} />
             <ZoomControl position="bottomleft" />
           </MapContainer>
+
+          {/* popup page */}
+          {loading ? (
+            <div className="spinner-border" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </div>
+          ) : (
+            showPopup && (
+              <Popup
+                user={loggedinUser}
+                page={popupPage.page}
+                onClose={() => handleClosePopup()}
+              />
+            )
+          )}
+          <MdChatBubbleOutline
+            className="edit-bottom-right-comment"
+            size={40}
+            color={showPopup ? "grey" : "F35D74"}
+            onClick={() => {
+              setPopupPage({
+                page: "comments",
+                user: loggedinUser,
+                onClose: () => {},
+              });
+              setShowPopup(true);
+              // setDisableOtherComponents(true);
+            }}
+          />
         </div>
         <EditBar mapProject={map} onClose={() => navigate("/")} />
       </div>
@@ -263,34 +292,69 @@ function Map() {
         )}
 
         {/* <div className={"no-interaction greyed-out"}> */}
-          {/* <TopLeft /> */}
-          <div className="component-top-left">
-            <RiCommunityLine
-              size={30}
-              color={showPopup ? "grey" : "F35D74"}
-              onClick={() => {
-                setPopupPage({
-                  page: "community",
-                  user: loggedinUser,
-                  onClose: () => {},
-                });
-                setShowPopup(true);
-                // setDisableOtherComponents(true);
-              }}
-            />
-          </div>
+        {/* <TopLeft /> */}
+        <div className="component-top-left">
+          <RiCommunityLine
+            size={30}
+            color={showPopup ? "grey" : "F35D74"}
+            onClick={() => {
+              setPopupPage({
+                page: "community",
+                user: loggedinUser,
+                onClose: () => {},
+              });
+              setShowPopup(true);
+              // setDisableOtherComponents(true);
+            }}
+          />
+        </div>
 
-          {/* <TopRight /> */}
-          <BiSolidUserCircle
-            className="component-top-right"
-            color={showPopup ? "grey" : "BB2649"}
+        {/* <TopRight /> */}
+        <BiSolidUserCircle
+          className="component-top-right"
+          color={showPopup ? "grey" : "BB2649"}
+          size={40}
+          onClick={() => {
+            if (!isAuthenticated) {
+              loginWithRedirect();
+            } else {
+              setPopupPage({
+                page: "userProfile",
+                user: loggedinUser,
+                onClose: () => {},
+              });
+              setShowPopup(true);
+              // setDisableOtherComponents(true);
+            }
+          }}
+        />
+
+        {/* <BottomRight /> */}
+        <div className="component-bottom-right">
+          <MdChatBubbleOutline
+            className="component-bottom-right-comment"
             size={40}
+            color={showPopup ? "grey" : "F35D74"}
+            onClick={() => {
+              setPopupPage({
+                page: "comments",
+                user: loggedinUser,
+                onClose: () => {},
+              });
+              setShowPopup(true);
+              // setDisableOtherComponents(true);
+            }}
+          />
+          <MdAddCircle
+            className="component-bottom-right-add"
+            size={50}
+            color={showPopup ? "grey" : "BB2649"}
             onClick={() => {
               if (!isAuthenticated) {
                 loginWithRedirect();
               } else {
                 setPopupPage({
-                  page: "userProfile",
+                  page: "addProject",
                   user: loggedinUser,
                   onClose: () => {},
                 });
@@ -299,16 +363,17 @@ function Map() {
               }
             }}
           />
+        </div>
 
-          {/* <BottomRight /> */}
-          <div className="component-bottom-right">
-            <MdChatBubbleOutline
-            className="component-bottom-right-comment"
+        {/* <BottomLeft /> */}
+        <div>
+          <BiInfoCircle
+            className="component-bottom-left"
             size={40}
-            color={showPopup ? "grey" : "F35D74"}
+            color={showPopup ? "grey" : "4B4F5D"}
             onClick={() => {
               setPopupPage({
-                page: "comments", 
+                page: "mapInfo",
                 user: loggedinUser,
                 onClose: () => {},
               });
@@ -316,43 +381,7 @@ function Map() {
               // setDisableOtherComponents(true);
             }}
           />
-            <MdAddCircle
-              className="component-bottom-right-add"
-              size={50}
-              color={showPopup ? "grey" : "BB2649"}
-              onClick={() => {
-                if (!isAuthenticated) {
-                  loginWithRedirect();
-                } else {
-                  setPopupPage({
-                    page: "addProject",
-                    user: loggedinUser,
-                    onClose: () => {},
-                  });
-                  setShowPopup(true);
-                  // setDisableOtherComponents(true);
-                }
-              }}
-            />
-          </div>
-
-          {/* <BottomLeft /> */}
-          <div>
-            <BiInfoCircle
-              className="component-bottom-left"
-              size={40}
-              color={showPopup ? "grey" : "4B4F5D"}
-              onClick={() => {
-                setPopupPage({
-                  page: "mapInfo",
-                  user: loggedinUser,
-                  onClose: () => {},
-                });
-                setShowPopup(true);
-                // setDisableOtherComponents(true);
-              }}
-            />
-          </div>
+        </div>
         {/* </div> */}
       </div>
     );
