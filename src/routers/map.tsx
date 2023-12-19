@@ -218,6 +218,8 @@ function Map() {
             <ZoomControl position="bottomleft" />
           </MapContainer>
 
+          <EditBar mapProject={map} onClose={() => navigate("/")} geojson={geojson} setGeojson={setGeojson}/>
+
           {/* popup page */}
           {loading ? (
             <div className="spinner-border" role="status">
@@ -247,7 +249,6 @@ function Map() {
             }}
           />
         </div>
-        <EditBar mapProject={map} onClose={() => navigate("/")} />
       </div>
     );
   } else {
