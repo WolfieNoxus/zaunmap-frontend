@@ -28,7 +28,7 @@ const useUsers = () => {
 
     setLoading(true);
     const controller = new AbortController();
-    const request = apiClient.get<IListUser[]>("/user/list", {
+    const request = apiClient.get<IListUser[]>("/user/search", {
       signal: controller.signal,
     });
     const cancel = () => controller.abort();

@@ -1,9 +1,20 @@
-.edit-map-view {
-    position: relative;
-    background-color: gray;
-    height: 100%;
-    width: 71%;
-    /* margin-left: 20%; */
-    left: 19.75%;
-    z-index: 1000;
+.edit-map-view-heatmap {
+  position: relative;
+  background-color: gray;
+  height: 100%;
+  width: 71%;
+  /* margin-left: 20%; */
+  left: 19.75%;
+  z-index: 1000;
+}
+
+.edit-bottom-right-comment {
+  position: absolute;
+  z-index: 1000;
+  bottom: 4vh;
+  right: 2vw;
+  background-color: white;
+  padding: 5px;
+  border-radius: 25px;
+  box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.75);
 }

@@ -27,7 +27,7 @@ const GeoJSONMapView: React.FC<TGeoJSONMapViewProps> = ({ geoJSONData }) => {
 
   const [loggedinUser, setLoggedinUser] = useState<IUser>({
     userId: "",
-    user_name: "",
+    name: "",
     role: "user",
     maps: [],
   });
