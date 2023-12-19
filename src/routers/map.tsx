@@ -65,6 +65,13 @@ function Map() {
     description: "",
   });
 
+  const [geojson, setGeojson] = useState<
+    GeoJSON.FeatureCollection<GeoJSON.GeometryObject>
+  >({
+    type: "FeatureCollection",
+    features: [],
+  });
+
   const [popupPage, setPopupPage] = useState<IPopupProps>({
     page: "community",
     user: loggedinUser,
@@ -76,6 +83,58 @@ function Map() {
     // setDisableOtherComponents(false);
   };
 
+  const onEachFeature = React.useCallback((feature: any, layer: any) => {
+    const defaultStyle = {
+      stroke: true,
+      color: "#3388ff",
+      weight: 3,
+      opacity: 1.0,
+      lineCap: "round",
+      lineJoin: "round",
+      dashArray: null,
+      dashOffset: null,
+      // fill : true, // Adjust the default as needed
+      fillColor: "#3388ff",
+      fillOpacity: 0.2,
+      fillRule: "evenodd",
+      bubblingMouseEvents: true,
+      // renderer, // No default provided
+      className: null,
+    };
+    const countryName = feature.properties.ADMIN;
+    layer.bindPopup(countryName);
+
+    layer.on({
+      click: (event: any) => {
+        // console.log("Click")
+        console.log(event.target.feature.properties.ADMIN);
+        console.log(event.target);
+        // event.target.set
+      },
+      mouseover: (event: any) => {
+        var l = event.target;
+
+        l.setStyle({
+          weight: 5,
+          color: "#666",
+          dashArray: "",
+          fillOpacity: 0.7,
+          fillColor: "white",
+        });
+
+        l.bringToFront();
+      },
+      mouseout: (event: any) => {
+        var l = event.target;
+        l.setStyle(
+          feature.properties.styles ? feature.properties.styles : defaultStyle
+        );
+        l.bringToBack();
+      },
+    });
+  }, []);
+
+  //
   useEffect(() => {
     const fetchUserData = async (sub: string) => {
       try {
@@ -102,13 +161,7 @@ function Map() {
     }
   }, [isAuthenticated, user]);
 
-  const [geojson, setGeojson] = useState<
-    GeoJSON.FeatureCollection<GeoJSON.GeometryObject>
-  >({
-    type: "FeatureCollection",
-    features: [],
-  });
-
+  //
   useEffect(() => {
     const fetchMapMeta = async (sub: string) => {
       try {
@@ -187,6 +240,7 @@ function Map() {
     // eslint-disable-next-line
   }, [geojson]);
 
+  // return block
   if (loading) {
     return (
       <div className="spinner-border" role="status">
@@ -194,6 +248,7 @@ function Map() {
       </div>
     );
   } else if (user?.sub === map.owner) {
+    // return edit block
     return (
       <div style={{ position: "relative" }}>
         <div className="edit-map-view-heatmap">
@@ -217,6 +272,13 @@ function Map() {
             <GeomanWrapper geojson={geojson} setGeojson={setGeojson} />
             <ZoomControl position="bottomleft" />
           </MapContainer>
+
+          <EditBar
+            mapProject={map}
+            onClose={() => navigate("/")}
+            geojson={geojson}
+            setGeojson={setGeojson}
+          />
 
           {/* popup page */}
           {loading ? (
@@ -247,10 +309,10 @@ function Map() {
             }}
           />
         </div>
-        <EditBar mapProject={map} onClose={() => navigate("/")} />
       </div>
     );
   } else {
+    // return view block
     return (
       <div style={{ position: "relative" }}>
         {/* <span>hhhhhh</span> */}
@@ -271,8 +333,14 @@ function Map() {
             url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}{r}.png"
           />
           {geojson.features.map((geoJsonObject, index) => (
-            <GeoJSON key={index} data={geoJsonObject} />
+            <GeoJSON
+              key={index}
+              data={geoJsonObject}
+              style={geoJsonObject.properties?.styles}
+              onEachFeature={onEachFeature}
+            />
           ))}
+
           <ZoomControl position="bottomleft" />
         </MapContainer>
 
