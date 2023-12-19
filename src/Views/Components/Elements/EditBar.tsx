@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import IEditProps from "../../../Interfaces/IEditProps";
 import apiClient from "../../../services/apiClient";
+import "./css/editBar.css";
 
-const EditBar: React.FC<IEditProps> = ({ onClose, mapProject }) => {
+const EditBar: React.FC<IEditProps> = ({ onClose, mapProject, geojson, setGeojson}) => {
   const [currentProjecName, setCurrentProjectName] = useState<string>(
     mapProject.name
   );

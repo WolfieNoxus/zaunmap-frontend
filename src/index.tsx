@@ -10,7 +10,7 @@ import ErrorPage from "./errorPage";
 // import SignUpPage from "./Views/Components/PopupPage/SignUpPage";
 // import ForgotPasswordPage from "./Views/Components/PopupPage/ForgotPasswordPage";
 import Map from "./routers/map";
-import EditMapView from "./Views/EditMapView";
+// import EditMapView from "./Views/EditMapView";
 import { Auth0Provider } from "@auth0/auth0-react";
 import { Provider } from 'react-redux';
 import store from './store/store';
@@ -35,14 +35,14 @@ const router = createBrowserRouter([
     element: <AdminPortal />,
     errorElement: <ErrorPage />,
   },
-  {
-    path: "/edit",
-    element: (
-      <div>
-        <EditMapView fileData={null} onChange={() => (router.navigate("/"))}/>
-      </div>
-    ),
-  },
+  // {
+  //   path: "/edit",
+  //   element: (
+  //     <div>
+  //       <EditMapView fileData={null} onChange={() => (router.navigate("/"))}/>
+  //     </div>
+  //   ),
+  // },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
