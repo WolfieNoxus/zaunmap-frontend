@@ -1,10 +1,11 @@
+import IGeoJsonProperties from "./IGeoJsonProperties";
 import IMap from "./IMap";
-import { FeatureCollection } from "geojson";
+// import { FeatureCollection } from "geojson";
 
 export default interface IEditProps {
   mapProject: IMap;
   onClose: () => void;
 
-  geojson: FeatureCollection;
-  setGeojson: (geojson: FeatureCollection) => void;
+  selectedProperties: IGeoJsonProperties;
+  setSelectedProperties: (properties: IGeoJsonProperties) => void;
 }
