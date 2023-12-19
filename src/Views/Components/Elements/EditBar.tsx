@@ -2,13 +2,20 @@ import React, { useEffect, useState } from "react";
 import IEditProps from "../../../Interfaces/IEditProps";
 import apiClient from "../../../services/apiClient";
 import "./css/editBar.css";
+// import IGeoJsonProperties from "../../../Interfaces/IGeoJsonProperties";
 
-const EditBar: React.FC<IEditProps> = ({ onClose, mapProject, geojson, setGeojson}) => {
+const EditBar: React.FC<IEditProps> = ({
+  onClose,
+  mapProject,
+  selectedProperties,
+  setSelectedProperties,
+}) => {
   const [currentProjecName, setCurrentProjectName] = useState<string>(
     mapProject.name
   );
   const [onSelectCategory, setOnSelectCategory] = useState<string>("region");
   const [isPublic, setIsPublic] = useState<boolean>(mapProject.isPublic);
+  // const [newName, setNewName] = useState<string>("");
 
   useEffect(() => {
     const updateProjectName = async (newName: string) => {
@@ -55,9 +62,30 @@ const EditBar: React.FC<IEditProps> = ({ onClose, mapProject, geojson, setGeojso
     // eslint-disable-next-line
   }, [isPublic]);
 
+  // // selectedProperties
+  // useEffect(() => {setNewName(selectedProperties.name? selectedProperties.name: "")}, [selectedProperties]);
+
+  // useEffect(() => {}, [newName])
+
   // const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
   //   console.log(e.target.value);
   // };
+
+  // const handleChange = (property: keyof IGeoJsonProperties, value: any) => {
+  //   setSelectedProperties({
+  //     ...selectedProperties,
+  //     [property]: value,
+  //   });
+  // }
+
+  // const handleInputChange = (property: keyof IGeoJsonProperties, events: React.KeyboardEvent<HTMLInputElement>) => {
+  //   if (events.key === "Enter") {
+  //     setSelectedProperties({
+  //       ...selectedProperties,
+  //       [property]: events.currentTarget.value,
+  //     });
+  //   }
+  // }
 
   const changEdit = () => {
     if (onSelectCategory === "region") {
@@ -69,7 +97,7 @@ const EditBar: React.FC<IEditProps> = ({ onClose, mapProject, geojson, setGeojso
               <col style={{ width: "50%" }} />
             </colgroup>
             <tbody>
-              <tr>
+              {/* <tr>
                 <td>Attach Text:</td>
                 <td>AS</td>
               </tr>
@@ -109,10 +137,24 @@ const EditBar: React.FC<IEditProps> = ({ onClose, mapProject, geojson, setGeojso
                   Vertical:
                 </td>
                 <td>-5</td>
-              </tr>
+              </tr> */}
               <tr>
-                <td>Region Name:</td>
-                <td>Afghanistan</td>
+                <td>Name:</td>
+                <td>
+                  <input
+                    type="text"
+                    value={selectedProperties ? selectedProperties.name : ""}
+                    disabled={selectedProperties ? false : true}
+                    onChange={(event) =>
+                      { 
+                        selectedProperties.name = event.target.value
+                        console.log(selectedProperties.name)
+                      }
+                    }
+                    // placeholder={selectedProperties.ADMIN}
+                    // onKeyDown={(event) => handleInputChange("name", event)}
+                  />
+                </td>
               </tr>
               <tr>
                 <td>Region Color:</td>

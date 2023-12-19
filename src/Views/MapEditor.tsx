@@ -2,68 +2,85 @@ import "@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css";
 import { GeomanControls } from "react-leaflet-geoman-v2";
 import { FeatureGroup } from "react-leaflet";
 import { FeatureCollection } from "geojson";
+import { defaultRegionStyles } from "../Interfaces/IRegionStyles";
 import React from "react";
 import L from "leaflet";
+import IGeoJsonProperties, {
+  // defaultGeoJsonProperties,
+} from "../Interfaces/IGeoJsonProperties";
 
 interface Props {
   geojson: FeatureCollection;
   setGeojson: (geojson: FeatureCollection) => void;
+  selectedProperties: IGeoJsonProperties;
+  setSelectedProperties: (properties: IGeoJsonProperties) => void;
 }
 
-export default function Geoman({ geojson, setGeojson }: Props) {
+export default function Geoman({
+  geojson,
+  setGeojson,
+  selectedProperties,
+  setSelectedProperties,
+}: Props) {
   const ref = React.useRef<L.FeatureGroup>(null);
   // let geojsonLayer: L.GeoJSON = React.useRef(null);;
 
-  const onEachFeature = React.useCallback((feature: any, layer: any) => {
-    const defaultStyle = {
-      stroke: true,
-      color: "#3388ff",
-      weight: 3,
-      opacity: 1.0,
-      lineCap: "round",
-      lineJoin: "round",
-      dashArray: null,
-      dashOffset: null,
-      // fill : true, // Adjust the default as needed
-      fillColor: "#3388ff",
-      fillOpacity: 0.2,
-      fillRule: "evenodd",
-      bubblingMouseEvents: true,
-      // renderer, // No default provided
-      className: null,
-    };
-    const countryName = feature.properties.ADMIN;
-    layer.bindPopup(countryName);
+  const onEachFeature = React.useCallback(
+    (feature: any, layer: any) => {
+      // feature.properties.name =
+      //   feature.properties.name || feature.properties.ADMIN;
+      // const name = feature.properties.name;
+      const countryName = feature.properties.ADMIN;
+      layer.bindPopup(countryName);
 
-    layer.on({
-      click: (event: any) => {
-        // console.log("Click")
-        console.log(event.target.feature.properties.ADMIN);
-        console.log(event.target);
-        // event.target.set
-      },
-      mouseover: (event: any) => {
-        var l = event.target;
+      layer.on({
+        click: (event: any) => {
+          // console.log("Click")
+          // console.log(event.target.feature.properties.ADMIN);
+          // console.log(event.target.feature.properties.styles);
 
-        l.setStyle({
-          weight: 5,
-          color: "#666",
-          dashArray: "",
-          fillOpacity: 0.7,
-          fillColor: "white",
-        });
+          if (event.target.feature.properties === undefined) {
+            // event.target.feature.properties = defaultGeoJsonProperties;
+            setSelectedProperties(feature.properties);
+          } else {
+            if (event.target.feature.properties.styles === undefined) {
+              event.target.feature.properties.styles = defaultRegionStyles;
+            }
+            setSelectedProperties({
+              ...event.target.feature.properties,
+            });
+            // event.target.feature.properties = selectedProperties;
+          }
+          console.log(selectedProperties)
 
-        l.bringToFront();
-      },
-      mouseout: (event: any) => {
-        var l = event.target;
-        l.setStyle(
-          feature.properties.styles ? feature.properties.styles : defaultStyle
-        );
-        l.bringToBack();
-      },
-    });
-  }, []);
+          // event.target.set
+        },
+        mouseover: (event: any) => {
+          var l = event.target;
+
+          l.setStyle({
+            weight: 5,
+            color: "#666",
+            dashArray: "",
+            fillOpacity: 0.7,
+            fillColor: "white",
+          });
+
+          l.bringToFront();
+        },
+        mouseout: (event: any) => {
+          var l = event.target;
+          l.setStyle(
+            feature.properties.styles
+              ? feature.properties.styles
+              : defaultRegionStyles
+          );
+          l.bringToBack();
+        },
+      });
+    },
+    [selectedProperties, setSelectedProperties]
+  );
 
   React.useEffect(() => {
     if (ref.current?.getLayers().length === 0 && geojson) {
@@ -117,6 +134,7 @@ export default function Geoman({ geojson, setGeojson }: Props) {
           layer instanceof L.Rectangle ||
           layer instanceof L.Polyline
         ) {
+          //
           newGeo.features.push(layer.toGeoJSON());
         }
       });

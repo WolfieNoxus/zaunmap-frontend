@@ -43,6 +43,8 @@ const UserProfile = (userProfile: IUser) => {
             setNewUsername(
               userData.name === "" ? user?.nickname : userData.name
             );
+
+            // updateUsername(user?.sub, newUsername)
           } else {
             setNewUsername(userData.name);
           }
@@ -81,6 +83,7 @@ const UserProfile = (userProfile: IUser) => {
     //eslint-disable-next-line
   }, [user]);
 
+  // Function to handle public/private toggle
   const setItemsPublic = (id: string) => {
     setItems(items.map((i) => (i._id === id ? { ...i, isPublic: !i.isPublic } : i)));
     apiClient
@@ -105,31 +108,6 @@ const UserProfile = (userProfile: IUser) => {
     }
 
     try {
-      // const response = await fetch(
-      //   `https://zaunmap-6b1455b08c9b.herokuapp.com/api/user/rename?userId=${sub}&newName=${encodeURIComponent(
-      //     new_name
-      //   )}`,
-      //   {
-      //     method: "PUT",
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //       Authorization: `Bearer ${user?.token}`, // Make sure you use the correct token
-      //     },
-      //     body: JSON.stringify({
-      //       userId: sub,
-      //       name: new_name,
-      //     }),
-      //   }
-      // );
-      // if (response.ok) {
-      //   console.log("Username updated successfully");
-      //   setUserData({ ...userData, name: new_name });
-      //   setNewUsername(new_name);
-      // } else {
-      //   console.error("Failed to update username");
-      //   // Handle errors, possibly by parsing the response JSON
-      // }
-
       const res = await apiClient.put(
         `/user/rename?userId=${sub}&newName=${encodeURIComponent(new_name)}`,
         {
