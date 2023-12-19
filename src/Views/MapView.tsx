@@ -24,7 +24,7 @@ const MapView: React.FC<TMapViewProps> = ({ fileData }) => {
   const [showPopup, setShowPopup] = useState<boolean>(false);
   const [loggedinUser, setLoggedinUser] = useState<IUser>({
     userId: "",
-    user_name: "",
+    name: "",
     role: "user",
     maps: [],
   });

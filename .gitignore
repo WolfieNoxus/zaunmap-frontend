@@ -134,3 +134,4 @@ build
 *.zip
 IconChecklist.tsx
 backend_api_doc.md
+file_api_doc.md
