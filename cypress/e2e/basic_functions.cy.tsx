@@ -86,7 +86,44 @@ describe('Unauthorized Access to Admin Portal with normal user', () => {
   });
 });
 
-describe('Create and Delete a Map Test', () => {
+describe('Create a Map Test', () => {
+
+  it('Create a map as logged-in user.', () => {
+    // Visit the test page
+    cy.visit('/');
+
+    cy.get('.component-top-right').click();
+
+    cy.wait(2000);
+
+    cy.origin('https://zaunmap.us.auth0.com', () => {
+      cy.get('#username').type('example@example.com');
+      cy.get('#password').type('QraHcL^3NG8AETW%');
+      cy.get('button[type="submit"][name="action"][data-action-button-primary="true"]').click();
+    })
+
+    cy.wait(5000);
+
+    cy.get('.component-bottom-right').click();
+
+    cy.get('.file-uploader-buttons').click();
+
+    cy.wait(3000);
+    
+    cy.get('.btn-close').click();
+
+    cy.wait(3000);
+
+    cy.get('.component-top-right').click();
+
+    cy.wait(1000);
+
+    cy.get('.text-danger').should('exist');
+
+  });
+});
+
+describe('Create then Delete a Map Test', () => {
 
   it('Create a map as logged-in user and then delete it.', () => {
     // Visit the test page
@@ -122,57 +159,4 @@ describe('Create and Delete a Map Test', () => {
 
   });
 
-describe('Create and Delete a Map Test', () => {
-
-  it('Create a map as logged-in user and then delete it.', () => {
-    // Visit the test page
-    cy.visit('/');
-
-    cy.get('.component-top-right').click();
-
-    cy.wait(2000);
-
-    cy.origin('https://zaunmap.us.auth0.com', () => {
-      cy.get('#username').type('example@example.com');
-      cy.get('#password').type('QraHcL^3NG8AETW%');
-      cy.get('button[type="submit"][name="action"][data-action-button-primary="true"]').click();
-    })
-
-    cy.wait(5000);
-
-    cy.get('.component-bottom-right').click();
-
-    cy.get('.file-uploader-buttons').click();
-
-    cy.wait(3000);
-    
-    cy.get('.btn-close').click();
-
-    cy.wait(3000);
-
-    cy.get('.component-top-right').click();
-
-    cy.wait(1000);
-
-    cy.get('.text-danger').should('exist');
-
-  });
-
-});
-
-describe('Load New Public List without sign-in', () => {
-
-  it('Create a map as logged-in user and then delete it.', () => {
-    // Visit the test page
-    cy.visit('/');
-
-    cy.get('.component-top-left').click();
-
-    cy.wait(1000);
-
-    cy.get('.table-group-divider').should('exist');
-
-  });
-
-});
 });

@@ -30,8 +30,10 @@
 
 /* Whole bar css */
 .bar-content {
+  /* display: grid; */
   margin-right: 1%;
   overflow: auto;
+  align-content: center;
 }
 .bar-content::-webkit-scrollbar {
   display: none;
@@ -85,7 +87,7 @@
 .tag {
   /* display: inline-block; */
   /* flex: 1; */
-
+  color: #4b4f5d;
   background-color: #eee;
   /* border: 1px solid #ccc; */
   border-radius: 15px;
@@ -139,7 +141,7 @@
 .export-button {
   position: absolute;
   width: 70%;
-  bottom: 30px ;
+  bottom: 30px;
   /* height: 40px; */
   /* background-color: #4b4f5d;
   color: white;
@@ -148,4 +150,43 @@
   font-size: 16px;
   font-weight: 600;
   cursor: pointer; */
+}
+
+.input-box-basic {
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 4px;
+  border: 1px solid #4b4f5d;
+}
+
+.input-box-basic:focus {
+  border-color: #4b4f5d;
+}
+
+
+
+button {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  background-color: #4CAF50; /* A pleasant green background */
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+button:hover {
+  background-color: #45a049; /* Darken the button on hover */
+  transform: translateY(-2px); /* Slight lift effect */
+}
+
+button:active {
+  transform: translateY(1px); /* Push the button down on click */
+}
+
+button:disabled {
+  background-color: #ccc;
+  color: #666;
+  cursor: not-allowed;
 }

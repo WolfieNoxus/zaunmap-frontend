@@ -3,8 +3,11 @@ import UserProfile from "./PopupPage/UserProfile";
 import IPopupProps from "../../Interfaces/IPopupProps";
 import FileUploader from "./PopupPage/FileUploader";
 import Comments from "./PopupPage/Comments";
-const Popup: React.FC<IPopupProps> = ({ page, user, onClose }) => {
+import MapInfo from "./PopupPage/MapInfo"
+import ForkProject from "./PopupPage/ForkProject";
+const Popup: React.FC<IPopupProps> = ({ page, user, onClose, importObjectId, importUserId}) => {
   const changePage = (type: string) => {
+    console.log(importObjectId, importUserId);
     if (type === "community") {
       return <CommunityList role={user.role} />;
     } else if (type === "userProfile") {
@@ -21,17 +24,10 @@ const Popup: React.FC<IPopupProps> = ({ page, user, onClose }) => {
     } else if (type === "comments") {
       return <Comments />;
     } else if (type === "mapInfo") {
-      return (
-        <div>
-          <h2 className="mb-4 mt-3">Map Info</h2>
-          <span className="text text-danger" style={{ fontStyle: "italic" }}>
-            Not implemented yet. Please check back later for more updates.
-          </span>
-          {/* <p className="text text-danger" style={{ fontStyle: "italic" }}>
-            *You need to set up project to view map infomation.
-          </p> */}
-        </div>
-      );
+      return <MapInfo />;
+    } else if (type === "forkProject" && importObjectId && importUserId) {
+      console.log("Forking project");
+      return <ForkProject objectId={importObjectId} userId={importUserId} />;
     }
   };
 

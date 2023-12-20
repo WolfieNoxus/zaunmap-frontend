@@ -1,39 +1,70 @@
 .search-container {
-    display: flex;
-    align-items: center;
-    border: 2px solid #4B4F5D;
-    border-radius: 20px;
-    padding: 5px 15px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-    transition: all 0.3s ease;
-    width: 300px;
-  }
-  
-  .search-container:hover {
-    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3);
-  }
-  
-  .search-icon {
-    display: flex;
-    align-items: center;
-    margin-right: 10px;
-  }
-  
-  .search-box {
-    border: none;
-    outline: none;
-    font-size: 16px;
-    width: 100%;
-    padding: 5px;
-    background-color: transparent;
-    color: #4B4F5D;
-  }
-  
-  .search-box::placeholder {
-    color: #aaa;
-  }
-  
-  .search-box:focus {
-    border-color: #4B4F5D;
-  }
-  
+  display: flex;
+  align-items: center;
+  /* background-color: #f2f2f2; */
+  padding: 10px;
+  width: fit-content;
+  border-radius: 50px;
+  overflow: auto;
+  padding: 10px 20px;
+  /* border: #5a6170 2px solid; */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+}
+
+.search-mode-selector select,
+.sorting-options select {
+  padding: 5px 10px;
+  margin-right: 10px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  background-color: white;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
+
+.search-box {
+  flex-grow: 1;
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  margin-right: 10px;
+}
+
+.search-icon {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f2f2f2;
+  color: white;
+  padding: 5px;
+  border-radius: 3px;
+}
+
+.input-with-clear {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-with-clear .BiX {
+  position: absolute;
+  right: 10px;
+  cursor: pointer;
+  color: #666;
+}
+
+/* Hover and Focus Effects */
+.search-mode-selector select:hover,
+.sorting-options select:hover,
+.search-box:hover,
+.search-icon:hover,
+.search-mode-selector select:focus,
+.sorting-options select:focus,
+.search-box:focus {
+  border-color: #888;
+}
+
+.search-icon:hover {
+  background-color: #5a6170;
+}

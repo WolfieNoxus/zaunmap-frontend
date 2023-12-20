@@ -26,8 +26,7 @@
     "shpjs": "^4",
     "typescript": "^5",
     "web-vitals": "^3",
-    "xmldom": "^0.6",
-    "zod": "^3.22.4"
+    "xmldom": "^0.6"
   },
   "overrides": {
     "typescript": "^5"

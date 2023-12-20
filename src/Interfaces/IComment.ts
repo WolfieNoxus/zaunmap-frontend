@@ -1,8 +1,13 @@
 export default interface IComment {
-  id: number;
-  userName: string;
-  comment: string;
-  date: string;
-  like?: boolean;
-  likes?: number;
+  _id: string;
+  postedBy: string;
+  content: string;
+  likes: string[];
+  like: boolean;
+  dislikes: string[];
+  dislike: boolean;
+  replies: [];
+  createdAt: string;
+  updatedAt: string;
+  name: string;
 }
