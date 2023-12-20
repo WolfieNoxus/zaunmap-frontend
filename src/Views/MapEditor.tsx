@@ -1,6 +1,6 @@
 import "@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css";
 import { GeomanControls } from "react-leaflet-geoman-v2";
-import { FeatureGroup } from "react-leaflet";
+import { FeatureGroup, useMap } from "react-leaflet";
 import { FeatureCollection } from "geojson";
 import { defaultRegionStyles } from "../Interfaces/IRegionStyles";
 import React, { useEffect } from "react";
@@ -58,7 +58,7 @@ export default function Geoman({
           // event.target.set
         },
         mouseover: (event: any) => {
-          if (event.target.feature.type !== "Point") {
+          if (event.target.feature.type === "Point") {
             return;
           }
           var l = event.target;
@@ -74,7 +74,7 @@ export default function Geoman({
           l.bringToFront();
         },
         mouseout: (event: any) => {
-          if (event.target.feature.type !== "Point") {
+          if (event.target.feature.type === "Point") {
             return;
           }
           var l = event.target;
