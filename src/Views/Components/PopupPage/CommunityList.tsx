@@ -9,7 +9,6 @@ import apiClient from "../../../services/apiClient";
 import { useEffect, useState } from "react";
 // import FlipPage from "react-flip-page";
 import { MdChevronLeft, MdChevronRight } from "react-icons/md";
-import { IoIosClose } from "react-icons/io";
 
 interface ITagProps {
   mapId: string;
@@ -123,45 +122,39 @@ const CommunityList = ({ role }: CommunityListProps) => {
   }, []);
 
   // set project tags
-  const addTag = async (mapId: string, newTags: string[]) => {
-    // Find the current map and prepare updated tags
-    // const currentMap = items.find((item) => item._id === mapId);
-    // if (!currentMap) {
-    //   console.error("Map not found");
-    //   return;
-    // }
-    try {
-      // Call the backend API to update the tags
-      const response = await apiClient.put(`/map?mapId=${mapId}`, {
-        tags: newTags,
-      });
-      if (response.status === 200) {
-        console.log("Tags updated successfully");
-        // Update the state to reflect the new tags
-        setItems(
-          items.map((item) =>
-            item._id === mapId ? { ...item, tags: newTags } : item
-          )
-        );
-      } else {
-        console.error("Failed to update tags");
-        // Handle errors
-      }
-    } catch (err) {
-      console.error("Error while updating tags", err);
-      // Handle errors
-    }
-  };
+  // const addTag = async (mapId: string, newTags: string[]) => {
+  //   // Find the current map and prepare updated tags
+  //   // const currentMap = items.find((item) => item._id === mapId);
+  //   // if (!currentMap) {
+  //   //   console.error("Map not found");
+  //   //   return;
+  //   // }
+  //   try {
+  //     // Call the backend API to update the tags
+  //     const response = await apiClient.put(`/map?mapId=${mapId}`, {
+  //       tags: newTags,
+  //     });
+  //     if (response.status === 200) {
+  //       console.log("Tags updated successfully");
+  //       // Update the state to reflect the new tags
+  //       setItems(
+  //         items.map((item) =>
+  //           item._id === mapId ? { ...item, tags: newTags } : item
+  //         )
+  //       );
+  //     } else {
+  //       console.error("Failed to update tags");
+  //       // Handle errors
+  //     }
+  //   } catch (err) {
+  //     console.error("Error while updating tags", err);
+  //     // Handle errors
+  //   }
+  // };
 
   // TagInput component
   const Tags = ({ mapId, initialTags }: ITagProps) => {
-    const [tags, setTags] = useState(initialTags);
-
-    const removeTag = (index: number) => {
-      const newTags = tags.filter((_, idx) => idx !== index);
-      setTags(newTags);
-      addTag(mapId, newTags); // Update the backend
-    };
+    const tags = (initialTags);
 
     return (
       <div className="tag-block">
@@ -169,11 +162,6 @@ const CommunityList = ({ role }: CommunityListProps) => {
         {tags.map((tag, index) => (
           <div className="tag" key={index}>
             {tag}
-            <IoIosClose
-              className="remove-tag"
-              size={20}
-              onClick={() => removeTag(index)}
-            />
           </div>
         ))}
         {/* <div className="input-box-tag">
