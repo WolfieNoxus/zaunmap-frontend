@@ -45,7 +45,7 @@ const Comments = () => {
           };
           setComments([...comments, newData]);
           setNewComment(""); // Clear the input after success
-          console.log(response);
+          // console.log(response);
         })
         .catch((error) => {
           console.error("Error fetching data:", error);
@@ -271,7 +271,7 @@ const Comments = () => {
           <textarea
             id="floatingTextarea"
             className="form-control mb-3"
-            style={{ height: "100px" ,maxHeight: "100px" }}
+            style={{ height: "100px", maxHeight: "100px" }}
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
             placeholder="Write a comment..."
