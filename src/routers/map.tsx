@@ -40,6 +40,7 @@ function Map() {
   const { user, isAuthenticated, loginWithRedirect } = useAuth0();
 
   const mapId = useLoaderData();
+
   if (typeof mapId !== "string") {
     throw new Error("Map ID is not a string");
   }
@@ -67,6 +68,7 @@ function Map() {
   const [justUndo, setJustUndo] = useState<boolean>(false);
   const [justRedo, setJustRedo] = useState<boolean>(false);
   const [changed, setChanged] = useState<boolean>(true);
+  const [inited, setInited] = useState<boolean>(false);
   const [rerender, setRerender] = useState<boolean>(false);
 
   const handleClosePopup = () => {
@@ -158,6 +160,7 @@ function Map() {
     setJustUndo(false);
     setRedoStack([]);
     setJustRedo(false);
+    setInited(false);
     fetchMapMeta(mapId);
   }, [mapId]);
 
@@ -212,7 +215,12 @@ function Map() {
     };
 
     if (map.owner && map.objectId && map.owner === user?.sub && changed) {
-      putMapData(map, geojson);
+      if (inited) {
+        putMapData(map, geojson);
+      }
+      else {
+        setInited(true);
+      };
       if (justUndo) {
         setJustUndo(false);
       }
@@ -220,10 +228,10 @@ function Map() {
         setJustRedo(false);
       }
       else {
+        setPrevGeojson(geojson);
         if (prevGeojson) {
           setUndoStack([...undoStack, prevGeojson]);
         }
-        setPrevGeojson(geojson);
         setRedoStack([]);
       };
       setChanged(false);
