@@ -121,6 +121,7 @@ describe('Create a Map Test', () => {
     cy.get('.text-danger').should('exist');
 
   });
+});
 
 describe('Create then Delete a Map Test', () => {
 
