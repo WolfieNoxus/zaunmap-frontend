@@ -1,5 +1,6 @@
 // import { Link } from "react-router-dom";
 // import IMap from "../Interfaces/IMap";
+import { MdChevronLeft, MdChevronRight } from "react-icons/md";
 import IListUser from "../Interfaces/IListUser";
 import IUser from "../Interfaces/IUser";
 import useManageUsers from "../hooks/useManageUsers";
@@ -112,15 +113,29 @@ const AdminPortal = () => {
       });
   };
 
+  const itemsPerPage = 9;
+
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const maxPage = Math.ceil(users.length / itemsPerPage);
+
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentusers = users.slice(startIndex, endIndex);
+
+  const goToNextPage = () =>
+    setCurrentPage((page) => Math.min(page + 1, maxPage));
+  const goToPreviousPage = () =>
+    setCurrentPage((page) => Math.max(page - 1, 1));
+
   if (loggedinUser.role === "admin") {
     return (
       <div className="admin-page">
         <div className="admin-portal-table my-3">
           {error && <p className="text-danger">{error}</p>}
           {isLoading && <div className="spinner-border"></div>}
-          <table className="table">
+          <table className="table" style={{ borderRadius: "8px" }}>
             <thead>
-              <tr>
+              <tr style={{ borderRadius: "8px" }}>
                 <th>User Name</th>
                 {/* <th>Project Number</th> */}
                 <th>Role</th>
@@ -130,13 +145,13 @@ const AdminPortal = () => {
               </tr>
             </thead>
             <tbody className="table-group-divider">
-              {users.map((user) => (
+              {currentusers.map((user) => (
                 <tr key={user.userId}>
                   <td>{user.name}</td>
                   {/* <td>{user.project_list.length}</td> */}
                   <td>{user.role}</td>
 
-                  <th>
+                  <td>
                     {user.role === "restricted" ? (
                       <button
                         className="btn btn-warning"
@@ -158,9 +173,9 @@ const AdminPortal = () => {
                   >
                     Restrict
                   </button> */}
-                  </th>
+                  </td>
 
-                  <th>
+                  <td>
                     {user.role === "disabled" ? (
                       <button
                         className="btn btn-danger"
@@ -176,11 +191,30 @@ const AdminPortal = () => {
                         Disable
                       </button>
                     )}
-                  </th>
+                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
+        </div>
+        <div>
+          <button
+            className="btn"
+            onClick={goToPreviousPage}
+            disabled={currentPage === 1}
+          >
+            <MdChevronLeft />
+          </button>
+          <span className="mx-2">
+            Page {currentPage} of {maxPage}
+          </span>
+          <button
+            className="btn"
+            onClick={goToNextPage}
+            disabled={currentPage === maxPage}
+          >
+            <MdChevronRight />
+          </button>
         </div>
       </div>
     );

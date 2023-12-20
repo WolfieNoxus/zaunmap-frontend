@@ -19,3 +19,17 @@ export default interface IMap {
     textColor: string;
   }[];
 }
+
+export const defaultMap: IMap = {
+  _id: "",
+  name: "",
+  tags: [],
+  owner: "",
+  isPublic: false,
+  objectId: "",
+  createdAt: "",
+  updatedAt: "",
+  averageRating: 0,
+  ratingCount: 0,
+  description: "",
+};

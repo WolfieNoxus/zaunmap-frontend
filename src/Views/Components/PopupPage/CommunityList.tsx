@@ -9,7 +9,14 @@ import apiClient from "../../../services/apiClient";
 import { useEffect, useState } from "react";
 // import FlipPage from "react-flip-page";
 import { MdChevronLeft, MdChevronRight } from "react-icons/md";
+
 import { useAuth0 } from "@auth0/auth0-react";
+
+
+interface ITagProps {
+  mapId: string;
+  initialTags: string[];
+}
 type CommunityListProps = Pick<IUser, "role">;
 type UsernamesMap = {
   [key: string]: string; // This denotes an object with string keys and string values
@@ -60,13 +67,12 @@ const CommunityList = ({ role }: CommunityListProps) => {
         `/map/rate?userId=${userId}&mapId=${map._id}&rating=${userRating}`
       );
       const updatedMap = response.data;
-      
-      console.log(response.data);
+
       // Update local state with the updated map data
       setItems(
         items.map((item) => (item._id === updatedMap._id ? updatedMap : item))
       );
-      // console.log(items);
+
     } catch (error) {
       // Handle any errors
       console.error("Error updating rating:", error);
@@ -120,6 +126,56 @@ const CommunityList = ({ role }: CommunityListProps) => {
     fetchMaps();
   }, []);
 
+  // set project tags
+  // const addTag = async (mapId: string, newTags: string[]) => {
+  //   // Find the current map and prepare updated tags
+  //   // const currentMap = items.find((item) => item._id === mapId);
+  //   // if (!currentMap) {
+  //   //   console.error("Map not found");
+  //   //   return;
+  //   // }
+  //   try {
+  //     // Call the backend API to update the tags
+  //     const response = await apiClient.put(`/map?mapId=${mapId}`, {
+  //       tags: newTags,
+  //     });
+  //     if (response.status === 200) {
+  //       console.log("Tags updated successfully");
+  //       // Update the state to reflect the new tags
+  //       setItems(
+  //         items.map((item) =>
+  //           item._id === mapId ? { ...item, tags: newTags } : item
+  //         )
+  //       );
+  //     } else {
+  //       console.error("Failed to update tags");
+  //       // Handle errors
+  //     }
+  //   } catch (err) {
+  //     console.error("Error while updating tags", err);
+  //     // Handle errors
+  //   }
+  // };
+
+  // TagInput component
+  const Tags = ({ mapId, initialTags }: ITagProps) => {
+    const tags = (initialTags);
+
+    return (
+      <div className="tag-block">
+        {/* tag-input-container */}
+        {tags.map((tag, index) => (
+          <div className="tag" key={index}>
+            {tag}
+          </div>
+        ))}
+        {/* <div className="input-box-tag">
+          <IoIosAdd size={20} />
+        </div> */}
+      </div>
+    );
+  };
+
   const itemsPerPage = 6;
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -150,19 +206,28 @@ const CommunityList = ({ role }: CommunityListProps) => {
               <th style={{ width: "25%" }}>Project Name</th>
               <th style={{ width: "25%" }}>Author</th>
               <th style={{ width: "25%" }}>Tags</th>
+
               <th style={{ width: "25%" }}>Rate</th>
+// lingxuan
+//               <th style={{ width: "25%" }}>
+//                 {role === "admin" ? "Ban" : "Rate"}
+//               </th>
+
             </tr>
           </thead>
           <tbody className="table-group-divider">
             {currentItems.map((item) => (
               <tr key={item._id}>
+
                 <td>
+
                   <Link reloadDocument to={"/map/" + item._id}>
                     {item.name}
                   </Link>
                 </td>
+
                 <td>{usernames[item._id]}</td>
-                <td>{item.tags.toString()}</td>
+                <td><Tags mapId={item._id} initialTags={item.tags || []} /></td>
                 <td>
                   <ReactStars
                     count={5}
@@ -173,6 +238,7 @@ const CommunityList = ({ role }: CommunityListProps) => {
                     activeColor="#ffd700"
                     value={item.averageRating}
                   />
+
                 </td>
               </tr>
             ))}

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useLoaderData } from "react-router-dom";
 import GeomanWrapper from "../Views/MapEditor";
 import { MapContainer, TileLayer, ZoomControl, GeoJSON } from "react-leaflet";
-import IMap from "../Interfaces/IMap";
+import IMap, { defaultMap } from "../Interfaces/IMap";
 import apiClient from "../services/apiClient";
 import fileClient from "../services/fileClient";
 import EditBar from "../Views/Components/Elements/EditBar";
@@ -14,8 +14,9 @@ import { RiCommunityLine } from "react-icons/ri"; // TopLeft
 import { BiSolidUserCircle } from "react-icons/bi"; // TopRight
 import { BiInfoCircle } from "react-icons/bi"; // BottomLeft
 import { MdAddCircle, MdChatBubbleOutline } from "react-icons/md"; // BottomRight
-import IPopupProps from "../Interfaces/IPopupProps";
-import IUser from "../Interfaces/IUser";
+import IPopupProps, { defaultPopupProps } from "../Interfaces/IPopupProps";
+import IUser, { defaultUser } from "../Interfaces/IUser";
+import IGeoJsonProperties, {defaultGeoJsonProperties} from "../Interfaces/IGeoJsonProperties";
 import Popup from "../Views/Components/Popup";
 
 // async function getFileFromUrl(url: string, filename: string): Promise<File> {
@@ -44,26 +45,8 @@ function Map() {
   }
   const [loading, setLoading] = useState(true);
   const [showPopup, setShowPopup] = useState<boolean>(false);
-  const [loggedinUser, setLoggedinUser] = useState<IUser>({
-    userId: "",
-    name: "",
-    role: "user",
-    maps: [],
-  });
-
-  const [map, setMap] = useState<IMap>({
-    _id: "",
-    name: "",
-    tags: [],
-    owner: "",
-    isPublic: false,
-    objectId: "",
-    createdAt: "",
-    updatedAt: "",
-    averageRating: 0,
-    ratingCount: 0,
-    description: "",
-  });
+  const [loggedinUser, setLoggedinUser] = useState<IUser>(defaultUser);
+  const [map, setMap] = useState<IMap>(defaultMap);
 
   const [geojson, setGeojson] = useState<
     GeoJSON.FeatureCollection<GeoJSON.GeometryObject>
@@ -71,12 +54,12 @@ function Map() {
     type: "FeatureCollection",
     features: [],
   });
+  const [popupPage, setPopupPage] = useState<IPopupProps>(defaultPopupProps);
 
-  const [popupPage, setPopupPage] = useState<IPopupProps>({
-    page: "community",
-    user: loggedinUser,
-    onClose: () => {},
-  });
+  const [selectedProperties, setSelectedProperties] =
+    useState<IGeoJsonProperties>(defaultGeoJsonProperties);
+
+  const [newProperties, setNewProperties] = useState<IGeoJsonProperties>(defaultGeoJsonProperties);
 
   const handleClosePopup = () => {
     setShowPopup(false);
@@ -84,32 +67,13 @@ function Map() {
   };
 
   const onEachFeature = React.useCallback((feature: any, layer: any) => {
-    const defaultStyle = {
-      stroke: true,
-      color: "#3388ff",
-      weight: 3,
-      opacity: 1.0,
-      lineCap: "round",
-      lineJoin: "round",
-      dashArray: null,
-      dashOffset: null,
-      // fill : true, // Adjust the default as needed
-      fillColor: "#3388ff",
-      fillOpacity: 0.2,
-      fillRule: "evenodd",
-      bubblingMouseEvents: true,
-      // renderer, // No default provided
-      className: null,
-    };
     const countryName = feature.properties.ADMIN;
     layer.bindPopup(countryName);
 
     layer.on({
       click: (event: any) => {
-        // console.log("Click")
-        console.log(event.target.feature.properties.ADMIN);
-        console.log(event.target);
-        // event.target.set
+        // console.log(event.target.feature.properties.ADMIN);
+        // console.log(event.target);
       },
       mouseover: (event: any) => {
         var l = event.target;
@@ -127,7 +91,9 @@ function Map() {
       mouseout: (event: any) => {
         var l = event.target;
         l.setStyle(
-          feature.properties.styles ? feature.properties.styles : defaultStyle
+          feature.properties.styles
+            ? feature.properties.styles
+            : defaultGeoJsonProperties.styles
         );
         l.bringToBack();
       },
@@ -269,15 +235,21 @@ function Map() {
               attribution="Map data <a href='https://www.openstreetmap.org'>OpenStreetMap</a> contributors"
               url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}{r}.png"
             />
-            <GeomanWrapper geojson={geojson} setGeojson={setGeojson} />
+            <GeomanWrapper
+              geojson={geojson}
+              setGeojson={setGeojson}
+              selectedProperties={selectedProperties}
+              setSelectedProperties={setSelectedProperties}
+              newProperties={newProperties}
+            />
             <ZoomControl position="bottomleft" />
           </MapContainer>
 
           <EditBar
             mapProject={map}
             onClose={() => navigate("/")}
-            geojson={geojson}
-            setGeojson={setGeojson}
+            selectedProperties={selectedProperties}
+            setNewProperties={setNewProperties}
           />
 
           {/* popup page */}

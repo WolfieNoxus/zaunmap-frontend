@@ -1,55 +1,59 @@
-.profile-center{
-    display: flex;
-    /* display: ; */
-    justify-content: center;
+.profile-center {
+  display: flex;
+  /* display: ; */
+  justify-content: center;
 }
 .username-label {
-    font-weight: bold;
-    margin-right: 8px;   
+  font-weight: bold;
+  margin-right: 8px;
 }
 .username-section {
-    position: relative;
-    display: grid;
-    width: fit-content;
-    background-color: #f2f4f8; 
-    /* background-color: red; */
-    padding: 10px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
-    justify-content: center;
-    /* max-width: 300px;  */
-    /* margin: auto; */
+  position: relative;
+  display: grid;
+  width: fit-content;
+  background-color: #f2f4f8;
+  /* background-color: red; */
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  justify-content: center;
+  /* max-width: 300px;  */
+  /* margin: auto; */
 }
 
 .display-username {
-    display: inline-flex;
-    align-items: center;
-    justify-content: space-between;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .username-text {
-    /* font-size: 20px;  */
-    align-items: center;
-    color: #333; /* Dark text color for contrast */
-    /* font-weight: bold;  */
+  /* font-size: 20px;  */
+  align-items: center;
+  color: #333; /* Dark text color for contrast */
+  /* font-weight: bold;  */
 }
 
 .edit-username-input {
-    flex-grow: 1; /* Input field takes up available space */
-    margin-right: 10px;
-    padding: 5px 10px;
-    border-radius: 4px;
-    border: 1px solid #ccc; /* Subtle border for input */
+  flex-grow: 1; /* Input field takes up available space */
+  margin-right: 10px;
+  padding: 5px 10px;
+  border-radius: 4px;
+  border: 1px solid #ccc; /* Subtle border for input */
 }
 
-.icon-check, .icon-close, .icon-edit {
-    cursor: pointer;
-    color: #4a90e2; /* Blue color for icons */
-    margin-left: 10px;
+.icon-check,
+.icon-close,
+.icon-edit {
+  cursor: pointer;
+  color: #4a90e2; /* Blue color for icons */
+  margin-left: 10px;
 }
 
-.icon-check:hover, .icon-close:hover, .icon-edit:hover {
-    color: #3c7dcf; /* Slightly darker color on hover */
+.icon-check:hover,
+.icon-close:hover,
+.icon-edit:hover {
+  color: #3c7dcf; /* Slightly darker color on hover */
 }
 
 .table {
@@ -58,7 +62,8 @@
   margin: 20px 0;
 }
 
-.table th, .table td {
+.table th,
+.table td {
   padding: 10px;
   text-align: left;
   border-bottom: 1px solid #ddd;
@@ -68,43 +73,16 @@
   background-color: #f4f4f4;
 }
 
-.tag-input-container {
+.bottom-box-line {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  padding: 5px;
-  max-width: 80%; /* Adjust this value to make the container shorter */
+  justify-content: space-between; /* This spreads out the items */
+  align-items: center; /* Aligns items vertically in the center */
+  width: 100%; /* Container takes full width */
+  position: absolute;
+  bottom: 0;
 }
 
-.tag-input-container input {
-    display: flex;
-    flex-wrap: wrap; /* This is important for wrapping */
-    align-items: center;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    padding: 5px;
-    min-width: 0; /* Allows the container to shrink below its content's intrinsic width */
-    width: 80%; /* Adjust width as necessary */
-    max-width: 50%;
-}
-
-.tag-item {
-    display: inline-flex; /* Use inline-flex so that the tags can wrap */
-    align-items: center;
-    background-color: #007bff;
-    color: white;
-    border-radius: 15px;
-    padding: 5px 10px;
-    margin: 5px;
-    font-size: 15px;
-    
-}
-
-.remove-tag {
-  margin-left: 8px;
-  font-size: 15px;
-  cursor: pointer;
-  color: #250909;
+.log-out-box {
+  margin-right: auto; /* This pushes the component to the center */
+  margin-left: auto;
 }
