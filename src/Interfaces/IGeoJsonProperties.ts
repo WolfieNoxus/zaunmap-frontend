@@ -10,6 +10,8 @@ export default interface IGeoJsonProperties {
     mode?: "general" | "heatmap" ,
 
     styles?: IRegionStyles,
+
+    editId?: number,
 }
 
 export const defaultGeoJsonProperties: IGeoJsonProperties = {
