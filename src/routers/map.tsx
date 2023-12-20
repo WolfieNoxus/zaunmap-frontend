@@ -13,10 +13,12 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { RiCommunityLine } from "react-icons/ri"; // TopLeft
 import { BiSolidUserCircle } from "react-icons/bi"; // TopRight
 import { BiInfoCircle } from "react-icons/bi"; // BottomLeft
-import { MdAddCircle, MdChatBubbleOutline } from "react-icons/md"; // BottomRight
+import { MdChatBubbleOutline, MdContentCopy } from "react-icons/md"; // BottomRight
 import IPopupProps, { defaultPopupProps } from "../Interfaces/IPopupProps";
 import IUser, { defaultUser } from "../Interfaces/IUser";
-import IGeoJsonProperties, { defaultGeoJsonProperties } from "../Interfaces/IGeoJsonProperties";
+import IGeoJsonProperties, {
+  defaultGeoJsonProperties,
+} from "../Interfaces/IGeoJsonProperties";
 import Popup from "../Views/Components/Popup";
 
 // async function getFileFromUrl(url: string, filename: string): Promise<File> {
@@ -40,6 +42,7 @@ function Map() {
   const { user, isAuthenticated, loginWithRedirect } = useAuth0();
 
   const mapId = useLoaderData();
+
   if (typeof mapId !== "string") {
     throw new Error("Map ID is not a string");
   }
@@ -54,19 +57,27 @@ function Map() {
     type: "FeatureCollection",
     features: [],
   });
-  const [prevGeojson, setPrevGeojson] = useState<GeoJSON.FeatureCollection<GeoJSON.GeometryObject>>();
+  const [prevGeojson, setPrevGeojson] =
+    useState<GeoJSON.FeatureCollection<GeoJSON.GeometryObject>>();
   const [popupPage, setPopupPage] = useState<IPopupProps>(defaultPopupProps);
 
   const [selectedProperties, setSelectedProperties] =
     useState<IGeoJsonProperties>(defaultGeoJsonProperties);
 
-  const [newProperties, setNewProperties] = useState<IGeoJsonProperties>(defaultGeoJsonProperties);
+  const [newProperties, setNewProperties] = useState<IGeoJsonProperties>(
+    defaultGeoJsonProperties
+  );
 
-  const [undoStack, setUndoStack] = useState<GeoJSON.FeatureCollection<GeoJSON.GeometryObject>[]>([]);
-  const [redoStack, setRedoStack] = useState<GeoJSON.FeatureCollection<GeoJSON.GeometryObject>[]>([]);
+  const [undoStack, setUndoStack] = useState<
+    GeoJSON.FeatureCollection<GeoJSON.GeometryObject>[]
+  >([]);
+  const [redoStack, setRedoStack] = useState<
+    GeoJSON.FeatureCollection<GeoJSON.GeometryObject>[]
+  >([]);
   const [justUndo, setJustUndo] = useState<boolean>(false);
   const [justRedo, setJustRedo] = useState<boolean>(false);
   const [changed, setChanged] = useState<boolean>(true);
+  const [inited, setInited] = useState<boolean>(false);
   const [rerender, setRerender] = useState<boolean>(false);
 
   const handleClosePopup = () => {
@@ -75,8 +86,15 @@ function Map() {
   };
 
   const onEachFeature = React.useCallback((feature: any, layer: any) => {
-    const countryName = feature.properties.ADMIN;
-    layer.bindPopup(countryName);
+    const countryName = feature.properties.name ? feature.properties.name : "undefined";
+    const attachText =
+      feature.properties.attachText === undefined
+        ? "<em>This region do not have attach text yet.</em>"
+        : feature.properties.attachText;
+    layer.bindPopup(
+      // countryName
+      `<div><strong>${countryName}</strong><p></p><span>Attached:</span><span> ${attachText}</span></div>`
+    );
 
     layer.on({
       click: (event: any) => {
@@ -84,6 +102,9 @@ function Map() {
         // console.log(event.target);
       },
       mouseover: (event: any) => {
+        if (event.target.feature.type === "Point") {
+          return;
+        }
         var l = event.target;
 
         l.setStyle({
@@ -97,6 +118,9 @@ function Map() {
         l.bringToFront();
       },
       mouseout: (event: any) => {
+        if (event.target.feature.type === "Point") {
+          return;
+        }
         var l = event.target;
         l.setStyle(
           feature.properties.styles
@@ -158,6 +182,7 @@ function Map() {
     setJustUndo(false);
     setRedoStack([]);
     setJustRedo(false);
+    setInited(false);
     fetchMapMeta(mapId);
   }, [mapId]);
 
@@ -212,20 +237,22 @@ function Map() {
     };
 
     if (map.owner && map.objectId && map.owner === user?.sub && changed) {
-      putMapData(map, geojson);
+      if (inited) {
+        putMapData(map, geojson);
+      } else {
+        setInited(true);
+      }
       if (justUndo) {
         setJustUndo(false);
-      }
-      else if (justRedo) {
+      } else if (justRedo) {
         setJustRedo(false);
-      }
-      else {
+      } else {
+        setPrevGeojson(geojson);
         if (prevGeojson) {
           setUndoStack([...undoStack, prevGeojson]);
         }
-        setPrevGeojson(geojson);
         setRedoStack([]);
-      };
+      }
       setChanged(false);
     }
     // eslint-disable-next-line
@@ -252,22 +279,32 @@ function Map() {
   };
 
   const handleKeyDown = (event: KeyboardEvent) => {
-    if (event.ctrlKey || event.metaKey) { 
-      if (event.key === 'z') {
+    if (event.ctrlKey || event.metaKey) {
+      if (event.key === "z") {
         document.getElementById("undo")?.click();
-      } else if (event.key === 'y' || (event.shiftKey && event.key === 'Z')) {
+      } else if (event.key === "y" || (event.shiftKey && event.key === "Z")) {
         document.getElementById("redo")?.click();
       }
     }
   };
 
   useEffect(() => {
-    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown);
 
     return () => {
-      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener("keydown", handleKeyDown);
     };
   }, []);
+
+  const handleForkProject = () => {
+    setPopupPage({
+      page: "forkProject",
+      user: loggedinUser,
+      onClose: () => {},
+      importUserId: map.owner,
+      importObjectId: map.objectId,
+    });
+  };
 
   // return block
   if (loading) {
@@ -283,9 +320,36 @@ function Map() {
         <div className="edit-map-view-heatmap">
           {/* <span>hhhhhh</span> */}
           <div className="undoRedoContainer">
-            <button disabled={undoStack.length < 1 ? true : false} onClick={handleUndo} id="undo">Undo</button>
-            <button disabled={redoStack.length < 1 ? true : false} onClick={handleRedo} id="redo">Redo</button>
+            <button
+              disabled={undoStack.length < 1 ? true : false}
+              onClick={handleUndo}
+              id="undo"
+            >
+              Undo
+            </button>
+            <button
+              disabled={redoStack.length < 1 ? true : false}
+              onClick={handleRedo}
+              id="redo"
+            >
+              Redo
+            </button>
           </div>
+          {loading ? (
+            <div className="spinner-border" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </div>
+          ) : (
+            showPopup && (
+              <Popup
+                user={loggedinUser}
+                page={popupPage.page}
+                onClose={() => handleClosePopup()}
+                importUserId={popupPage.importUserId}
+                importObjectId={popupPage.importObjectId}
+              />
+            )
+          )}
           <MapContainer
             key={JSON.stringify(rerender)}
             className="structure-of-map"
@@ -296,6 +360,7 @@ function Map() {
               [-90, -180],
               [90, 180],
             ]}
+            // whenCreated={(map) => setMap({ ...map, owner: user?.sub })}
             maxBoundsViscosity={1}
             zoomControl={false}
           >
@@ -322,20 +387,6 @@ function Map() {
             setChanged={setChanged}
           />
 
-          {/* popup page */}
-          {loading ? (
-            <div className="spinner-border" role="status">
-              <span className="visually-hidden">Loading...</span>
-            </div>
-          ) : (
-            showPopup && (
-              <Popup
-                user={loggedinUser}
-                page={popupPage.page}
-                onClose={() => handleClosePopup()}
-              />
-            )
-          )}
           <MdChatBubbleOutline
             className="edit-bottom-right-comment"
             size={40}
@@ -344,10 +395,24 @@ function Map() {
               setPopupPage({
                 page: "comments",
                 user: loggedinUser,
-                onClose: () => { },
+                onClose: () => {},
               });
               setShowPopup(true);
               // setDisableOtherComponents(true);
+            }}
+          />
+          <MdContentCopy
+            className="component-bottom-right-copy"
+            size={40}
+            color={showPopup ? "grey" : "BB2649"}
+            onClick={() => {
+              if (!isAuthenticated) {
+                loginWithRedirect();
+              } else {
+                handleForkProject();
+                setShowPopup(true);
+                // setDisableOtherComponents(true);
+              }
             }}
           />
         </div>
@@ -397,6 +462,8 @@ function Map() {
               user={loggedinUser}
               page={popupPage.page}
               onClose={() => handleClosePopup()}
+              importUserId={popupPage.importUserId}
+              importObjectId={popupPage.importObjectId}
             />
           )
         )}
@@ -411,7 +478,7 @@ function Map() {
               setPopupPage({
                 page: "community",
                 user: loggedinUser,
-                onClose: () => { },
+                onClose: () => {},
               });
               setShowPopup(true);
               // setDisableOtherComponents(true);
@@ -431,7 +498,7 @@ function Map() {
               setPopupPage({
                 page: "userProfile",
                 user: loggedinUser,
-                onClose: () => { },
+                onClose: () => {},
               });
               setShowPopup(true);
               // setDisableOtherComponents(true);
@@ -449,25 +516,21 @@ function Map() {
               setPopupPage({
                 page: "comments",
                 user: loggedinUser,
-                onClose: () => { },
+                onClose: () => {},
               });
               setShowPopup(true);
               // setDisableOtherComponents(true);
             }}
           />
-          <MdAddCircle
-            className="component-bottom-right-add"
-            size={50}
+          <MdContentCopy
+            className="component-bottom-right-copy"
+            size={40}
             color={showPopup ? "grey" : "BB2649"}
             onClick={() => {
               if (!isAuthenticated) {
                 loginWithRedirect();
               } else {
-                setPopupPage({
-                  page: "addProject",
-                  user: loggedinUser,
-                  onClose: () => { },
-                });
+                handleForkProject();
                 setShowPopup(true);
                 // setDisableOtherComponents(true);
               }
@@ -485,7 +548,7 @@ function Map() {
               setPopupPage({
                 page: "mapInfo",
                 user: loggedinUser,
-                onClose: () => { },
+                onClose: () => {},
               });
               setShowPopup(true);
               // setDisableOtherComponents(true);

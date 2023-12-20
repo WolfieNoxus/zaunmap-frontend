@@ -9,9 +9,11 @@ export default interface IPopupProps {
     | "logIn"
     | "signUp"
     | "addProject"
-    | "forgotPassword";
-
+    | "forgotPassword"
+    | "forkProject"
   user: IUser;
+  importUserId?: string;
+  importObjectId?: string;
   onClose: () => void;
 }
 
