@@ -1,6 +1,6 @@
 import "@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css";
 import { GeomanControls } from "react-leaflet-geoman-v2";
-import { FeatureGroup, useMap } from "react-leaflet";
+import { FeatureGroup } from "react-leaflet";
 import { FeatureCollection } from "geojson";
 import { defaultRegionStyles } from "../Interfaces/IRegionStyles";
 import React, { useEffect } from "react";
