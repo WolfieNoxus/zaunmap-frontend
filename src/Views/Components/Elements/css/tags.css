@@ -37,3 +37,25 @@
   cursor: pointer;
   color: #250909;
 }
+
+.input-box-tag {
+  width: 23%;
+  height: 30px;
+  box-sizing: border-box;
+
+  /* border: 0.5px solid #4b4f5d; */
+  /* font: italic; */
+  color: #4b4f5d;
+  background-color: #eee;
+  border: 1px solid #ccc;
+  border-radius: 15px;
+  padding: 5px 10px;
+  margin-bottom: 5px;
+  margin-right: 5px;
+  cursor: pointer;
+
+}
+
+.input-box-tag:focus {
+  border-color: #4b4f5d;
+}
