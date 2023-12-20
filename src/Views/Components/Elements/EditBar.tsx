@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import IEditProps from "../../../Interfaces/IEditProps";
 import apiClient from "../../../services/apiClient";
 import "./css/editBar.css";
+// import { HiEye, HiEyeOff } from "react-icons/hi";
 // import IGeoJsonProperties from "../../../Interfaces/IGeoJsonProperties";
 
 const EditBar: React.FC<IEditProps> = ({
@@ -237,6 +238,19 @@ const EditBar: React.FC<IEditProps> = ({
                 </tr>
                 <tr key={"viewPublic"}>
                   <td>Public:</td>
+                  {/* <td style={{ textAlign: "center" }}>
+                    {item.isPublic ? (
+                      <HiEye
+                        onClick={() => setItemsPublic(item._id)}
+                        color="6A738B"
+                      />
+                    ) : (
+                      <HiEyeOff
+                        onClick={() => setItemsPublic(item._id)}
+                        color="6A738B"
+                      />
+                    )}
+                  </td> */}
                   <td>
                     {/* <input type="checkbox" id="publicView" name="publicView" /> */}
                     <input
