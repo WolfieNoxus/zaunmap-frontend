@@ -87,11 +87,13 @@ function Map() {
 
   const onEachFeature = React.useCallback((feature: any, layer: any) => {
     const countryName = feature.properties.name;
+    const attachText =
+      feature.properties.attachText === undefined
+        ? "<em>This region do not have attach text yet.</em>"
+        : feature.properties.attachText;
     layer.bindPopup(
-      <div>
-        <span>{countryName}</span>
-        <span>Attached: {feature.properties.attachText}</span>
-      </div>
+      // countryName
+      `<div><strong>${countryName}</strong><p></p><span>Attached:</span><span> ${attachText}</span></div>`
     );
 
     layer.on({
