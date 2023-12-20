@@ -4,8 +4,10 @@ import IPopupProps from "../../Interfaces/IPopupProps";
 import FileUploader from "./PopupPage/FileUploader";
 import Comments from "./PopupPage/Comments";
 import MapInfo from "./PopupPage/MapInfo"
-const Popup: React.FC<IPopupProps> = ({ page, user, onClose }) => {
+import ForkProject from "./PopupPage/ForkProject";
+const Popup: React.FC<IPopupProps> = ({ page, user, onClose, importObjectId, importUserId}) => {
   const changePage = (type: string) => {
+    console.log(importObjectId, importUserId);
     if (type === "community") {
       return <CommunityList role={user.role} />;
     } else if (type === "userProfile") {
@@ -23,6 +25,9 @@ const Popup: React.FC<IPopupProps> = ({ page, user, onClose }) => {
       return <Comments />;
     } else if (type === "mapInfo") {
       return <MapInfo />;
+    } else if (type === "forkProject" && importObjectId && importUserId) {
+      console.log("Forking project");
+      return <ForkProject objectId={importObjectId} userId={importUserId} />;
     }
   };
 

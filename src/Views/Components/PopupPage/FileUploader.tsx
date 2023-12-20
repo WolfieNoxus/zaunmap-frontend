@@ -3,7 +3,6 @@ import '../../../css/FileLoader.css';
 import apiClient from '../../../services/apiClient';
 import fileClient from '../../../services/fileClient';
 import { useAuth0 } from '@auth0/auth0-react';
-import { Link } from 'react-router-dom';
 import { Navigate } from 'react-router-dom';
 
 const FileUploader = () => {
@@ -116,10 +115,7 @@ const FileUploader = () => {
         // eslint-disable-next-line
     }, [uploadFile]);
 
-    if (false) {
-        return (<Link to="/login">Login to create a map</Link>);
-    }
-    else if (loading) {
+    if (loading) {
         return (<div className="spinner-border" role="status">
             <span className="visually-hidden">Loading...</span>
         </div>);
