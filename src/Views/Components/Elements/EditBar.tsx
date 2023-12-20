@@ -316,15 +316,15 @@ const EditBar: React.FC<IEditProps> = ({
 
   const formatDate = (dateString: string): string => {
     const options: Intl.DateTimeFormatOptions = {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: true
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
     };
     return new Date(dateString).toLocaleDateString(undefined, options);
-};
+  };
 
   return (
     <div>
@@ -385,13 +385,15 @@ const EditBar: React.FC<IEditProps> = ({
                 {
                   <tr key={"rating"}>
                     <td>Ratintg:</td>
-                    <td><ReactStars
-                            count={5}
-                            size={24}
-                            activeColor="#ffd700"
-                            value={mapProject.averageRating}
-                            edit={false}
-                        /></td>
+                    <td>
+                      <ReactStars
+                        count={5}
+                        size={24}
+                        activeColor="#ffd700"
+                        value={mapProject.averageRating}
+                        edit={false}
+                      />
+                    </td>
                   </tr>
                 }
               </tbody>
@@ -466,8 +468,7 @@ const EditBar: React.FC<IEditProps> = ({
                 },
               });
               setChanged(true);
-            }
-            }
+            }}
           >
             Update
           </button>
