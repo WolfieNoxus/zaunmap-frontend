@@ -240,7 +240,7 @@ const CommunityList = ({ role }: CommunityListProps) => {
           </tbody>
         </table>
       )}
-      {items.length > itemsPerPage ? (
+      {items.length >= itemsPerPage ? (
         <div>
           <button
             className="btn"
@@ -249,6 +249,9 @@ const CommunityList = ({ role }: CommunityListProps) => {
           >
             <MdChevronLeft />
           </button>
+          <span className="mx-2">
+            Page {currentPage} of {maxPage}
+          </span>
           <button
             className="btn"
             onClick={goToNextPage}

@@ -1,0 +1,26 @@
+.invisible-button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  outline: none;
+}
+
+.bottom-div {
+  width: 95%;
+  position: absolute;
+  bottom: 0;
+}
+
+.box-line-comments {
+  display: flex;
+  justify-content: space-between; /* This spreads out the items */
+  align-items: center; /* Aligns items vertically in the center */
+  width: 100%; /* Container takes full width */
+  /* position: absolute;
+  bottom: 0; */
+}
+
+.log-out-box {
+  margin-right: 3vw; /* This pushes the component to the center */
+  margin-left: auto;
+}
