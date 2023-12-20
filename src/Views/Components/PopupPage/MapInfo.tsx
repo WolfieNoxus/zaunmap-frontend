@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import apiClient from "../../../services/apiClient";
 import { useParams } from 'react-router-dom';
 import IMap from "../../../Interfaces/IMap";
+import ReactStars from "react-rating-stars-component";
 import "./css/mapInfo.css";
 const MapInfo = () => {
     const { mapId } = useParams<{ mapId: string }>();
@@ -41,12 +42,22 @@ const MapInfo = () => {
                     <div className="map-detail"><strong>Created At:</strong> {formatDate(mapData.createdAt)}</div>
                     <div className="map-detail"><strong>Last Updated At:</strong> {formatDate(mapData.updatedAt)}</div>
                     <div className="map-detail"><strong>Public or Private:</strong> {mapData.isPublic ? 'Public' : 'Private'}</div>
-                    <div className="map-detail"><strong>Average Rating:</strong> {/* Display stars or progress bar */}</div>
+                    <div className="map-detail"><strong>Average Rating:</strong> 
+                        <ReactStars
+                            count={5}
+                            size={24}
+                            activeColor="#ffd700"
+                            value={mapData.averageRating}
+                            edit={false}
+                        /></div>
+                        
+                    <strong>Tags:</strong>
                     <div className="tags">
-                        <strong>Tags:</strong>
-                        {mapData.tags.map((tag, index) => (
-                            <span key={index} className="tag">{tag}</span>
+                        <div className="tag-block">
+                            {mapData.tags.map((tag, index) => (
+                            <div key={index} className="tag">{tag}</div>
                         ))}
+                        </div>
                     </div>
                 </div>
             ) : (

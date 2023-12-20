@@ -36,7 +36,7 @@ const useUsers = () => {
     request
       .then((res) => {
         // console.log(res.data);
-        setUsers(res.data);
+        setUsers(res.data.filter((user) => user.role !== "admin"));
         setLoading(false);
       })
       .catch((err) => {
