@@ -12,7 +12,6 @@ import { MdChevronLeft, MdChevronRight } from "react-icons/md";
 
 import { useAuth0 } from "@auth0/auth0-react";
 
-
 interface ITagProps {
   mapId: string;
   initialTags: string[];
@@ -72,7 +71,6 @@ const CommunityList = ({ role }: CommunityListProps) => {
       setItems(
         items.map((item) => (item._id === updatedMap._id ? updatedMap : item))
       );
-
     } catch (error) {
       // Handle any errors
       console.error("Error updating rating:", error);
@@ -159,7 +157,7 @@ const CommunityList = ({ role }: CommunityListProps) => {
 
   // TagInput component
   const Tags = ({ mapId, initialTags }: ITagProps) => {
-    const tags = (initialTags);
+    const tags = initialTags;
 
     return (
       <div className="tag-block">
@@ -206,28 +204,24 @@ const CommunityList = ({ role }: CommunityListProps) => {
               <th style={{ width: "25%" }}>Project Name</th>
               <th style={{ width: "25%" }}>Author</th>
               <th style={{ width: "25%" }}>Tags</th>
-
               <th style={{ width: "25%" }}>Rate</th>
-// lingxuan
-//               <th style={{ width: "25%" }}>
-//                 {role === "admin" ? "Ban" : "Rate"}
-//               </th>
-
             </tr>
           </thead>
           <tbody className="table-group-divider">
             {currentItems.map((item) => (
               <tr key={item._id}>
-
                 <td>
-
                   <Link reloadDocument to={"/map/" + item._id}>
                     {item.name}
                   </Link>
                 </td>
 
                 <td>{usernames[item._id]}</td>
-                <td><Tags mapId={item._id} initialTags={item.tags || []} /></td>
+
+                <td>
+                  <Tags mapId={item._id} initialTags={item.tags || []} />
+                </td>
+                
                 <td>
                   <ReactStars
                     count={5}
@@ -238,7 +232,6 @@ const CommunityList = ({ role }: CommunityListProps) => {
                     activeColor="#ffd700"
                     value={item.averageRating}
                   />
-
                 </td>
               </tr>
             ))}
