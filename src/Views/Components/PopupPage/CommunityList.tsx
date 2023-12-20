@@ -174,10 +174,15 @@ const CommunityList = ({ role }: CommunityListProps) => {
     );
   };
 
-  const handleSearch = async (name: string, tags: string, sortBy: string, sortOrder: string) => {
+  const handleSearch = async (
+    name: string,
+    tags: string,
+    sortBy: string,
+    sortOrder: string
+  ) => {
     try {
-      const response = await apiClient.get('/map/search', {
-        params: { name, tags, sortBy, sortOrder }
+      const response = await apiClient.get("/map/search", {
+        params: { name, tags, sortBy, sortOrder },
       });
       if (response.status === 200) {
         setItems(response.data as IMap[]);
@@ -210,7 +215,7 @@ const CommunityList = ({ role }: CommunityListProps) => {
     <div>
       {/* <span>View type: {role === "admin" ? "Admin" : "User"}</span> */}
       {error && <p className="text-danger">{error}</p>}
-      <SearchBar onSearch={handleSearch}/>
+      <SearchBar onSearch={handleSearch} />
       {loading ? (
         <div className="spinner-border" role="status">
           <span className="visually-hidden">Loading...</span>
@@ -258,7 +263,7 @@ const CommunityList = ({ role }: CommunityListProps) => {
           </tbody>
         </table>
       )}
-      {items.length > itemsPerPage ? (
+      {items.length >= itemsPerPage ? (
         <div>
           <button
             className="btn"
@@ -267,6 +272,9 @@ const CommunityList = ({ role }: CommunityListProps) => {
           >
             <MdChevronLeft />
           </button>
+          <span className="mx-2">
+            Page {currentPage} of {maxPage}
+          </span>
           <button
             className="btn"
             onClick={goToNextPage}
