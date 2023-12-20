@@ -58,6 +58,9 @@ export default function Geoman({
           // event.target.set
         },
         mouseover: (event: any) => {
+          if (event.target.feature.type !== "Point") {
+            return;
+          }
           var l = event.target;
 
           l.setStyle({
@@ -71,6 +74,9 @@ export default function Geoman({
           l.bringToFront();
         },
         mouseout: (event: any) => {
+          if (event.target.feature.type !== "Point") {
+            return;
+          }
           var l = event.target;
           l.setStyle(
             feature.properties.styles
