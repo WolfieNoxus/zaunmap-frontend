@@ -1,9 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, KeyboardEvent } from "react";
 import IEditProps from "../../../Interfaces/IEditProps";
 import apiClient from "../../../services/apiClient";
 import "./css/editBar.css";
-// import { HiEye, HiEyeOff } from "react-icons/hi";
+import { HiEye, HiEyeOff } from "react-icons/hi";
+import { IoIosClose } from "react-icons/io";
 // import IGeoJsonProperties from "../../../Interfaces/IGeoJsonProperties";
+
+interface ITagProps {
+  mapId: string;
+  initialTags: string[];
+}
 
 const EditBar: React.FC<IEditProps> = ({
   onClose,
@@ -14,10 +20,11 @@ const EditBar: React.FC<IEditProps> = ({
   const [currentProjecName, setCurrentProjectName] = useState<string>(
     mapProject.name
   );
-  // const [onSelectCategory, setOnSelectCategory] = useState<string>("region");
   const [isPublic, setIsPublic] = useState<boolean>(mapProject.isPublic);
-  // const [newName, setNewName] = useState<string>("");
+  const [tags, setTags] = useState<string[]>(mapProject.tags);
+  // const [newTag, setNewTag] = useState<string>("");
 
+  // update project name
   useEffect(() => {
     const updateProjectName = async (newName: string) => {
       try {
@@ -40,6 +47,7 @@ const EditBar: React.FC<IEditProps> = ({
     // eslint-disable-next-line
   }, [currentProjecName]);
 
+  // set project public or not
   useEffect(() => {
     const updateProjectPublic = async (newPublic: boolean) => {
       try {
@@ -63,25 +71,80 @@ const EditBar: React.FC<IEditProps> = ({
     // eslint-disable-next-line
   }, [isPublic]);
 
-  // const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   console.log(e.target.value);
-  // };
+  // set project tags
+  const addTag = async (mapId: string, newTags: string[]) => {
+    // Find the current map and prepare updated tags
+    // const currentMap = items.find((item) => item._id === mapId);
+    // if (!currentMap) {
+    //   console.error("Map not found");
+    //   return;
+    // }
+    try {
+      // Call the backend API to update the tags
+      const response = await apiClient.put(`/map?mapId=${mapId}`, {
+        tags: newTags,
+      });
+      if (response.status === 200) {
+        console.log("Tags updated successfully");
+        // Update the state to reflect the new tags
+        setTags(newTags);
+      } else {
+        console.error("Failed to update tags");
+        // Handle errors
+      }
+    } catch (err) {
+      console.error("Error while updating tags", err);
+      // Handle errors
+    }
+  };
 
-  // const handleChange = (property: keyof IGeoJsonProperties, value: any) => {
-  //   setSelectedProperties({
-  //     ...selectedProperties,
-  //     [property]: value,
-  //   });
-  // }
+  // TagInput component
+  const Tags = ({ mapId, initialTags }: ITagProps) => {
+    const [tags, setTags] = useState(initialTags);
+    const [input, setInput] = useState("");
 
-  // const handleInputChange = (property: keyof IGeoJsonProperties, events: React.KeyboardEvent<HTMLInputElement>) => {
-  //   if (events.key === "Enter") {
-  //     setSelectedProperties({
-  //       ...selectedProperties,
-  //       [property]: events.currentTarget.value,
-  //     });
-  //   }
-  // }
+    const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+      if (event.key === "Enter" && input) {
+        const newTags = [...tags, input];
+        setInput("");
+        setTags(newTags);
+        addTag(mapId, newTags); // Call the addTag function to update the backend
+      }
+    };
+
+    const removeTag = (index: number) => {
+      const newTags = tags.filter((_, idx) => idx !== index);
+      setTags(newTags);
+      addTag(mapId, newTags); // Update the backend
+    };
+
+    return (
+      <div className="tag-block">
+        {/* tag-input-container */}
+        {tags.map((tag, index) => (
+          <div className="tag" key={index}>
+            {tag}
+            <IoIosClose
+              className="remove-tag"
+              size={20}
+              onClick={() => removeTag(index)}
+            />
+          </div>
+        ))}
+        {/* <div className="input-box-tag">
+          <IoIosAdd size={20} />
+        </div> */}
+        <input
+          className="input-box-tag"
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder="New Tag"
+        />
+      </div>
+    );
+  };
 
   const [newName, setNewName] = useState<string>("");
   const [newFillColor, setNewFillColor] = useState<string>("");
@@ -124,115 +187,115 @@ const EditBar: React.FC<IEditProps> = ({
 
   const changEdit = () => {
     // if (onSelectCategory === "region") {
-      return (
-        <div>
-          <table className="no-line-table">
-            <colgroup>
-              <col style={{ width: "45%" }} />
-              <col style={{ width: "50%" }} />
-            </colgroup>
-            <tbody>
-              <tr className="">
-                <td>Name:</td>
-                <td>
-                  <input
-                    className="input-box-basic my-1"
-                    type="text"
-                    value={newName}
-                    disabled={selectedProperties?.editId ? false : true}
-                    onChange={(event) => {
-                      setNewName(event.target.value);
-                    }}
-                    // placeholder={selectedProperties.ADMIN}
-                    // onKeyDown={(event) => handleInputChange("name", event)}
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>Filled Color:</td>
-                <td>
-                  <input
-                    className="input-inTable-color my-1"
-                    type={"color"}
-                    // value="#f6b73c"
-                    value={newFillColor}
-                    disabled={selectedProperties?.editId ? false : true}
-                    onChange={(event) => {
-                      setNewFillColor(event.target.value);
-                    }}
-                    // onChange={handleInputChange}
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>Filled:</td>
-                <td>
-                  <input
-                    className="my-1"
-                    type={"checkbox"}
-                    checked={newFill}
-                    disabled={selectedProperties?.editId ? false : true}
-                    onChange={(event) => {
-                      setNewFill(event.target.checked);
-                    }}
-                    // onChange={handleInputChange}
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>Filled Opacity:</td>
-                <td>
-                  <input
-                    className="input-box-basic my-1"
-                    type={"number"}
-                    // value="#f6b73c"
-                    value={newFillOpacity}
-                    disabled={selectedProperties?.editId ? false : true}
-                    onChange={(event) => {
-                      setNewFillOpacity(Number(event.target.value));
-                    }}
-                    // onChange={handleInputChange}
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>Border Width:</td>
-                <td>
-                  <input
-                    className="input-box-basic my-1"
-                    type={"number"}
-                    // min={1}
-                    // max={10}
-                    // step={1}
-                    value={newBorderWidth}
-                    disabled={selectedProperties ? false : true}
-                    onChange={(event) => {
-                      setNewBorderWidth(Number(event.target.value));
-                    }}
-                    // onChange={handleInputChange}
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>Border Color:</td>
-                <td>
-                  <input
-                    className="input-inTable-color my-1"
-                    type={"color"}
-                    // value="#f6b73c"
-                    value={newBorderColor}
-                    disabled={selectedProperties ? false : true}
-                    onChange={(event) => {
-                      setNewBorderColor(event.target.value);
-                    }}
-                    // onChange={handleInputChange}
-                  />
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      );
+    return (
+      <div>
+        <table className="no-line-table">
+          <colgroup>
+            <col style={{ width: "45%" }} />
+            <col style={{ width: "50%" }} />
+          </colgroup>
+          <tbody>
+            <tr className="">
+              <td>Name:</td>
+              <td>
+                <input
+                  className="input-box-basic my-1"
+                  type="text"
+                  value={newName}
+                  disabled={selectedProperties?.editId ? false : true}
+                  onChange={(event) => {
+                    setNewName(event.target.value);
+                  }}
+                  // placeholder={selectedProperties.ADMIN}
+                  // onKeyDown={(event) => handleInputChange("name", event)}
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>Filled Color:</td>
+              <td>
+                <input
+                  className="input-inTable-color my-1"
+                  type={"color"}
+                  // value="#f6b73c"
+                  value={newFillColor}
+                  disabled={selectedProperties?.editId ? false : true}
+                  onChange={(event) => {
+                    setNewFillColor(event.target.value);
+                  }}
+                  // onChange={handleInputChange}
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>Filled:</td>
+              <td>
+                <input
+                  className="my-1"
+                  type={"checkbox"}
+                  checked={newFill}
+                  disabled={selectedProperties?.editId ? false : true}
+                  onChange={(event) => {
+                    setNewFill(event.target.checked);
+                  }}
+                  // onChange={handleInputChange}
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>Filled Opacity:</td>
+              <td>
+                <input
+                  className="input-box-basic my-1"
+                  type={"number"}
+                  // value="#f6b73c"
+                  value={newFillOpacity}
+                  disabled={selectedProperties?.editId ? false : true}
+                  onChange={(event) => {
+                    setNewFillOpacity(Number(event.target.value));
+                  }}
+                  // onChange={handleInputChange}
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>Border Width:</td>
+              <td>
+                <input
+                  className="input-box-basic my-1"
+                  type={"number"}
+                  // min={1}
+                  // max={10}
+                  // step={1}
+                  value={newBorderWidth}
+                  disabled={selectedProperties ? false : true}
+                  onChange={(event) => {
+                    setNewBorderWidth(Number(event.target.value));
+                  }}
+                  // onChange={handleInputChange}
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>Border Color:</td>
+              <td>
+                <input
+                  className="input-inTable-color my-1"
+                  type={"color"}
+                  // value="#f6b73c"
+                  value={newBorderColor}
+                  disabled={selectedProperties ? false : true}
+                  onChange={(event) => {
+                    setNewBorderColor(event.target.value);
+                  }}
+                  // onChange={handleInputChange}
+                />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    );
     // } else if (onSelectCategory === "map") {
     //   return (
     //     <div>
@@ -283,29 +346,26 @@ const EditBar: React.FC<IEditProps> = ({
                 </tr>
                 <tr key={"viewPublic"}>
                   <td>Public:</td>
-                  {/* <td style={{ textAlign: "center" }}>
-                    {item.isPublic ? (
+                  <td>
+                    {isPublic ? (
                       <HiEye
-                        onClick={() => setItemsPublic(item._id)}
+                        onClick={(event) => setIsPublic(!isPublic)}
                         color="6A738B"
                       />
                     ) : (
                       <HiEyeOff
-                        onClick={() => setItemsPublic(item._id)}
+                        onClick={(event) => setIsPublic(!isPublic)}
                         color="6A738B"
                       />
                     )}
-                  </td> */}
-                  <td>
-                    {/* <input type="checkbox" id="publicView" name="publicView" /> */}
-                    <input
+                    {/* <input
                       type="checkbox"
                       id="publicView"
                       name="publicView"
                       defaultChecked={isPublic}
                       onClick={(event) => setIsPublic(!isPublic)}
                       // onChange={() => {}} // to avoid warning
-                    />
+                    /> */}
                   </td>
                 </tr>
                 {
@@ -320,13 +380,28 @@ const EditBar: React.FC<IEditProps> = ({
             {/* tags */}
             <div className="tags">
               <label>Tags:</label>
-              <div className="tag-block ms-3">
-                {mapProject.tags.map((tag) => (
+              <Tags mapId={mapProject._id} initialTags={tags || []} />
+
+              {/* <div className="tag-block ms-3">
+                {mapProject.tags.map((tag, index) => (
                   <div key={tag} className="tag">
                     {tag}
+                    <IoIosClose
+                      className="remove-tag"
+                      size={20}
+                      onClick={() => removeTag(index)}
+                    />
                   </div>
                 ))}
-              </div>
+                <input
+                  className="input-box-tag"
+                  type="text"
+                  value={newTag}
+                  onChange={(e) => setNewTag(e.target.value)}
+                  // onKeyDown={handleKeyDown}
+                  placeholder="New Tag"
+                />
+              </div> */}
             </div>
           </div>
 

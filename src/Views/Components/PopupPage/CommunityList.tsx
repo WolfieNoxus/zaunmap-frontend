@@ -9,6 +9,12 @@ import apiClient from "../../../services/apiClient";
 import { useEffect, useState } from "react";
 // import FlipPage from "react-flip-page";
 import { MdChevronLeft, MdChevronRight } from "react-icons/md";
+import { IoIosClose } from "react-icons/io";
+
+interface ITagProps {
+  mapId: string;
+  initialTags: string[];
+}
 
 type CommunityListProps = Pick<IUser, "role">;
 type UsernamesMap = {
@@ -54,18 +60,20 @@ const CommunityList = ({ role }: CommunityListProps) => {
       console.log("map : ", map);
       console.log("userRating: ", userRating);
       console.log("userId: ", userId);
-      const response = await apiClient.put(`/map/rate?userId=${userId}&mapId=${map._id}&rating=${userRating}`);
+      const response = await apiClient.put(
+        `/map/rate?userId=${userId}&mapId=${map._id}&rating=${userRating}`
+      );
       const updatedMap = response.data;
-      
+
       // Update local state with the updated map data
-      setItems(items.map(item => item._id === updatedMap._id ? updatedMap : item));
-  
+      setItems(
+        items.map((item) => (item._id === updatedMap._id ? updatedMap : item))
+      );
     } catch (error) {
       // Handle any errors
       console.error("Error updating rating:", error);
     }
   };
-  
 
   async function getPublic(): Promise<IMap[]> {
     const response = await apiClient.get(`/map/search`);
@@ -79,26 +87,25 @@ const CommunityList = ({ role }: CommunityListProps) => {
     return items;
   }
 
-  
   async function getUsername(userId: string): Promise<string> {
     const response = await apiClient.get(`/user?userId=${userId}`);
     return response.data.name;
   }
-  
+
   useEffect(() => {
     const fetchMaps = async () => {
       setLoading(true);
       try {
         const fetchedItems = await getPublic();
         console.log(fetchedItems);
-        
+
         /*for (let i = 0; i < fetchedItems.length; i++) {
           console.log(fetchedItems[i]);
           console.log("item owner: ", fetchedItems[i].owner);
           fetchedItems[i].owner = await getUsername(fetchedItems[i].owner);
         }*/
         setItems(fetchedItems);
-        const newUsernames : UsernamesMap = {};
+        const newUsernames: UsernamesMap = {};
         for (const item of fetchedItems) {
           const username = await getUsername(item.owner);
           newUsernames[item._id] = username;
@@ -114,6 +121,67 @@ const CommunityList = ({ role }: CommunityListProps) => {
 
     fetchMaps();
   }, []);
+
+  // set project tags
+  const addTag = async (mapId: string, newTags: string[]) => {
+    // Find the current map and prepare updated tags
+    // const currentMap = items.find((item) => item._id === mapId);
+    // if (!currentMap) {
+    //   console.error("Map not found");
+    //   return;
+    // }
+    try {
+      // Call the backend API to update the tags
+      const response = await apiClient.put(`/map?mapId=${mapId}`, {
+        tags: newTags,
+      });
+      if (response.status === 200) {
+        console.log("Tags updated successfully");
+        // Update the state to reflect the new tags
+        setItems(
+          items.map((item) =>
+            item._id === mapId ? { ...item, tags: newTags } : item
+          )
+        );
+      } else {
+        console.error("Failed to update tags");
+        // Handle errors
+      }
+    } catch (err) {
+      console.error("Error while updating tags", err);
+      // Handle errors
+    }
+  };
+
+  // TagInput component
+  const Tags = ({ mapId, initialTags }: ITagProps) => {
+    const [tags, setTags] = useState(initialTags);
+
+    const removeTag = (index: number) => {
+      const newTags = tags.filter((_, idx) => idx !== index);
+      setTags(newTags);
+      addTag(mapId, newTags); // Update the backend
+    };
+
+    return (
+      <div className="tag-block">
+        {/* tag-input-container */}
+        {tags.map((tag, index) => (
+          <div className="tag" key={index}>
+            {tag}
+            <IoIosClose
+              className="remove-tag"
+              size={20}
+              onClick={() => removeTag(index)}
+            />
+          </div>
+        ))}
+        {/* <div className="input-box-tag">
+          <IoIosAdd size={20} />
+        </div> */}
+      </div>
+    );
+  };
 
   const itemsPerPage = 6;
 
@@ -142,23 +210,27 @@ const CommunityList = ({ role }: CommunityListProps) => {
         <table className="table">
           <thead>
             <tr>
-            <th style={{ width: '25%' }}>Project Name</th>
-            <th style={{ width: '25%' }}>Author</th>
-            <th style={{ width: '25%' }}>Tags</th>
-            <th style={{ width: '25%' }}>{role === "admin" ? "Ban" : "Rate"}</th>
+              <th style={{ width: "25%" }}>Project Name</th>
+              <th style={{ width: "25%" }}>Author</th>
+              <th style={{ width: "25%" }}>Tags</th>
+              <th style={{ width: "25%" }}>
+                {role === "admin" ? "Ban" : "Rate"}
+              </th>
             </tr>
           </thead>
           <tbody className="table-group-divider">
             {currentItems.map((item) => (
               <tr key={item._id}>
-                <td style={{ width: '25%' }}>
+                <td style={{ width: "25%" }}>
                   <Link reloadDocument to={"/map/" + item._id}>
                     {item.name}
                   </Link>
                 </td>
-                <td style={{ width: '25%' }}>{usernames[item._id]}</td>
-                <td style={{ width: '25%' }}>{item.tags.toString()}</td>
-                <td style={{ width: '25%' }}>
+                <td style={{ width: "25%" }}>{usernames[item._id]}</td>
+                <td style={{ width: "25%" }}>
+                  <Tags mapId={item._id} initialTags={item.tags || []} />
+                </td>
+                <td style={{ width: "25%" }}>
                   {role === "admin" ? (
                     <button
                       className="btn btn-outline-danger"
@@ -169,7 +241,9 @@ const CommunityList = ({ role }: CommunityListProps) => {
                   ) : (
                     <ReactStars
                       count={5}
-                      onChange={(newRating:number) => handleRatingChange(newRating, item)}
+                      onChange={(newRating: number) =>
+                        handleRatingChange(newRating, item)
+                      }
                       size={24}
                       activeColor="#ffd700"
                       value={item.averageRating}

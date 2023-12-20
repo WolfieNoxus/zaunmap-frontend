@@ -15,6 +15,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { HiEye, HiEyeOff, HiPencil, HiCheck, HiX } from "react-icons/hi";
 import { MdChevronLeft, MdChevronRight } from "react-icons/md";
 import { RiDeleteBin5Line } from "react-icons/ri";
+import { IoIosClose } from "react-icons/io";
 // import Tags from "../Elements/Tags";
 
 // interface IUserResponse {
@@ -175,11 +176,11 @@ const UserProfile = (userProfile: IUser) => {
 
   const addTag = async (mapId: string, newTags: string[]) => {
     // Find the current map and prepare updated tags
-    const currentMap = items.find((item) => item._id === mapId);
-    if (!currentMap) {
-      console.error("Map not found");
-      return;
-    }
+    // const currentMap = items.find((item) => item._id === mapId);
+    // if (!currentMap) {
+    //   console.error("Map not found");
+    //   return;
+    // }
     try {
       // Call the backend API to update the tags
       const response = await apiClient.put(`/map?mapId=${mapId}`, {
@@ -224,21 +225,28 @@ const UserProfile = (userProfile: IUser) => {
     };
 
     return (
-      <div className="tag-input-container">
+      <div className="tag-block">
+        {/* tag-input-container */}
         {tags.map((tag, index) => (
-          <div className="tag-item" key={index}>
+          <div className="tag" key={index}>
             {tag}
-            <span className="remove-tag" onClick={() => removeTag(index)}>
-              x
-            </span>
+            <IoIosClose
+              className="remove-tag"
+              size={20}
+              onClick={() => removeTag(index)}
+            />
           </div>
         ))}
+        {/* <div className="input-box-tag">
+          <IoIosAdd size={20} />
+        </div> */}
         <input
+          className="input-box-tag"
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="Add a tag"
+          placeholder="New Tag"
         />
       </div>
     );
@@ -292,7 +300,7 @@ const UserProfile = (userProfile: IUser) => {
           )}
         </div>
       </div>
-      <div className="mb-3 profile-center">
+      {/* <div className="mb-3 profile-center">
         {userData?.role === "admin" ? (
           <button
             className="btn btn-info"
@@ -303,11 +311,17 @@ const UserProfile = (userProfile: IUser) => {
             Admin Portal
           </button>
         ) : null}
-      </div>
+      </div> */}
 
       <SearchBar />
       <span className="text-danger">{error} </span>
       <table className="table mb-3">
+        <colgroup>
+          <col style={{ width: "25%" }} />
+          <col style={{ width: "57%" }} />
+          <col style={{ width: "10%" }} />
+          <col style={{ width: "10%" }} />
+        </colgroup>
         <thead>
           <tr>
             <th>Project Name</th>
@@ -379,6 +393,16 @@ const UserProfile = (userProfile: IUser) => {
           </div>
         ) : null}
         <div className="log-out-box">
+          {userData?.role === "admin" ? (
+            <button
+              className="btn btn-info me-5"
+              onClick={() => {
+                navigate("/admin/");
+              }}
+            >
+              Admin Portal
+            </button>
+          ) : null}
           {/* style={{ textAlign: "center" }} */}
           <button
             className="btn btn-primary"
