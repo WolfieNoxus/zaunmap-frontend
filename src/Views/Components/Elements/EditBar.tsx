@@ -188,6 +188,7 @@ const EditBar: React.FC<IEditProps> = ({
     setNewFillOpacity,
     setNewBorderWidth,
     setNewBorderColor,
+    setNewAttachText,
     selectedProperties,
   ]);
 
@@ -462,6 +463,7 @@ const EditBar: React.FC<IEditProps> = ({
               setNewProperties({
                 ...selectedProperties,
                 name: newName,
+                attachText: newAttachText,
                 styles: {
                   ...selectedProperties.styles,
                   fillColor: newFillColor,
