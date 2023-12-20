@@ -14,6 +14,7 @@ import IGeoJsonProperties, { defaultGeoJsonProperties } from // defaultGeoJsonPr
     selectedProperties: IGeoJsonProperties;
     setSelectedProperties: (properties: IGeoJsonProperties) => void;
     newProperties: IGeoJsonProperties;
+    setChanged: (changed: boolean) => void;
 }
 
 export default function Geoman({
@@ -22,6 +23,7 @@ export default function Geoman({
     // selectedProperties,
     setSelectedProperties,
     newProperties,
+    setChanged,
 }: Props) {
     const ref = React.useRef<L.FeatureGroup>(null);
     // let geojsonLayer: L.GeoJSON = React.useRef(null);;
@@ -170,6 +172,7 @@ export default function Geoman({
                 }
             });
         }
+        setChanged(true);
         setGeojson(newGeo);
     };
 
