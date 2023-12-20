@@ -174,6 +174,24 @@ const CommunityList = ({ role }: CommunityListProps) => {
     );
   };
 
+  const handleSearch = async (name: string, tags: string, sortBy: string, sortOrder: string) => {
+    try {
+      const response = await apiClient.get('/map/search', {
+        params: { name, tags, sortBy, sortOrder }
+      });
+      if (response.status === 200) {
+        setItems(response.data as IMap[]);
+      } else {
+        // Handle non-200 responses
+        console.error("Failed to retrieve search results");
+      }
+    } catch (error) {
+      // Handle errors
+      setError("Failed to retrieve search results: " + error);
+      console.error("Error fetching search results:", error);
+    }
+  };
+
   const itemsPerPage = 6;
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -190,9 +208,9 @@ const CommunityList = ({ role }: CommunityListProps) => {
 
   return (
     <div>
-      <SearchBar />
       {/* <span>View type: {role === "admin" ? "Admin" : "User"}</span> */}
       {error && <p className="text-danger">{error}</p>}
+      <SearchBar onSearch={handleSearch}/>
       {loading ? (
         <div className="spinner-border" role="status">
           <span className="visually-hidden">Loading...</span>
