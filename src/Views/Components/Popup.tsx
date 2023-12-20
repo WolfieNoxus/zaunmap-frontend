@@ -3,6 +3,7 @@ import UserProfile from "./PopupPage/UserProfile";
 import IPopupProps from "../../Interfaces/IPopupProps";
 import FileUploader from "./PopupPage/FileUploader";
 import Comments from "./PopupPage/Comments";
+import MapInfo from "./PopupPage/MapInfo"
 const Popup: React.FC<IPopupProps> = ({ page, user, onClose }) => {
   const changePage = (type: string) => {
     if (type === "community") {
@@ -21,17 +22,7 @@ const Popup: React.FC<IPopupProps> = ({ page, user, onClose }) => {
     } else if (type === "comments") {
       return <Comments />;
     } else if (type === "mapInfo") {
-      return (
-        <div>
-          <h2 className="mb-4 mt-3">Map Info</h2>
-          <span className="text text-danger" style={{ fontStyle: "italic" }}>
-            Not implemented yet. Please check back later for more updates.
-          </span>
-          {/* <p className="text text-danger" style={{ fontStyle: "italic" }}>
-            *You need to set up project to view map infomation.
-          </p> */}
-        </div>
-      );
+      return <MapInfo />;
     }
   };
 
