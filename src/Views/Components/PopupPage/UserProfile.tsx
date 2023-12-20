@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, KeyboardEvent } from "react";
 import SearchBar from "../Elements/SearchBar";
 import IUser from "../../../Interfaces/IUser";
 import { HiEye, HiEyeOff, HiPencil, HiCheck, HiX } from "react-icons/hi";
@@ -180,6 +180,69 @@ const UserProfile = (userProfile: IUser) => {
     }
   };
 
+  const addTag = async (mapId: string, newTags: string[]) => {
+    // Find the current map and prepare updated tags
+    const currentMap = items.find(item => item._id === mapId);
+    if (!currentMap) {
+      console.error("Map not found");
+      return;
+    }
+    try {
+      // Call the backend API to update the tags
+      const response = await apiClient.put(`/map?mapId=${mapId}`, { tags: newTags });
+      if (response.status === 200) {
+        console.log("Tags updated successfully");
+        // Update the state to reflect the new tags
+        setItems(items.map(item => item._id === mapId ? { ...item, tags: newTags } : item));
+      } else {
+        console.error("Failed to update tags");
+        // Handle errors
+      }
+    } catch (err) {
+      console.error("Error while updating tags", err);
+      // Handle errors
+    }
+  };
+
+  // TagInput component
+  const TagInput = ({ mapId, initialTags }: { mapId: string, initialTags: string[] }) => {
+    const [tags, setTags] = useState(initialTags);
+    const [input, setInput] = useState('');
+
+    const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+      if (event.key === 'Enter' && input) {
+        const newTags = [...tags, input];
+        setInput('');
+        setTags(newTags);
+        addTag(mapId, newTags); // Call the addTag function to update the backend
+      }
+    };
+
+    const removeTag = (index: number) => {
+      const newTags = tags.filter((_, idx) => idx !== index);
+      setTags(newTags);
+      addTag(mapId, newTags); // Update the backend
+    };
+
+    return (
+      <div className="tag-input-container">
+        {tags.map((tag, index) => (
+          <div className="tag-item" key={index}>
+            {tag}
+            <span className="remove-tag" onClick={() => removeTag(index)}>x</span>
+          </div>
+        ))}
+        <input
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder="Add a tag"
+        />
+      </div>
+    );
+  };
+
   // Page Flip Code
   const itemsPerPage = 6;
 
@@ -201,6 +264,7 @@ const UserProfile = (userProfile: IUser) => {
         <div className="username-section mb-3">
           {isEditing ? (
             <div className="display-username">
+              <span className="username-label">UserName:</span>
               <input
                 type="text"
                 value={newUsername}
@@ -215,7 +279,8 @@ const UserProfile = (userProfile: IUser) => {
             </div>
           ) : (
             <div className="display-username">
-              <span className="text username-text">{newUsername}</span>
+              <span className="username-label">UserName:</span>
+              <span className="username-text">{newUsername}</span>
               <HiPencil
                 onClick={() => setIsEditing(true)}
                 className="icon-edit"
@@ -258,9 +323,11 @@ const UserProfile = (userProfile: IUser) => {
                 </Link>
               </td>
               {/* <td>{item.userName}</td> */}
-              <td>{item.tags}</td>
+              <td>
+                <TagInput mapId={item._id} initialTags={item.tags || []} />
+              </td>
               {/* <td>{item.views}</td> */}
-              <td style={{ textAlign: "center" }}>
+              <td>
                 {item.isPublic ? (
                   <HiEye
                     onClick={() => setItemsPublic(item._id)}
