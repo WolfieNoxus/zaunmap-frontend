@@ -1,20 +1,32 @@
-import { useState, useEffect } from "react";
-import SearchBar from "../Elements/SearchBar";
+import { useState, useEffect, KeyboardEvent } from "react";
+
 import IUser from "../../../Interfaces/IUser";
-import { HiEye, HiEyeOff, HiPencil, HiCheck, HiX } from "react-icons/hi";
+import IMap from "../../../Interfaces/IMap";
+import SearchBar from "../Elements/SearchBar";
+import apiClient from "../../../services/apiClient";
+import { AxiosError } from "axios";
+
+import "./css/userProfile.css";
+import "../Elements/css/tags.css";
+
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
-import apiClient from "../../../services/apiClient";
-import "./css/userProfile.css";
+
+import { HiEye, HiEyeOff, HiPencil, HiCheck, HiX } from "react-icons/hi";
 import { MdChevronLeft, MdChevronRight } from "react-icons/md";
-import { AxiosError } from "axios";
-import IMap from "../../../Interfaces/IMap";
+import { RiDeleteBin5Line } from "react-icons/ri";
+// import Tags from "../Elements/Tags";
 
 // interface IUserResponse {
 //   userId: string;
 //   name: string;
 //   role: string;
 // }
+
+interface ITagProps {
+  mapId: string;
+  initialTags: string[];
+}
 
 const UserProfile = (userProfile: IUser) => {
   const { user, logout } = useAuth0();
@@ -43,6 +55,8 @@ const UserProfile = (userProfile: IUser) => {
             setNewUsername(
               userData.name === "" ? user?.nickname : userData.name
             );
+
+            // updateUsername(user?.sub, newUsername)
           } else {
             setNewUsername(userData.name);
           }
@@ -58,13 +72,12 @@ const UserProfile = (userProfile: IUser) => {
               console.error("Failed to retrieve map data");
               // Handle errors
             }
-          };
+          }
           setItems(mapList);
         } else {
           console.error("Failed to retrieve user data");
           // Handle errors
         }
-
       } catch (err) {
         setError(
           "Failed to retrieve user data: " + (err as AxiosError).message
@@ -81,10 +94,15 @@ const UserProfile = (userProfile: IUser) => {
     //eslint-disable-next-line
   }, [user]);
 
+  // Function to handle public/private toggle
   const setItemsPublic = (id: string) => {
-    setItems(items.map((i) => (i._id === id ? { ...i, isPublic: !i.isPublic } : i)));
+    setItems(
+      items.map((i) => (i._id === id ? { ...i, isPublic: !i.isPublic } : i))
+    );
     apiClient
-      .put(`/map?mapId=${id}`, { isPublic: !items.find((i) => i._id === id)?.isPublic })
+      .put(`/map?mapId=${id}`, {
+        isPublic: !items.find((i) => i._id === id)?.isPublic,
+      })
       .catch((err) => {
         setError(err.message);
       });
@@ -105,31 +123,6 @@ const UserProfile = (userProfile: IUser) => {
     }
 
     try {
-      // const response = await fetch(
-      //   `https://zaunmap-6b1455b08c9b.herokuapp.com/api/user/rename?userId=${sub}&newName=${encodeURIComponent(
-      //     new_name
-      //   )}`,
-      //   {
-      //     method: "PUT",
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //       Authorization: `Bearer ${user?.token}`, // Make sure you use the correct token
-      //     },
-      //     body: JSON.stringify({
-      //       userId: sub,
-      //       name: new_name,
-      //     }),
-      //   }
-      // );
-      // if (response.ok) {
-      //   console.log("Username updated successfully");
-      //   setUserData({ ...userData, name: new_name });
-      //   setNewUsername(new_name);
-      // } else {
-      //   console.error("Failed to update username");
-      //   // Handle errors, possibly by parsing the response JSON
-      // }
-
       const res = await apiClient.put(
         `/user/rename?userId=${sub}&newName=${encodeURIComponent(new_name)}`,
         {
@@ -180,10 +173,81 @@ const UserProfile = (userProfile: IUser) => {
     }
   };
 
-  // Page Flip Code
-  const itemsPerPage = 6;
+  const addTag = async (mapId: string, newTags: string[]) => {
+    // Find the current map and prepare updated tags
+    const currentMap = items.find((item) => item._id === mapId);
+    if (!currentMap) {
+      console.error("Map not found");
+      return;
+    }
+    try {
+      // Call the backend API to update the tags
+      const response = await apiClient.put(`/map?mapId=${mapId}`, {
+        tags: newTags,
+      });
+      if (response.status === 200) {
+        console.log("Tags updated successfully");
+        // Update the state to reflect the new tags
+        setItems(
+          items.map((item) =>
+            item._id === mapId ? { ...item, tags: newTags } : item
+          )
+        );
+      } else {
+        console.error("Failed to update tags");
+        // Handle errors
+      }
+    } catch (err) {
+      console.error("Error while updating tags", err);
+      // Handle errors
+    }
+  };
 
-  const [currentPage, setCurrentPage] = useState(1);
+  // TagInput component
+  const Tags = ({ mapId, initialTags }: ITagProps) => {
+    const [tags, setTags] = useState(initialTags);
+    const [input, setInput] = useState("");
+
+    const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+      if (event.key === "Enter" && input) {
+        const newTags = [...tags, input];
+        setInput("");
+        setTags(newTags);
+        addTag(mapId, newTags); // Call the addTag function to update the backend
+      }
+    };
+
+    const removeTag = (index: number) => {
+      const newTags = tags.filter((_, idx) => idx !== index);
+      setTags(newTags);
+      addTag(mapId, newTags); // Update the backend
+    };
+
+    return (
+      <div className="tag-input-container">
+        {tags.map((tag, index) => (
+          <div className="tag-item" key={index}>
+            {tag}
+            <span className="remove-tag" onClick={() => removeTag(index)}>
+              x
+            </span>
+          </div>
+        ))}
+        <input
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder="Add a tag"
+        />
+      </div>
+    );
+  };
+
+  // Page Flip Code
+  const itemsPerPage = 3;
+
+  const [currentPage, setCurrentPage] = useState<number>(1);
   const maxPage = Math.ceil(items.length / itemsPerPage);
 
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -201,12 +265,15 @@ const UserProfile = (userProfile: IUser) => {
         <div className="username-section mb-3">
           {isEditing ? (
             <div className="display-username">
+              <span className="username-label">UserName:</span>
+
               <input
                 type="text"
                 value={newUsername}
                 onChange={(e) => setNewUsername(e.target.value)}
                 className="edit-username-input"
               />
+
               <HiCheck
                 onClick={() => updateUsername(user?.sub, newUsername)}
                 className="icon-check"
@@ -215,7 +282,8 @@ const UserProfile = (userProfile: IUser) => {
             </div>
           ) : (
             <div className="display-username">
-              <span className="text username-text">{newUsername}</span>
+              <span className="username-label">UserName:</span>
+              <span className="username-text">{newUsername}</span>
               <HiPencil
                 onClick={() => setIsEditing(true)}
                 className="icon-edit"
@@ -245,68 +313,82 @@ const UserProfile = (userProfile: IUser) => {
             <th>Project Name</th>
             {/* <th>User</th> */}
             <th>tags</th>
-            <th>Public</th>
-            <th>Delete</th>
+            <th style={{ textAlign: "center" }}>Public</th>
+            <th style={{ textAlign: "center" }}>Delete</th>
           </tr>
         </thead>
         <tbody className="table-group-divider">
           {currentItems.map((item) => (
             <tr key={item._id}>
-              <td>
+              <td style={{ verticalAlign: "middle" }}>
                 <Link reloadDocument to={"/map/" + item._id}>
                   {item.name}
                 </Link>
               </td>
               {/* <td>{item.userName}</td> */}
-              <td>{item.tags}</td>
+              <td>
+                <Tags mapId={item._id} initialTags={item.tags || []} />
+              </td>
               {/* <td>{item.views}</td> */}
-              <td style={{ textAlign: "center" }}>
+              <td style={{ textAlign: "center", verticalAlign: "middle" }}>
                 {item.isPublic ? (
                   <HiEye
                     onClick={() => setItemsPublic(item._id)}
+                    size={20}
                     color="6A738B"
                   />
                 ) : (
                   <HiEyeOff
                     onClick={() => setItemsPublic(item._id)}
+                    size={20}
                     color="6A738B"
                   />
                 )}
               </td>
-              <td className="text-danger" onClick={() => deleteMap(item)}>
-                Delete
+              <td
+                className="text-danger"
+                style={{ textAlign: "center", verticalAlign: "middle" }}
+                onClick={() => deleteMap(item)}
+              >
+                <RiDeleteBin5Line size={30} />
               </td>
             </tr>
           ))}
         </tbody>
       </table>
-      {items.length > itemsPerPage ? (
-        <div>
+      <div className="bottom-box-line mb-3">
+        {items.length >= itemsPerPage ? (
+          <div>
+            <button
+              className="btn"
+              onClick={goToPreviousPage}
+              disabled={currentPage === 1}
+            >
+              <MdChevronLeft />
+            </button>
+            <span className="mx-2">
+              Page {currentPage} of {maxPage}
+            </span>
+            <button
+              className="btn"
+              onClick={goToNextPage}
+              disabled={currentPage === maxPage}
+            >
+              <MdChevronRight />
+            </button>
+          </div>
+        ) : null}
+        <div className="log-out-box">
+          {/* style={{ textAlign: "center" }} */}
           <button
-            className="btn"
-            onClick={goToPreviousPage}
-            disabled={currentPage === 1}
+            className="btn btn-primary"
+            onClick={() =>
+              logout({ logoutParams: { returnTo: window.location.origin } })
+            }
           >
-            <MdChevronLeft />
-          </button>
-          <button
-            className="btn"
-            onClick={goToNextPage}
-            disabled={currentPage === maxPage}
-          >
-            <MdChevronRight />
+            Log Out
           </button>
         </div>
-      ) : null}
-      <div style={{ textAlign: "center" }}>
-        <button
-          className="btn btn-primary"
-          onClick={() =>
-            logout({ logoutParams: { returnTo: window.location.origin } })
-          }
-        >
-          Log Out
-        </button>
       </div>
     </div>
   );
