@@ -63,11 +63,6 @@ const EditBar: React.FC<IEditProps> = ({
     // eslint-disable-next-line
   }, [isPublic]);
 
-  // // selectedProperties
-  // useEffect(() => {setNewName(selectedProperties.name? selectedProperties.name: "")}, [selectedProperties]);
-
-  // useEffect(() => {}, [newName])
-
   // const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
   //   console.log(e.target.value);
   // };

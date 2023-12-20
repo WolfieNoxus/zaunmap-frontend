@@ -1,21 +1,32 @@
 import { useState, useEffect, KeyboardEvent } from "react";
-import SearchBar from "../Elements/SearchBar";
+
 import IUser from "../../../Interfaces/IUser";
-import { HiEye, HiEyeOff, HiPencil, HiCheck, HiX } from "react-icons/hi";
+import IMap from "../../../Interfaces/IMap";
+import SearchBar from "../Elements/SearchBar";
+import apiClient from "../../../services/apiClient";
+import { AxiosError } from "axios";
+
+import "./css/userProfile.css";
+import "../Elements/css/tags.css";
+
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
-import apiClient from "../../../services/apiClient";
-import "./css/userProfile.css";
+
+import { HiEye, HiEyeOff, HiPencil, HiCheck, HiX } from "react-icons/hi";
 import { MdChevronLeft, MdChevronRight } from "react-icons/md";
 import { RiDeleteBin5Line } from "react-icons/ri";
-import { AxiosError } from "axios";
-import IMap from "../../../Interfaces/IMap";
+// import Tags from "../Elements/Tags";
 
 // interface IUserResponse {
 //   userId: string;
 //   name: string;
 //   role: string;
 // }
+
+interface ITagProps {
+  mapId: string;
+  initialTags: string[];
+}
 
 const UserProfile = (userProfile: IUser) => {
   const { user, logout } = useAuth0();
@@ -193,13 +204,7 @@ const UserProfile = (userProfile: IUser) => {
   };
 
   // TagInput component
-  const TagInput = ({
-    mapId,
-    initialTags,
-  }: {
-    mapId: string;
-    initialTags: string[];
-  }) => {
+  const Tags = ({ mapId, initialTags }: ITagProps) => {
     const [tags, setTags] = useState(initialTags);
     const [input, setInput] = useState("");
 
@@ -261,7 +266,7 @@ const UserProfile = (userProfile: IUser) => {
           {isEditing ? (
             <div className="display-username">
               <span className="username-label">UserName:</span>
-              
+
               <input
                 type="text"
                 value={newUsername}
@@ -322,7 +327,7 @@ const UserProfile = (userProfile: IUser) => {
               </td>
               {/* <td>{item.userName}</td> */}
               <td>
-                <TagInput mapId={item._id} initialTags={item.tags || []} />
+                <Tags mapId={item._id} initialTags={item.tags || []} />
               </td>
               {/* <td>{item.views}</td> */}
               <td style={{ textAlign: "center", verticalAlign: "middle" }}>
