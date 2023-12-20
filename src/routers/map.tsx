@@ -237,10 +237,9 @@ function Map() {
     if (map.owner && map.objectId && map.owner === user?.sub && changed) {
       if (inited) {
         putMapData(map, geojson);
-      }
-      else {
+      } else {
         setInited(true);
-      };
+      }
       if (justUndo) {
         setJustUndo(false);
       } else if (justRedo) {
@@ -279,7 +278,6 @@ function Map() {
 
   const handleKeyDown = (event: KeyboardEvent) => {
     if (event.ctrlKey || event.metaKey) {
-
       if (event.key === "z") {
         document.getElementById("undo")?.click();
       } else if (event.key === "y" || (event.shiftKey && event.key === "Z")) {
@@ -300,7 +298,7 @@ function Map() {
     setPopupPage({
       page: "forkProject",
       user: loggedinUser,
-      onClose: () => { },
+      onClose: () => {},
       importUserId: map.owner,
       importObjectId: map.objectId,
     });
