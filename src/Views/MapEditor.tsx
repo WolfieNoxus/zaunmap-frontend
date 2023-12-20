@@ -45,10 +45,6 @@ export default function Geoman({
 
       layer.on({
         click: (event: any) => {
-          // console.log("Click")
-          // console.log(event.target.feature.properties.ADMIN);
-          // console.log(event.target.feature.properties.styles);
-
           if (event.target.feature.properties === undefined) {
             event.target.feature.properties = defaultGeoJsonProperties;
             event.target.feature.properties.editId = 0;

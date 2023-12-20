@@ -403,7 +403,7 @@ function Map() {
           />
           <MdContentCopy
             className="component-bottom-right-copy"
-            size={40}
+            size={38}
             color={showPopup ? "grey" : "BB2649"}
             onClick={() => {
               if (!isAuthenticated) {
