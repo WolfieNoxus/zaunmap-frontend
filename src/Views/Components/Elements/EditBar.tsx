@@ -97,72 +97,58 @@ const EditBar: React.FC<IEditProps> = ({
               <col style={{ width: "50%" }} />
             </colgroup>
             <tbody>
-              {/* <tr>
-                <td>Attach Text:</td>
-                <td>AS</td>
-              </tr>
-              <tr>
-                <td>Text Font:</td>
-                <td>Arial</td>
-              </tr>
-              <tr>
-                <td>Text Size:</td>
-                <td>12</td>
-              </tr>
-              <tr>
-                <td>Text Color</td>
-                <td>
-                  <input
-                    className="input-inTable-color"
-                    type={"color"}
-                    defaultValue="#e66465"
-                    // onChange={handleInputChange}
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>Position:</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td style={{ fontSize: "80%", whiteSpace: "pre" }}>
-                  {"      "}
-                  Horizontal:
-                </td>
-                <td>3</td>
-              </tr>
-              <tr>
-                <td style={{ fontSize: "80%", whiteSpace: "pre" }}>
-                  {"      "}
-                  Vertical:
-                </td>
-                <td>-5</td>
-              </tr> */}
-              <tr>
+              <tr className="">
                 <td>Name:</td>
                 <td>
                   <input
+                    className="input-box-basic my-1"
                     type="text"
                     value={selectedProperties ? selectedProperties.name : ""}
                     disabled={selectedProperties ? false : true}
-                    onChange={(event) =>
-                      { 
-                        selectedProperties.name = event.target.value
-                        console.log(selectedProperties.name)
-                      }
-                    }
+                    onChange={(event) => {
+                      selectedProperties.name = event.target.value;
+                      console.log(selectedProperties.name);
+                    }}
                     // placeholder={selectedProperties.ADMIN}
                     // onKeyDown={(event) => handleInputChange("name", event)}
                   />
                 </td>
               </tr>
               <tr>
-                <td>Region Color:</td>
+                <td>Filled Color:</td>
                 <td>
                   <input
-                    className="input-inTable-color"
+                    className="input-inTable-color my-1"
                     type={"color"}
-                    defaultValue="#f6b73c"
+                    // value="#f6b73c"
+                    value={selectedProperties.styles?.fillColor}
+                    disabled={selectedProperties ? false : true}
+                    // onChange={handleInputChange}
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>Filled:</td>
+                <td>
+                  <input
+                    className="my-1"
+                    type={"checkbox"}
+                    // value="#f6b73c"
+                    checked={selectedProperties.styles?.fill}
+                    disabled={selectedProperties ? false : true}
+                    // onChange={handleInputChange}
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>Filled Opacity:</td>
+                <td>
+                  <input
+                    className="input-box-basic my-1"
+                    type={"number"}
+                    // value="#f6b73c"
+                    value={selectedProperties.styles?.fillOpacity}
+                    disabled={selectedProperties ? false : true}
                     // onChange={handleInputChange}
                   />
                 </td>
@@ -184,12 +170,14 @@ const EditBar: React.FC<IEditProps> = ({
                 <td>Border Width:</td>
                 <td>
                   <input
-                    className="input-inTable-color"
+                    className="input-box-basic my-1"
                     type={"number"}
                     // min={1}
                     // max={10}
                     // step={1}
-                    value={1}
+                    value={selectedProperties.styles?.weight}
+                    disabled={selectedProperties ? false : true}
+
                     // onChange={handleInputChange}
                   />
                 </td>
@@ -198,9 +186,11 @@ const EditBar: React.FC<IEditProps> = ({
                 <td>Border Color:</td>
                 <td>
                   <input
-                    className="input-inTable-color"
+                    className="input-inTable-color my-1"
                     type={"color"}
-                    value="#f6b73c"
+                    // value="#f6b73c"
+                    value={selectedProperties.styles?.color}
+                    disabled={selectedProperties ? false : true}
                     // onChange={handleInputChange}
                   />
                 </td>
