@@ -13,7 +13,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { RiCommunityLine } from "react-icons/ri"; // TopLeft
 import { BiSolidUserCircle } from "react-icons/bi"; // TopRight
 import { BiInfoCircle } from "react-icons/bi"; // BottomLeft
-import { MdAddCircle, MdChatBubbleOutline } from "react-icons/md"; // BottomRight
+import { MdChatBubbleOutline, MdContentCopy } from "react-icons/md"; // BottomRight
 import IPopupProps, { defaultPopupProps } from "../Interfaces/IPopupProps";
 import IUser, { defaultUser } from "../Interfaces/IUser";
 import IGeoJsonProperties, {
@@ -42,6 +42,7 @@ function Map() {
   const { user, isAuthenticated, loginWithRedirect } = useAuth0();
 
   const mapId = useLoaderData();
+
   if (typeof mapId !== "string") {
     throw new Error("Map ID is not a string");
   }
@@ -76,6 +77,7 @@ function Map() {
   const [justUndo, setJustUndo] = useState<boolean>(false);
   const [justRedo, setJustRedo] = useState<boolean>(false);
   const [changed, setChanged] = useState<boolean>(true);
+  const [inited, setInited] = useState<boolean>(false);
   const [rerender, setRerender] = useState<boolean>(false);
 
   const handleClosePopup = () => {
@@ -178,6 +180,7 @@ function Map() {
     setJustUndo(false);
     setRedoStack([]);
     setJustRedo(false);
+    setInited(false);
     fetchMapMeta(mapId);
   }, [mapId]);
 
@@ -232,16 +235,21 @@ function Map() {
     };
 
     if (map.owner && map.objectId && map.owner === user?.sub && changed) {
-      putMapData(map, geojson);
+      if (inited) {
+        putMapData(map, geojson);
+      }
+      else {
+        setInited(true);
+      };
       if (justUndo) {
         setJustUndo(false);
       } else if (justRedo) {
         setJustRedo(false);
       } else {
+        setPrevGeojson(geojson);
         if (prevGeojson) {
           setUndoStack([...undoStack, prevGeojson]);
         }
-        setPrevGeojson(geojson);
         setRedoStack([]);
       }
       setChanged(false);
@@ -271,6 +279,7 @@ function Map() {
 
   const handleKeyDown = (event: KeyboardEvent) => {
     if (event.ctrlKey || event.metaKey) {
+
       if (event.key === "z") {
         document.getElementById("undo")?.click();
       } else if (event.key === "y" || (event.shiftKey && event.key === "Z")) {
@@ -286,6 +295,16 @@ function Map() {
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, []);
+
+  const handleForkProject = () => {
+    setPopupPage({
+      page: "forkProject",
+      user: loggedinUser,
+      onClose: () => { },
+      importUserId: map.owner,
+      importObjectId: map.objectId,
+    });
+  };
 
   // return block
   if (loading) {
@@ -316,6 +335,21 @@ function Map() {
               Redo
             </button>
           </div>
+          {loading ? (
+            <div className="spinner-border" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </div>
+          ) : (
+            showPopup && (
+              <Popup
+                user={loggedinUser}
+                page={popupPage.page}
+                onClose={() => handleClosePopup()}
+                importUserId={popupPage.importUserId}
+                importObjectId={popupPage.importObjectId}
+              />
+            )
+          )}
           <MapContainer
             key={JSON.stringify(rerender)}
             className="structure-of-map"
@@ -353,20 +387,6 @@ function Map() {
             setChanged={setChanged}
           />
 
-          {/* popup page */}
-          {loading ? (
-            <div className="spinner-border" role="status">
-              <span className="visually-hidden">Loading...</span>
-            </div>
-          ) : (
-            showPopup && (
-              <Popup
-                user={loggedinUser}
-                page={popupPage.page}
-                onClose={() => handleClosePopup()}
-              />
-            )
-          )}
           <MdChatBubbleOutline
             className="edit-bottom-right-comment"
             size={40}
@@ -379,6 +399,20 @@ function Map() {
               });
               setShowPopup(true);
               // setDisableOtherComponents(true);
+            }}
+          />
+          <MdContentCopy
+            className="component-bottom-right-copy"
+            size={40}
+            color={showPopup ? "grey" : "BB2649"}
+            onClick={() => {
+              if (!isAuthenticated) {
+                loginWithRedirect();
+              } else {
+                handleForkProject();
+                setShowPopup(true);
+                // setDisableOtherComponents(true);
+              }
             }}
           />
         </div>
@@ -428,6 +462,8 @@ function Map() {
               user={loggedinUser}
               page={popupPage.page}
               onClose={() => handleClosePopup()}
+              importUserId={popupPage.importUserId}
+              importObjectId={popupPage.importObjectId}
             />
           )
         )}
@@ -486,19 +522,15 @@ function Map() {
               // setDisableOtherComponents(true);
             }}
           />
-          <MdAddCircle
-            className="component-bottom-right-add"
-            size={50}
+          <MdContentCopy
+            className="component-bottom-right-copy"
+            size={40}
             color={showPopup ? "grey" : "BB2649"}
             onClick={() => {
               if (!isAuthenticated) {
                 loginWithRedirect();
               } else {
-                setPopupPage({
-                  page: "addProject",
-                  user: loggedinUser,
-                  onClose: () => {},
-                });
+                handleForkProject();
                 setShowPopup(true);
                 // setDisableOtherComponents(true);
               }
