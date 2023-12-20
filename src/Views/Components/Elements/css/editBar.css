@@ -87,7 +87,7 @@
 .tag {
   /* display: inline-block; */
   /* flex: 1; */
-
+  color: #4b4f5d;
   background-color: #eee;
   /* border: 1px solid #ccc; */
   border-radius: 15px;
