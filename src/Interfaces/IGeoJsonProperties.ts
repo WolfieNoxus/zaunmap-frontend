@@ -2,11 +2,12 @@ import IRegionStyles, {defaultRegionStyles} from "./IRegionStyles";
 
 export default interface IGeoJsonProperties {
     // ADMIN?: string, 
-    // ISO_A3?: string,
+    ISO_A3?: string,
 
     name?: string,
     density?: number,
 
+    mode?: "general" | "heatmap" ,
 
     styles?: IRegionStyles,
 }

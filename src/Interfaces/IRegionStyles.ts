@@ -24,7 +24,7 @@ export const defaultRegionStyles: IRegionStyles = {
   lineJoin: "round",
   dashArray: null,
   dashOffset: null,
-  // fill : true, // Adjust the default as needed
+  fill : true, // Adjust the default as needed
   fillColor: "#3388ff",
   fillOpacity: 0.2,
   fillRule: "evenodd",

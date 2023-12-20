@@ -5,9 +5,8 @@ import { FeatureCollection } from "geojson";
 import { defaultRegionStyles } from "../Interfaces/IRegionStyles";
 import React from "react";
 import L from "leaflet";
-import IGeoJsonProperties, {
-  // defaultGeoJsonProperties,
-} from "../Interfaces/IGeoJsonProperties";
+import IGeoJsonProperties from // defaultGeoJsonProperties,
+"../Interfaces/IGeoJsonProperties";
 
 interface Props {
   geojson: FeatureCollection;
@@ -27,11 +26,15 @@ export default function Geoman({
 
   const onEachFeature = React.useCallback(
     (feature: any, layer: any) => {
-      // feature.properties.name =
-      //   feature.properties.name || feature.properties.ADMIN;
-      // const name = feature.properties.name;
-      const countryName = feature.properties.ADMIN;
-      layer.bindPopup(countryName);
+      feature.properties.name =
+        feature.properties.name ||
+        feature.properties.ADMIN ||
+        feature.properties.admin;
+      const name = feature.properties.name;
+      // const countryName = feature.properties.ADMIN;
+      if (feature.properties.name !== undefined) {
+        layer.bindPopup(name);
+      }
 
       layer.on({
         click: (event: any) => {
@@ -51,7 +54,7 @@ export default function Geoman({
             });
             // event.target.feature.properties = selectedProperties;
           }
-          console.log(selectedProperties)
+          console.log(selectedProperties);
 
           // event.target.set
         },
