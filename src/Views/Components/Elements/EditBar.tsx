@@ -17,6 +17,7 @@ const EditBar: React.FC<IEditProps> = ({
   mapProject,
   selectedProperties,
   setNewProperties,
+  setChanged,
 }) => {
   const [currentProjecName, setCurrentProjectName] = useState<string>(
     mapProject.name
@@ -451,7 +452,7 @@ const EditBar: React.FC<IEditProps> = ({
           <button
             className="btn btn-primary"
             style={{ textAlign: "center" }}
-            onClick={() =>
+            onClick={() => {
               setNewProperties({
                 ...selectedProperties,
                 name: newName,
@@ -463,7 +464,9 @@ const EditBar: React.FC<IEditProps> = ({
                   weight: newBorderWidth,
                   color: newBorderColor,
                 },
-              })
+              });
+              setChanged(true);
+            }
             }
           >
             Update
@@ -482,7 +485,7 @@ const EditBar: React.FC<IEditProps> = ({
       </div>
 
       {/* right sidebar */}
-      <div className="editBar-right">
+      {/* <div className="editBar-right">
         <div className="bar-content">
           <p className="title" style={{ textAlign: "center" }}>
             Color Bar
@@ -509,7 +512,7 @@ const EditBar: React.FC<IEditProps> = ({
             Export JPEG
           </button>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

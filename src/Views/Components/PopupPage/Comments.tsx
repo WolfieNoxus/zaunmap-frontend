@@ -35,7 +35,7 @@ const Comments= () => {
         };
         setComments([...comments, newData]);
         setNewComment(''); // Clear the input after success
-        console.log(response);
+        // console.log(response);
       }).catch(error => {
         console.error('Error fetching data:', error);
       });

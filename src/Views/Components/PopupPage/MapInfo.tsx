@@ -12,7 +12,7 @@ const MapInfo = () => {
         const fetchMapData = async () => {
           try {
             const response = await apiClient.get(`/map?mapId=${mapId}`);
-            console.log(response.data);
+            // console.log(response.data);
             setMapData(response.data);
           } catch (error) {
             console.error('Error fetching comments', error);
