@@ -4,6 +4,7 @@ import apiClient from "../../../services/apiClient";
 import "./css/editBar.css";
 import { HiEye, HiEyeOff } from "react-icons/hi";
 import { IoIosClose } from "react-icons/io";
+import ReactStars from "react-rating-stars-component";
 // import IGeoJsonProperties from "../../../Interfaces/IGeoJsonProperties";
 
 interface ITagProps {
@@ -312,6 +313,18 @@ const EditBar: React.FC<IEditProps> = ({
     // return null;
   };
 
+  const formatDate = (dateString: string): string => {
+    const options: Intl.DateTimeFormatOptions = {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true
+    };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+};
+
   return (
     <div>
       {/* left sidebar */}
@@ -338,11 +351,11 @@ const EditBar: React.FC<IEditProps> = ({
               <tbody>
                 <tr key={"createTime"}>
                   <td>Create Time:</td>
-                  <td>{mapProject.createdAt}</td>
+                  <td>{formatDate(mapProject.createdAt)}</td>
                 </tr>
                 <tr key={"lastEdit"}>
                   <td>Last Edit:</td>
-                  <td>{mapProject.updatedAt}</td>
+                  <td>{formatDate(mapProject.updatedAt)}</td>
                 </tr>
                 <tr key={"viewPublic"}>
                   <td>Public:</td>
@@ -371,7 +384,13 @@ const EditBar: React.FC<IEditProps> = ({
                 {
                   <tr key={"rating"}>
                     <td>Ratintg:</td>
-                    <td>{mapProject.averageRating}</td>
+                    <td><ReactStars
+                            count={5}
+                            size={24}
+                            activeColor="#ffd700"
+                            value={mapProject.averageRating}
+                            edit={false}
+                        /></td>
                   </tr>
                 }
               </tbody>

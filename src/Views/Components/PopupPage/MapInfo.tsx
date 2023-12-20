@@ -50,11 +50,14 @@ const MapInfo = () => {
                             value={mapData.averageRating}
                             edit={false}
                         /></div>
+                        
+                    <strong>Tags:</strong>
                     <div className="tags">
-                        <strong>Tags:</strong>
-                        {mapData.tags.map((tag, index) => (
-                            <span key={index} className="tag">{tag}</span>
+                        <div className="tag-block">
+                            {mapData.tags.map((tag, index) => (
+                            <div key={index} className="tag">{tag}</div>
                         ))}
+                        </div>
                     </div>
                 </div>
             ) : (
