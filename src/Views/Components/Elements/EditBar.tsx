@@ -10,6 +10,7 @@ const EditBar: React.FC<IEditProps> = ({
   mapProject,
   selectedProperties,
   setNewProperties,
+  setChanged,
 }) => {
   const [currentProjecName, setCurrentProjectName] = useState<string>(
     mapProject.name
@@ -124,115 +125,115 @@ const EditBar: React.FC<IEditProps> = ({
 
   const changEdit = () => {
     // if (onSelectCategory === "region") {
-      return (
-        <div>
-          <table className="no-line-table">
-            <colgroup>
-              <col style={{ width: "45%" }} />
-              <col style={{ width: "50%" }} />
-            </colgroup>
-            <tbody>
-              <tr className="">
-                <td>Name:</td>
-                <td>
-                  <input
-                    className="input-box-basic my-1"
-                    type="text"
-                    value={newName}
-                    disabled={selectedProperties?.editId ? false : true}
-                    onChange={(event) => {
-                      setNewName(event.target.value);
-                    }}
-                    // placeholder={selectedProperties.ADMIN}
-                    // onKeyDown={(event) => handleInputChange("name", event)}
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>Filled Color:</td>
-                <td>
-                  <input
-                    className="input-inTable-color my-1"
-                    type={"color"}
-                    // value="#f6b73c"
-                    value={newFillColor}
-                    disabled={selectedProperties?.editId ? false : true}
-                    onChange={(event) => {
-                      setNewFillColor(event.target.value);
-                    }}
-                    // onChange={handleInputChange}
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>Filled:</td>
-                <td>
-                  <input
-                    className="my-1"
-                    type={"checkbox"}
-                    checked={newFill}
-                    disabled={selectedProperties?.editId ? false : true}
-                    onChange={(event) => {
-                      setNewFill(event.target.checked);
-                    }}
-                    // onChange={handleInputChange}
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>Filled Opacity:</td>
-                <td>
-                  <input
-                    className="input-box-basic my-1"
-                    type={"number"}
-                    // value="#f6b73c"
-                    value={newFillOpacity}
-                    disabled={selectedProperties?.editId ? false : true}
-                    onChange={(event) => {
-                      setNewFillOpacity(Number(event.target.value));
-                    }}
-                    // onChange={handleInputChange}
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>Border Width:</td>
-                <td>
-                  <input
-                    className="input-box-basic my-1"
-                    type={"number"}
-                    // min={1}
-                    // max={10}
-                    // step={1}
-                    value={newBorderWidth}
-                    disabled={selectedProperties ? false : true}
-                    onChange={(event) => {
-                      setNewBorderWidth(Number(event.target.value));
-                    }}
-                    // onChange={handleInputChange}
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>Border Color:</td>
-                <td>
-                  <input
-                    className="input-inTable-color my-1"
-                    type={"color"}
-                    // value="#f6b73c"
-                    value={newBorderColor}
-                    disabled={selectedProperties ? false : true}
-                    onChange={(event) => {
-                      setNewBorderColor(event.target.value);
-                    }}
-                    // onChange={handleInputChange}
-                  />
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      );
+    return (
+      <div>
+        <table className="no-line-table">
+          <colgroup>
+            <col style={{ width: "45%" }} />
+            <col style={{ width: "50%" }} />
+          </colgroup>
+          <tbody>
+            <tr className="">
+              <td>Name:</td>
+              <td>
+                <input
+                  className="input-box-basic my-1"
+                  type="text"
+                  value={newName}
+                  disabled={selectedProperties?.editId ? false : true}
+                  onChange={(event) => {
+                    setNewName(event.target.value);
+                  }}
+                // placeholder={selectedProperties.ADMIN}
+                // onKeyDown={(event) => handleInputChange("name", event)}
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>Filled Color:</td>
+              <td>
+                <input
+                  className="input-inTable-color my-1"
+                  type={"color"}
+                  // value="#f6b73c"
+                  value={newFillColor}
+                  disabled={selectedProperties?.editId ? false : true}
+                  onChange={(event) => {
+                    setNewFillColor(event.target.value);
+                  }}
+                // onChange={handleInputChange}
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>Filled:</td>
+              <td>
+                <input
+                  className="my-1"
+                  type={"checkbox"}
+                  checked={newFill}
+                  disabled={selectedProperties?.editId ? false : true}
+                  onChange={(event) => {
+                    setNewFill(event.target.checked);
+                  }}
+                // onChange={handleInputChange}
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>Filled Opacity:</td>
+              <td>
+                <input
+                  className="input-box-basic my-1"
+                  type={"number"}
+                  // value="#f6b73c"
+                  value={newFillOpacity}
+                  disabled={selectedProperties?.editId ? false : true}
+                  onChange={(event) => {
+                    setNewFillOpacity(Number(event.target.value));
+                  }}
+                // onChange={handleInputChange}
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>Border Width:</td>
+              <td>
+                <input
+                  className="input-box-basic my-1"
+                  type={"number"}
+                  // min={1}
+                  // max={10}
+                  // step={1}
+                  value={newBorderWidth}
+                  disabled={selectedProperties ? false : true}
+                  onChange={(event) => {
+                    setNewBorderWidth(Number(event.target.value));
+                  }}
+                // onChange={handleInputChange}
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>Border Color:</td>
+              <td>
+                <input
+                  className="input-inTable-color my-1"
+                  type={"color"}
+                  // value="#f6b73c"
+                  value={newBorderColor}
+                  disabled={selectedProperties ? false : true}
+                  onChange={(event) => {
+                    setNewBorderColor(event.target.value);
+                  }}
+                // onChange={handleInputChange}
+                />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    );
     // } else if (onSelectCategory === "map") {
     //   return (
     //     <div>
@@ -304,7 +305,7 @@ const EditBar: React.FC<IEditProps> = ({
                       name="publicView"
                       defaultChecked={isPublic}
                       onClick={(event) => setIsPublic(!isPublic)}
-                      // onChange={() => {}} // to avoid warning
+                    // onChange={() => {}} // to avoid warning
                     />
                   </td>
                 </tr>
@@ -357,7 +358,7 @@ const EditBar: React.FC<IEditProps> = ({
           <button
             className="btn btn-primary"
             style={{ textAlign: "center" }}
-            onClick={() =>
+            onClick={() => {
               setNewProperties({
                 ...selectedProperties,
                 name: newName,
@@ -369,7 +370,9 @@ const EditBar: React.FC<IEditProps> = ({
                   weight: newBorderWidth,
                   color: newBorderColor,
                 },
-              })
+              });
+              setChanged(true);
+            }
             }
           >
             Update
@@ -388,7 +391,7 @@ const EditBar: React.FC<IEditProps> = ({
       </div>
 
       {/* right sidebar */}
-      <div className="editBar-right">
+      {/* <div className="editBar-right">
         <div className="bar-content">
           <p className="title" style={{ textAlign: "center" }}>
             Color Bar
@@ -415,7 +418,7 @@ const EditBar: React.FC<IEditProps> = ({
             Export JPEG
           </button>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };
