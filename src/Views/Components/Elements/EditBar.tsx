@@ -14,7 +14,7 @@ const EditBar: React.FC<IEditProps> = ({
   const [currentProjecName, setCurrentProjectName] = useState<string>(
     mapProject.name
   );
-  const [onSelectCategory, setOnSelectCategory] = useState<string>("region");
+  // const [onSelectCategory, setOnSelectCategory] = useState<string>("region");
   const [isPublic, setIsPublic] = useState<boolean>(mapProject.isPublic);
   // const [newName, setNewName] = useState<string>("");
 
@@ -128,7 +128,7 @@ const EditBar: React.FC<IEditProps> = ({
   ]);
 
   const changEdit = () => {
-    if (onSelectCategory === "region") {
+    // if (onSelectCategory === "region") {
       return (
         <div>
           <table className="no-line-table">
@@ -144,7 +144,7 @@ const EditBar: React.FC<IEditProps> = ({
                     className="input-box-basic my-1"
                     type="text"
                     value={newName}
-                    disabled={selectedProperties ? false : true}
+                    disabled={selectedProperties?.editId ? false : true}
                     onChange={(event) => {
                       setNewName(event.target.value);
                     }}
@@ -161,7 +161,7 @@ const EditBar: React.FC<IEditProps> = ({
                     type={"color"}
                     // value="#f6b73c"
                     value={newFillColor}
-                    disabled={selectedProperties ? false : true}
+                    disabled={selectedProperties?.editId ? false : true}
                     onChange={(event) => {
                       setNewFillColor(event.target.value);
                     }}
@@ -176,7 +176,7 @@ const EditBar: React.FC<IEditProps> = ({
                     className="my-1"
                     type={"checkbox"}
                     checked={newFill}
-                    disabled={selectedProperties ? false : true}
+                    disabled={selectedProperties?.editId ? false : true}
                     onChange={(event) => {
                       setNewFill(event.target.checked);
                     }}
@@ -192,7 +192,7 @@ const EditBar: React.FC<IEditProps> = ({
                     type={"number"}
                     // value="#f6b73c"
                     value={newFillOpacity}
-                    disabled={selectedProperties ? false : true}
+                    disabled={selectedProperties?.editId ? false : true}
                     onChange={(event) => {
                       setNewFillOpacity(Number(event.target.value));
                     }}
@@ -200,19 +200,6 @@ const EditBar: React.FC<IEditProps> = ({
                   />
                 </td>
               </tr>
-            </tbody>
-          </table>
-        </div>
-      );
-    } else if (onSelectCategory === "map") {
-      return (
-        <div>
-          <table className="no-line-table">
-            <colgroup>
-              <col style={{ width: "45%" }} />
-              <col style={{ width: "50%" }} />
-            </colgroup>
-            <tbody>
               <tr>
                 <td>Border Width:</td>
                 <td>
@@ -251,8 +238,20 @@ const EditBar: React.FC<IEditProps> = ({
           </table>
         </div>
       );
-    }
-    return null;
+    // } else if (onSelectCategory === "map") {
+    //   return (
+    //     <div>
+    //       <table className="no-line-table">
+    //         <colgroup>
+    //           <col style={{ width: "45%" }} />
+    //           <col style={{ width: "50%" }} />
+    //         </colgroup>
+    //         <tbody></tbody>
+    //       </table>
+    //     </div>
+    //   );
+    // }
+    // return null;
   };
 
   return (
@@ -342,7 +341,7 @@ const EditBar: React.FC<IEditProps> = ({
           {/* Edit Map */}
           <div className="settings-panel">
             <p className="title mb-3">Edit:</p>
-            <div className="select-panel">
+            {/* <div className="select-panel">
               <select
                 className="form-select mb-3"
                 onChange={(event) => setOnSelectCategory(event.target.value)}
@@ -355,7 +354,7 @@ const EditBar: React.FC<IEditProps> = ({
                   Map
                 </option>
               </select>
-            </div>
+            </div> */}
             {changEdit()}
           </div>
 

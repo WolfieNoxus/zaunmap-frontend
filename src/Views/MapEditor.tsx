@@ -19,7 +19,7 @@ import IGeoJsonProperties, { defaultGeoJsonProperties } from // defaultGeoJsonPr
 export default function Geoman({
     geojson,
     setGeojson,
-    selectedProperties,
+    // selectedProperties,
     setSelectedProperties,
     newProperties,
 }: Props) {
@@ -32,11 +32,11 @@ export default function Geoman({
                 feature.properties.name ||
                 feature.properties.ADMIN ||
                 feature.properties.admin;
-            const name = feature.properties.name;
+            // const name = feature.properties.name;
             // const countryName = feature.properties.ADMIN;
-            if (feature.properties.name !== undefined) {
-                layer.bindPopup(name);
-            }
+            // if (feature.properties.name !== undefined) {
+            //     layer.bindPopup(feature.properties.name);
+            // }
 
             layer.on({
                 click: (event: any) => {
@@ -46,6 +46,7 @@ export default function Geoman({
                     
                     if (event.target.feature.properties === undefined) {
                         event.target.feature.properties = defaultGeoJsonProperties;
+                        event.target.feature.properties.editId = 0;
                     } else if (event.target.feature.properties.styles === undefined) {
                         event.target.feature.properties.styles = defaultRegionStyles;
                     }

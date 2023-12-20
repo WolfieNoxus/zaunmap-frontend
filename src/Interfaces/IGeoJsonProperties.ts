@@ -17,5 +17,6 @@ export default interface IGeoJsonProperties {
 export const defaultGeoJsonProperties: IGeoJsonProperties = {
     name: "",
     density: 0,
+    editId: -1,
     styles: defaultRegionStyles,
 }
