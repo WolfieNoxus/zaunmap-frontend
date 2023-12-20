@@ -252,6 +252,26 @@ const UserProfile = (userProfile: IUser) => {
     );
   };
 
+  const handleSearch = async (name: string, tags: string, sortBy: string, sortOrder: string) => {
+    try {
+      const response = await apiClient.get('/map/search', {
+        params: { name, tags, sortBy, sortOrder }
+      });
+      if (response.status === 200) {
+        const filteredUserMaps = (response.data as IMap[]).filter(map => map.owner === user?.sub);
+        console.log(filteredUserMaps);
+        setItems(filteredUserMaps);
+      } else {
+        // Handle non-200 responses
+        console.error("Failed to retrieve search results");
+      }
+    } catch (error) {
+      // Handle errors
+      setError("Failed to retrieve search results: " + error);
+      console.error("Error fetching search results:", error);
+    }
+  };
+
   // Page Flip Code
   const itemsPerPage = 3;
 
@@ -313,7 +333,7 @@ const UserProfile = (userProfile: IUser) => {
         ) : null}
       </div> */}
 
-      <SearchBar />
+      <SearchBar onSearch={handleSearch}/>
       <span className="text-danger">{error} </span>
       <table className="table mb-3">
         <colgroup>
