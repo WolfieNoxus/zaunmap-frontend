@@ -7,5 +7,5 @@ export default interface IEditProps {
   onClose: () => void;
 
   selectedProperties: IGeoJsonProperties;
-  setSelectedProperties: (properties: IGeoJsonProperties) => void;
+  setNewProperties: (properties: IGeoJsonProperties) => void;
 }

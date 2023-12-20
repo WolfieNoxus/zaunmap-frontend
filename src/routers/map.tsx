@@ -59,6 +59,8 @@ function Map() {
   const [selectedProperties, setSelectedProperties] =
     useState<IGeoJsonProperties>(defaultGeoJsonProperties);
 
+  const [newProperties, setNewProperties] = useState<IGeoJsonProperties>(defaultGeoJsonProperties);
+
   const handleClosePopup = () => {
     setShowPopup(false);
     // setDisableOtherComponents(false);
@@ -238,6 +240,7 @@ function Map() {
               setGeojson={setGeojson}
               selectedProperties={selectedProperties}
               setSelectedProperties={setSelectedProperties}
+              newProperties={newProperties}
             />
             <ZoomControl position="bottomleft" />
           </MapContainer>
@@ -246,7 +249,7 @@ function Map() {
             mapProject={map}
             onClose={() => navigate("/")}
             selectedProperties={selectedProperties}
-            setSelectedProperties={setSelectedProperties}
+            setNewProperties={setNewProperties}
           />
 
           {/* popup page */}

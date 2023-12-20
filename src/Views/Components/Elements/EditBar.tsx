@@ -8,7 +8,7 @@ const EditBar: React.FC<IEditProps> = ({
   onClose,
   mapProject,
   selectedProperties,
-  setSelectedProperties,
+  setNewProperties,
 }) => {
   const [currentProjecName, setCurrentProjectName] = useState<string>(
     mapProject.name
@@ -106,8 +106,7 @@ const EditBar: React.FC<IEditProps> = ({
                     value={selectedProperties ? selectedProperties.name : ""}
                     disabled={selectedProperties ? false : true}
                     onChange={(event) => {
-                      selectedProperties.name = event.target.value;
-                      console.log(selectedProperties.name);
+                      setNewProperties({...selectedProperties, name: event.target.value});
                     }}
                     // placeholder={selectedProperties.ADMIN}
                     // onKeyDown={(event) => handleInputChange("name", event)}
