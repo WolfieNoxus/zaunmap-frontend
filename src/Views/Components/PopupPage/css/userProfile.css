@@ -3,7 +3,10 @@
     /* display: ; */
     justify-content: center;
 }
-
+.username-label {
+    font-weight: bold;
+    margin-right: 8px;   
+}
 .username-section {
     position: relative;
     display: grid;
@@ -47,4 +50,61 @@
 
 .icon-check:hover, .icon-close:hover, .icon-edit:hover {
     color: #3c7dcf; /* Slightly darker color on hover */
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+}
+
+.table th, .table td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.table th {
+  background-color: #f4f4f4;
+}
+
+.tag-input-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 5px;
+  max-width: 80%; /* Adjust this value to make the container shorter */
+}
+
+.tag-input-container input {
+    display: flex;
+    flex-wrap: wrap; /* This is important for wrapping */
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 5px;
+    min-width: 0; /* Allows the container to shrink below its content's intrinsic width */
+    width: 80%; /* Adjust width as necessary */
+    max-width: 50%;
+}
+
+.tag-item {
+    display: inline-flex; /* Use inline-flex so that the tags can wrap */
+    align-items: center;
+    background-color: #007bff;
+    color: white;
+    border-radius: 15px;
+    padding: 5px 10px;
+    margin: 5px;
+    font-size: 15px;
+    
+}
+
+.remove-tag {
+  margin-left: 8px;
+  font-size: 15px;
+  cursor: pointer;
+  color: #250909;
 }
