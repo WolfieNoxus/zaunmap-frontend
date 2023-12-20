@@ -88,6 +88,45 @@ const EditBar: React.FC<IEditProps> = ({
   //   }
   // }
 
+  const [newName, setNewName] = useState<string>("");
+  const [newFillColor, setNewFillColor] = useState<string>("");
+  const [newFill, setNewFill] = useState<boolean>(false);
+  const [newFillOpacity, setNewFillOpacity] = useState<number>(0);
+  const [newBorderWidth, setNewBorderWidth] = useState<number>(0);
+  const [newBorderColor, setNewBorderColor] = useState<string>("");
+
+  // set default value into useState
+  useEffect(() => {
+    setNewName(selectedProperties.name ? selectedProperties.name : "");
+    setNewFillColor(
+      selectedProperties.styles?.fillColor
+        ? selectedProperties.styles?.fillColor
+        : ""
+    );
+    setNewFill(
+      selectedProperties.styles?.fill ? selectedProperties.styles?.fill : false
+    );
+    setNewFillOpacity(
+      selectedProperties.styles?.fillOpacity
+        ? selectedProperties.styles?.fillOpacity
+        : 0
+    );
+    setNewBorderWidth(
+      selectedProperties.styles?.weight ? selectedProperties.styles?.weight : 0
+    );
+    setNewBorderColor(
+      selectedProperties.styles?.color ? selectedProperties.styles?.color : ""
+    );
+  }, [
+    setNewName,
+    setNewFillColor,
+    setNewFill,
+    setNewFillOpacity,
+    setNewBorderWidth,
+    setNewBorderColor,
+    selectedProperties,
+  ]);
+
   const changEdit = () => {
     if (onSelectCategory === "region") {
       return (
@@ -104,10 +143,10 @@ const EditBar: React.FC<IEditProps> = ({
                   <input
                     className="input-box-basic my-1"
                     type="text"
-                    value={selectedProperties ? selectedProperties.name : ""}
+                    value={newName}
                     disabled={selectedProperties ? false : true}
                     onChange={(event) => {
-                      setNewProperties({...selectedProperties, name: event.target.value});
+                      setNewName(event.target.value);
                     }}
                     // placeholder={selectedProperties.ADMIN}
                     // onKeyDown={(event) => handleInputChange("name", event)}
@@ -121,8 +160,11 @@ const EditBar: React.FC<IEditProps> = ({
                     className="input-inTable-color my-1"
                     type={"color"}
                     // value="#f6b73c"
-                    value={selectedProperties.styles?.fillColor}
+                    value={newFillColor}
                     disabled={selectedProperties ? false : true}
+                    onChange={(event) => {
+                      setNewFillColor(event.target.value);
+                    }}
                     // onChange={handleInputChange}
                   />
                 </td>
@@ -133,9 +175,11 @@ const EditBar: React.FC<IEditProps> = ({
                   <input
                     className="my-1"
                     type={"checkbox"}
-                    // value="#f6b73c"
-                    checked={selectedProperties.styles?.fill}
+                    checked={newFill}
                     disabled={selectedProperties ? false : true}
+                    onChange={(event) => {
+                      setNewFill(event.target.checked);
+                    }}
                     // onChange={handleInputChange}
                   />
                 </td>
@@ -147,8 +191,11 @@ const EditBar: React.FC<IEditProps> = ({
                     className="input-box-basic my-1"
                     type={"number"}
                     // value="#f6b73c"
-                    value={selectedProperties.styles?.fillOpacity}
+                    value={newFillOpacity}
                     disabled={selectedProperties ? false : true}
+                    onChange={(event) => {
+                      setNewFillOpacity(Number(event.target.value));
+                    }}
                     // onChange={handleInputChange}
                   />
                 </td>
@@ -175,9 +222,11 @@ const EditBar: React.FC<IEditProps> = ({
                     // min={1}
                     // max={10}
                     // step={1}
-                    value={selectedProperties.styles?.weight}
+                    value={newBorderWidth}
                     disabled={selectedProperties ? false : true}
-
+                    onChange={(event) => {
+                      setNewBorderWidth(Number(event.target.value));
+                    }}
                     // onChange={handleInputChange}
                   />
                 </td>
@@ -189,8 +238,11 @@ const EditBar: React.FC<IEditProps> = ({
                     className="input-inTable-color my-1"
                     type={"color"}
                     // value="#f6b73c"
-                    value={selectedProperties.styles?.color}
+                    value={newBorderColor}
                     disabled={selectedProperties ? false : true}
+                    onChange={(event) => {
+                      setNewBorderColor(event.target.value);
+                    }}
                     // onChange={handleInputChange}
                   />
                 </td>
@@ -306,6 +358,28 @@ const EditBar: React.FC<IEditProps> = ({
             </div>
             {changEdit()}
           </div>
+
+          {/* Update button */}
+          <button
+            className="btn btn-primary"
+            style={{ textAlign: "center" }}
+            onClick={() =>
+              setNewProperties({
+                ...selectedProperties,
+                name: newName,
+                styles: {
+                  ...selectedProperties.styles,
+                  fillColor: newFillColor,
+                  fill: newFill,
+                  fillOpacity: newFillOpacity,
+                  weight: newBorderWidth,
+                  color: newBorderColor,
+                },
+              })
+            }
+          >
+            Update
+          </button>
         </div>
 
         {/* close button */}

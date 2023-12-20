@@ -261,12 +261,14 @@ const UserProfile = (userProfile: IUser) => {
           {isEditing ? (
             <div className="display-username">
               <span className="username-label">UserName:</span>
+              
               <input
                 type="text"
                 value={newUsername}
                 onChange={(e) => setNewUsername(e.target.value)}
                 className="edit-username-input"
               />
+
               <HiCheck
                 onClick={() => updateUsername(user?.sub, newUsername)}
                 className="icon-check"
