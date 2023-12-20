@@ -1,6 +1,6 @@
 import "@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css";
 import { GeomanControls } from "react-leaflet-geoman-v2";
-import { FeatureGroup } from "react-leaflet";
+import { FeatureGroup, useMap } from "react-leaflet";
 import { FeatureCollection } from "geojson";
 import { defaultRegionStyles } from "../Interfaces/IRegionStyles";
 import React, { useEffect } from "react";
@@ -29,6 +29,8 @@ export default function Geoman({
   const ref = React.useRef<L.FeatureGroup>(null);
   // let geojsonLayer: L.GeoJSON = React.useRef(null);;
 
+  const map = useMap();
+
   const onEachFeature = React.useCallback(
     (feature: any, layer: any) => {
       feature.properties.name =
@@ -53,12 +55,14 @@ export default function Geoman({
           } else if (event.target.feature.properties.styles === undefined) {
             event.target.feature.properties.styles = defaultRegionStyles;
           }
+
           event.target.feature.properties.editId = event.target._leaflet_id;
           setSelectedProperties(event.target.feature.properties);
           // event.target.set
+          map.fitBounds(event.target.getBounds());
         },
         mouseover: (event: any) => {
-          if (event.target.feature.type !== "Point") {
+          if (event.target.feature.type === "Point") {
             return;
           }
           var l = event.target;
@@ -74,7 +78,7 @@ export default function Geoman({
           l.bringToFront();
         },
         mouseout: (event: any) => {
-          if (event.target.feature.type !== "Point") {
+          if (event.target.feature.type === "Point") {
             return;
           }
           var l = event.target;
@@ -87,7 +91,7 @@ export default function Geoman({
         },
       });
     },
-    [setSelectedProperties]
+    [setSelectedProperties, map]
   );
 
   useEffect(() => {
