@@ -86,7 +86,7 @@ function Map() {
   };
 
   const onEachFeature = React.useCallback((feature: any, layer: any) => {
-    const countryName = feature.properties.name;
+    const countryName = feature.properties.name ? feature.properties.name : "undefined";
     const attachText =
       feature.properties.attachText === undefined
         ? "<em>This region do not have attach text yet.</em>"
