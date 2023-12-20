@@ -209,7 +209,7 @@
 .popup-content {
   position: relative;
   background-color: white;
-  width: 50%;
+  width: 60vw;
   height: 70vh;
   min-height: 500px;
   padding: 20px;

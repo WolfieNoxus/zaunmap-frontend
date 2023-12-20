@@ -2,9 +2,10 @@
   position: relative;
   background-color: gray;
   height: 100%;
-  /* width: 71%; */
+  width: 80.25%;
   /* margin-left: 20%; */
   left: 19.75%;
+  /* right: 0; */
   z-index: 1000;
 }
 
@@ -17,4 +18,13 @@
   padding: 5px;
   border-radius: 25px;
   box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.75);
+}
+
+.undoRedoContainer {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 1000; /* Ensure it's always at the front */
+  display: flex;
+  gap: 10px; /* Adds a little space between buttons */
 }
