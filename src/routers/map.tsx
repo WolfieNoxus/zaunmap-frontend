@@ -16,7 +16,7 @@ import { BiInfoCircle } from "react-icons/bi"; // BottomLeft
 import { MdAddCircle, MdChatBubbleOutline } from "react-icons/md"; // BottomRight
 import IPopupProps, { defaultPopupProps } from "../Interfaces/IPopupProps";
 import IUser, { defaultUser } from "../Interfaces/IUser";
-import IGeoJsonProperties, {defaultGeoJsonProperties} from "../Interfaces/IGeoJsonProperties";
+import IGeoJsonProperties, { defaultGeoJsonProperties } from "../Interfaces/IGeoJsonProperties";
 import Popup from "../Views/Components/Popup";
 
 // async function getFileFromUrl(url: string, filename: string): Promise<File> {
@@ -54,12 +54,20 @@ function Map() {
     type: "FeatureCollection",
     features: [],
   });
+  const [prevGeojson, setPrevGeojson] = useState<GeoJSON.FeatureCollection<GeoJSON.GeometryObject>>();
   const [popupPage, setPopupPage] = useState<IPopupProps>(defaultPopupProps);
 
   const [selectedProperties, setSelectedProperties] =
     useState<IGeoJsonProperties>(defaultGeoJsonProperties);
 
   const [newProperties, setNewProperties] = useState<IGeoJsonProperties>(defaultGeoJsonProperties);
+
+  const [undoStack, setUndoStack] = useState<GeoJSON.FeatureCollection<GeoJSON.GeometryObject>[]>([]);
+  const [redoStack, setRedoStack] = useState<GeoJSON.FeatureCollection<GeoJSON.GeometryObject>[]>([]);
+  const [justUndo, setJustUndo] = useState<boolean>(false);
+  const [justRedo, setJustRedo] = useState<boolean>(false);
+  const [changed, setChanged] = useState<boolean>(true);
+  const [rerender, setRerender] = useState<boolean>(false);
 
   const handleClosePopup = () => {
     setShowPopup(false);
@@ -146,7 +154,10 @@ function Map() {
         setLoading(false);
       }
     };
-
+    setUndoStack([]);
+    setJustUndo(false);
+    setRedoStack([]);
+    setJustRedo(false);
     fetchMapMeta(mapId);
   }, [mapId]);
 
@@ -191,7 +202,7 @@ function Map() {
           }
         );
         if (response.status === 200) {
-          console.log("Successfully updated map data");
+          setRerender(!rerender);
         } else {
           console.error("Failed to update map data");
         }
@@ -200,11 +211,63 @@ function Map() {
       }
     };
 
-    if (map.owner && map.objectId && map.owner === user?.sub) {
+    if (map.owner && map.objectId && map.owner === user?.sub && changed) {
       putMapData(map, geojson);
+      if (justUndo) {
+        setJustUndo(false);
+      }
+      else if (justRedo) {
+        setJustRedo(false);
+      }
+      else {
+        if (prevGeojson) {
+          setUndoStack([...undoStack, prevGeojson]);
+        }
+        setPrevGeojson(geojson);
+        setRedoStack([]);
+      };
+      setChanged(false);
     }
     // eslint-disable-next-line
   }, [geojson]);
+
+  const handleUndo = () => {
+    if (undoStack.length > 0) {
+      setRedoStack([...redoStack, geojson]);
+      setJustUndo(true);
+      setChanged(true);
+      setGeojson(undoStack[undoStack.length - 1]);
+      setUndoStack(undoStack.slice(0, undoStack.length - 1));
+    }
+  };
+
+  const handleRedo = () => {
+    if (redoStack.length > 0) {
+      setUndoStack([...undoStack, geojson]);
+      setJustRedo(true);
+      setChanged(true);
+      setGeojson(redoStack[redoStack.length - 1]);
+      setRedoStack(redoStack.slice(0, redoStack.length - 1));
+    }
+  };
+
+  const handleKeyDown = (event: KeyboardEvent) => {
+    if (event.ctrlKey || event.metaKey) { 
+      if (event.key === 'z') {
+        document.getElementById("undo")?.click();
+      } else if (event.key === 'y' || (event.shiftKey && event.key === 'Z')) {
+        document.getElementById("redo")?.click();
+      }
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
 
   // return block
   if (loading) {
@@ -219,7 +282,12 @@ function Map() {
       <div style={{ position: "relative" }}>
         <div className="edit-map-view-heatmap">
           {/* <span>hhhhhh</span> */}
+          <div className="undoRedoContainer">
+            <button disabled={undoStack.length < 1 ? true : false} onClick={handleUndo} id="undo">Undo</button>
+            <button disabled={redoStack.length < 1 ? true : false} onClick={handleRedo} id="redo">Redo</button>
+          </div>
           <MapContainer
+            key={JSON.stringify(rerender)}
             className="structure-of-map"
             center={[0, 0]}
             zoom={4}
@@ -241,6 +309,7 @@ function Map() {
               selectedProperties={selectedProperties}
               setSelectedProperties={setSelectedProperties}
               newProperties={newProperties}
+              setChanged={setChanged}
             />
             <ZoomControl position="bottomleft" />
           </MapContainer>
@@ -250,6 +319,7 @@ function Map() {
             onClose={() => navigate("/")}
             selectedProperties={selectedProperties}
             setNewProperties={setNewProperties}
+            setChanged={setChanged}
           />
 
           {/* popup page */}
@@ -274,7 +344,7 @@ function Map() {
               setPopupPage({
                 page: "comments",
                 user: loggedinUser,
-                onClose: () => {},
+                onClose: () => { },
               });
               setShowPopup(true);
               // setDisableOtherComponents(true);
@@ -341,7 +411,7 @@ function Map() {
               setPopupPage({
                 page: "community",
                 user: loggedinUser,
-                onClose: () => {},
+                onClose: () => { },
               });
               setShowPopup(true);
               // setDisableOtherComponents(true);
@@ -361,7 +431,7 @@ function Map() {
               setPopupPage({
                 page: "userProfile",
                 user: loggedinUser,
-                onClose: () => {},
+                onClose: () => { },
               });
               setShowPopup(true);
               // setDisableOtherComponents(true);
@@ -379,7 +449,7 @@ function Map() {
               setPopupPage({
                 page: "comments",
                 user: loggedinUser,
-                onClose: () => {},
+                onClose: () => { },
               });
               setShowPopup(true);
               // setDisableOtherComponents(true);
@@ -396,7 +466,7 @@ function Map() {
                 setPopupPage({
                   page: "addProject",
                   user: loggedinUser,
-                  onClose: () => {},
+                  onClose: () => { },
                 });
                 setShowPopup(true);
                 // setDisableOtherComponents(true);
@@ -415,7 +485,7 @@ function Map() {
               setPopupPage({
                 page: "mapInfo",
                 user: loggedinUser,
-                onClose: () => {},
+                onClose: () => { },
               });
               setShowPopup(true);
               // setDisableOtherComponents(true);

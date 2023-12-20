@@ -8,4 +8,5 @@ export default interface IEditProps {
 
   selectedProperties: IGeoJsonProperties;
   setNewProperties: (properties: IGeoJsonProperties) => void;
+  setChanged: (changed: boolean) => void;
 }
