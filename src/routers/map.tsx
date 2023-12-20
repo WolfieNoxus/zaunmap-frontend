@@ -84,8 +84,13 @@ function Map() {
   };
 
   const onEachFeature = React.useCallback((feature: any, layer: any) => {
-    const countryName = feature.properties.ADMIN;
-    layer.bindPopup(countryName);
+    const countryName = feature.properties.name;
+    layer.bindPopup(
+      <div>
+        <span>{countryName}</span>
+        <span>Attached: {feature.properties.attachText}</span>
+      </div>
+    );
 
     layer.on({
       click: (event: any) => {

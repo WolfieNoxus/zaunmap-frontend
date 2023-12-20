@@ -6,6 +6,7 @@ export default interface IGeoJsonProperties {
 
     name?: string,
     density?: number,
+    attachText?: string,
 
     mode?: "general" | "heatmap" ,
 

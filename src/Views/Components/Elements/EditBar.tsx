@@ -154,6 +154,7 @@ const EditBar: React.FC<IEditProps> = ({
   const [newFillOpacity, setNewFillOpacity] = useState<number>(0);
   const [newBorderWidth, setNewBorderWidth] = useState<number>(0);
   const [newBorderColor, setNewBorderColor] = useState<string>("");
+  const [newAttachText, setNewAttachText] = useState<string>("");
 
   // set default value into useState
   useEffect(() => {
@@ -177,6 +178,9 @@ const EditBar: React.FC<IEditProps> = ({
     setNewBorderColor(
       selectedProperties.styles?.color ? selectedProperties.styles?.color : ""
     );
+    setNewAttachText(
+      selectedProperties.attachText ? selectedProperties.attachText : ""
+    );
   }, [
     setNewName,
     setNewFillColor,
@@ -197,7 +201,7 @@ const EditBar: React.FC<IEditProps> = ({
             <col style={{ width: "50%" }} />
           </colgroup>
           <tbody>
-            <tr className="">
+            <tr>
               <td>Name:</td>
               <td>
                 <input
@@ -279,18 +283,18 @@ const EditBar: React.FC<IEditProps> = ({
               </td>
             </tr>
             <tr>
-              <td>Border Color:</td>
+              <td>Attach Text:</td>
               <td>
                 <input
-                  className="input-inTable-color my-1"
-                  type={"color"}
-                  // value="#f6b73c"
-                  value={newBorderColor}
-                  disabled={selectedProperties ? false : true}
+                  className="input-box-basic my-1"
+                  type="text"
+                  value={newAttachText}
+                  disabled={selectedProperties?.editId ? false : true}
                   onChange={(event) => {
-                    setNewBorderColor(event.target.value);
+                    setNewAttachText(event.target.value);
                   }}
-                  // onChange={handleInputChange}
+                  // placeholder={selectedProperties.ADMIN}
+                  // onKeyDown={(event) => handleInputChange("name", event)}
                 />
               </td>
             </tr>
@@ -432,7 +436,7 @@ const EditBar: React.FC<IEditProps> = ({
 
           {/* Edit Map */}
           <div className="settings-panel">
-            <p className="title mb-3">Edit:</p>
+            <p className="title mb-1">Edit:</p>
             {/* <div className="select-panel">
               <select
                 className="form-select mb-3"
