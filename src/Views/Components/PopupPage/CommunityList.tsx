@@ -210,19 +210,21 @@ const CommunityList = ({ role }: CommunityListProps) => {
           <tbody className="table-group-divider">
             {currentItems.map((item) => (
               <tr key={item._id}>
-                <td>
+                <td style={{ verticalAlign: "middle" }}>
                   <Link reloadDocument to={"/map/" + item._id}>
                     {item.name}
                   </Link>
                 </td>
 
-                <td>{usernames[item._id]}</td>
+                <td style={{ verticalAlign: "middle" }}>
+                  {usernames[item._id]}
+                </td>
 
-                <td>
+                <td style={{ verticalAlign: "middle" }}>
                   <Tags mapId={item._id} initialTags={item.tags || []} />
                 </td>
-                
-                <td>
+
+                <td style={{ verticalAlign: "middle" }}>
                   <ReactStars
                     count={5}
                     onChange={(newRating: number) =>
