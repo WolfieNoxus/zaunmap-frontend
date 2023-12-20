@@ -252,13 +252,20 @@ const UserProfile = (userProfile: IUser) => {
     );
   };
 
-  const handleSearch = async (name: string, tags: string, sortBy: string, sortOrder: string) => {
+  const handleSearch = async (
+    name: string,
+    tags: string,
+    sortBy: string,
+    sortOrder: string
+  ) => {
     try {
-      const response = await apiClient.get('/map/search', {
-        params: { name, tags, sortBy, sortOrder }
+      const response = await apiClient.get("/map/search", {
+        params: { name, tags, sortBy, sortOrder },
       });
       if (response.status === 200) {
-        const filteredUserMaps = (response.data as IMap[]).filter(map => map.owner === user?.sub);
+        const filteredUserMaps = (response.data as IMap[]).filter(
+          (map) => map.owner === user?.sub
+        );
         console.log(filteredUserMaps);
         setItems(filteredUserMaps);
       } else {
@@ -333,7 +340,7 @@ const UserProfile = (userProfile: IUser) => {
         ) : null}
       </div> */}
 
-      <SearchBar onSearch={handleSearch}/>
+      <SearchBar onSearch={handleSearch} />
       <span className="text-danger">{error} </span>
       <table className="table mb-3">
         <colgroup>
