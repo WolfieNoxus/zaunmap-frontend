@@ -1,0 +1,61 @@
+.tag-input-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 5px;
+  max-width: 80%; /* Adjust this value to make the container shorter */
+}
+
+.tag-input-container input {
+  display: flex;
+  flex-wrap: wrap; /* This is important for wrapping */
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 5px;
+  min-width: 0; /* Allows the container to shrink below its content's intrinsic width */
+  width: 80%; /* Adjust width as necessary */
+  max-width: 50%;
+}
+
+.tag-item {
+  display: inline-flex; /* Use inline-flex so that the tags can wrap */
+  align-items: center;
+  background-color: #007bff;
+  color: white;
+  border-radius: 15px;
+  padding: 5px 10px;
+  margin: 5px;
+  font-size: 15px;
+}
+
+.remove-tag {
+  margin-left: 8px;
+  font-size: 15px;
+  cursor: pointer;
+  color: #250909;
+}
+
+.input-box-tag {
+  width: 23%;
+  height: 30px;
+  box-sizing: border-box;
+
+  /* border: 0.5px solid #4b4f5d; */
+  /* font: italic; */
+  color: #4b4f5d;
+  background-color: #eee;
+  border: 1px solid #ccc;
+  border-radius: 15px;
+  padding: 5px 10px;
+  margin-bottom: 5px;
+  margin-right: 5px;
+  cursor: pointer;
+
+}
+
+.input-box-tag:focus {
+  border-color: #4b4f5d;
+}
