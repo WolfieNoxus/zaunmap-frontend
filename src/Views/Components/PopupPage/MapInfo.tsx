@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import IMap from "../../../Interfaces/IMap";
 import ReactStars from "react-rating-stars-component";
 import "./css/mapInfo.css";
+
 const MapInfo = () => {
   const { mapId } = useParams<{ mapId: string }>();
   const [mapData, setMapData] = useState<IMap | null>(null);
@@ -31,6 +32,17 @@ const MapInfo = () => {
     };
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
+
+  const mapMode = (mode: string) => {
+    if (mode === "general") {
+      return "Freelance Map";
+    } else if (mode === "heatmap") {
+      return "Heat Map";
+    } else if (mode === "colormap") {
+      return "Color Map";
+    }
+  }
+
   return (
     <div className="map-info-container">
       <h2 className="map-info-title">Map Info</h2>
@@ -54,6 +66,10 @@ const MapInfo = () => {
           <div className="map-detail">
             <strong>Public or Private:</strong>{" "}
             {mapData.isPublic ? "Public" : "Private"}
+          </div>
+          <div className="map-detail">
+            <strong>Map Mode:</strong>{" "}
+            {mapMode(mapData.meta.mode)}
           </div>
           <div className="map-detail">
             <strong>Average Rating:</strong>

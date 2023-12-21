@@ -1,11 +1,17 @@
 .map-info-container {
     max-width: 600px;
+    max-height: 100%;
+    overflow: auto;
     margin: 0 auto;
     padding: 20px;
     background-color: #f8f9fa;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     font-family: Arial, sans-serif;
+}
+
+.map-info-container::-webkit-scrollbar {
+    display: none;
 }
 
 .map-info-title {
@@ -15,9 +21,16 @@
 }
 
 .map-data {
+    position: relative;
+    /* height: 70%; */
+    overflow: auto;
     background-color: white;
     padding: 15px;
     border-radius: 8px;
+}
+
+.map-data::-webkit-scrollbar {
+    display: none;
 }
 
 .map-detail {
