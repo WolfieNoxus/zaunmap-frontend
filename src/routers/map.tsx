@@ -159,11 +159,11 @@ function Map() {
         var l = event.target;
 
         l.setStyle({
-          weight: 5,
-          color: "#666",
-          dashArray: "",
+          // weight: 5,
+          // color: "#666",
+          // dashArray: "",
           fillOpacity: 0.7,
-          fillColor: "white",
+          // fillColor: "white",
         });
 
         l.bringToFront();
@@ -173,15 +173,10 @@ function Map() {
           return;
         }
         var l = event.target;
-        l.setStyle(
-          feature.properties.styles
-            ? feature.properties.styles
-            : defaultGeoJsonProperties.styles
-        );
-        l.bringToBack();
+        l.setStyle(stylesControl(event.target.feature));
       },
     });
-  }, []);
+  }, [stylesControl]);
 
   //
   useEffect(() => {
