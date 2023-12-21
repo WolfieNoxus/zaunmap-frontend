@@ -77,7 +77,7 @@ export default function Geoman({
     }
   }, [getHeatOpacity, meta]);
 
-  // var geo: L.GeoJSON;
+  var geo: L.GeoJSON;
   // const geoRef = React.useRef<L.GeoJSON>(null);
 
   const onEachFeature = React.useCallback(
@@ -130,20 +130,23 @@ export default function Geoman({
           if (event.target.feature.type === "Point") {
             return;
           }
-          var l = event.target;
-          l.setStyle(stylesControl(event.target.feature));
+          // var l = event.target;
+          geo.resetStyle(event.target)
+          // l.setStyle(stylesControl(event.target.feature));
           // if (geoRef.current) {
           //   geoRef.current.resetStyle(event.target);
           // }
         },
       });
     },
+    // eslint-disable-next-line
     [setSelectedProperties, map, stylesControl]
   );
 
   useEffect(() => {
     if (ref.current?.getLayers().length === 0 && geojson) {
-      L.geoJSON(geojson, {
+      // eslint-disable-next-line
+      geo = L.geoJSON(geojson, {
         style: stylesControl,
         // (feature: any) => {
         //   // Return the styles defined in the feature properties

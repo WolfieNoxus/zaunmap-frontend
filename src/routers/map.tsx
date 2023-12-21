@@ -134,49 +134,52 @@ function Map() {
     [getHeatOpacity, map.meta]
   );
 
-  const onEachFeature = React.useCallback((feature: any, layer: any) => {
-    const countryName = feature.properties.name
-      ? feature.properties.name
-      : "undefined";
-    const attachText =
-      feature.properties.attachText === undefined
-        ? "<em>This region do not have attach text yet.</em>"
-        : feature.properties.attachText;
-    layer.bindPopup(
-      // countryName
-      `<div><strong>${countryName}</strong><p></p><span>Attached:</span><span> ${attachText}</span></div>`
-    );
+  const onEachFeature = React.useCallback(
+    (feature: any, layer: any) => {
+      const countryName = feature.properties.name
+        ? feature.properties.name
+        : "undefined";
+      const attachText =
+        feature.properties.attachText === undefined
+          ? "<em>This region do not have attach text yet.</em>"
+          : feature.properties.attachText;
+      layer.bindPopup(
+        // countryName
+        `<div><strong>${countryName}</strong><p></p><span>Attached:</span><span> ${attachText}</span></div>`
+      );
 
-    layer.on({
-      click: (event: any) => {
-        // console.log(event.target.feature.properties.ADMIN);
-        // console.log(event.target);
-      },
-      mouseover: (event: any) => {
-        if (event.target.feature.type === "Point") {
-          return;
-        }
-        var l = event.target;
+      layer.on({
+        click: (event: any) => {
+          // console.log(event.target.feature.properties.ADMIN);
+          // console.log(event.target);
+        },
+        mouseover: (event: any) => {
+          if (event.target.feature.type === "Point") {
+            return;
+          }
+          var l = event.target;
 
-        l.setStyle({
-          // weight: 5,
-          // color: "#666",
-          // dashArray: "",
-          fillOpacity: 0.7,
-          // fillColor: "white",
-        });
+          l.setStyle({
+            // weight: 5,
+            // color: "#666",
+            // dashArray: "",
+            fillOpacity: 0.7,
+            // fillColor: "white",
+          });
 
-        l.bringToFront();
-      },
-      mouseout: (event: any) => {
-        if (event.target.feature.type === "Point") {
-          return;
-        }
-        var l = event.target;
-        l.setStyle(stylesControl(event.target.feature));
-      },
-    });
-  }, [stylesControl]);
+          l.bringToFront();
+        },
+        mouseout: (event: any) => {
+          if (event.target.feature.type === "Point") {
+            return;
+          }
+          var l = event.target;
+          l.setStyle(stylesControl(event.target.feature));
+        },
+      });
+    },
+    [stylesControl]
+  );
 
   //
   useEffect(() => {
@@ -435,34 +438,36 @@ function Map() {
             setChanged={setChanged}
           />
 
-          <MdChatBubbleOutline
-            className="edit-bottom-right-comment"
-            size={40}
-            color={showPopup ? "grey" : "F35D74"}
-            onClick={() => {
-              setPopupPage({
-                page: "comments",
-                user: loggedinUser,
-                onClose: () => {},
-              });
-              setShowPopup(true);
-              // setDisableOtherComponents(true);
-            }}
-          />
-          <MdContentCopy
-            className="component-bottom-right-copy"
-            size={40}
-            color={showPopup ? "grey" : "BB2649"}
-            onClick={() => {
-              if (!isAuthenticated) {
-                loginWithRedirect();
-              } else {
-                handleForkProject();
+          <div>
+            <MdChatBubbleOutline
+              className="edit-bottom-right-comment"
+              size={40}
+              color={showPopup ? "grey" : "F35D74"}
+              onClick={() => {
+                setPopupPage({
+                  page: "comments",
+                  user: loggedinUser,
+                  onClose: () => {},
+                });
                 setShowPopup(true);
                 // setDisableOtherComponents(true);
-              }
-            }}
-          />
+              }}
+            />
+            <MdContentCopy
+              className="component-bottom-right-copy"
+              size={40}
+              color={showPopup ? "grey" : "BB2649"}
+              onClick={() => {
+                if (!isAuthenticated) {
+                  loginWithRedirect();
+                } else {
+                  handleForkProject();
+                  setShowPopup(true);
+                  // setDisableOtherComponents(true);
+                }
+              }}
+            />
+          </div>
         </div>
       </div>
     );
