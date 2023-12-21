@@ -8,6 +8,8 @@ import "./css/mapInfo.css";
 const MapInfo = () => {
   const { mapId } = useParams<{ mapId: string }>();
   const [mapData, setMapData] = useState<IMap | null>(null);
+  const [userName, setUserName] = useState<string>();
+
   useEffect(() => {
     // console.log('Comments component has re-rendered.');
     const fetchMapData = async () => {
@@ -15,12 +17,20 @@ const MapInfo = () => {
         const response = await apiClient.get(`/map?mapId=${mapId}`);
         // console.log(response.data);
         setMapData(response.data);
+        const username = await getUsername(response.data.owner);
+        setUserName(username);
       } catch (error) {
         console.error("Error fetching comments", error);
       }
     };
     fetchMapData();
   }, [mapId]);
+
+  async function getUsername(userId: string): Promise<string> {
+    const response = await apiClient.get(`/user?userId=${userId}`);
+    return response.data.name;
+  }
+
   const formatDate = (dateString: string): string => {
     const options: Intl.DateTimeFormatOptions = {
       year: "numeric",
@@ -55,7 +65,7 @@ const MapInfo = () => {
             <strong>Description:</strong> {mapData.description}
           </div>
           <div className="map-detail">
-            <strong>Owner:</strong> {mapData.owner}
+            <strong>Owner:</strong> {userName}
           </div>
           <div className="map-detail">
             <strong>Created At:</strong> {formatDate(mapData.createdAt)}

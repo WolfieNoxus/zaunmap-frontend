@@ -1,6 +1,5 @@
 import IGeoJsonProperties from "./IGeoJsonProperties";
 import IMap from "./IMap";
-import IMeta from "./IMeta";
 // import { FeatureCollection } from "geojson";
 
 export default interface IEditProps {
