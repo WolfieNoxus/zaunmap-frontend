@@ -185,7 +185,7 @@ const Comments = () => {
   //   const fetchCommentsData = async () => {}
   // })
 
-  const itemsPerPage = 5;
+  const itemsPerPage = 3;
 
   const [currentPage, setCurrentPage] = useState(1);
   const maxPage = Math.ceil(comments.length / itemsPerPage);

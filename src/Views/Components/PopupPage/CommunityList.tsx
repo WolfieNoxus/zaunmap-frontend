@@ -197,7 +197,7 @@ const CommunityList = ({ role }: CommunityListProps) => {
     }
   };
 
-  const itemsPerPage = 6;
+  const itemsPerPage = 4;
 
   const [currentPage, setCurrentPage] = useState(1);
   const maxPage = Math.ceil(items.length / itemsPerPage);

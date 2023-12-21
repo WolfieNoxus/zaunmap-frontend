@@ -20,6 +20,7 @@ import IGeoJsonProperties, {
   defaultGeoJsonProperties,
 } from "../Interfaces/IGeoJsonProperties";
 import Popup from "../Views/Components/Popup";
+// import IMeta, { defaultMeta } from "../Interfaces/IMeta";
 
 // async function getFileFromUrl(url: string, filename: string): Promise<File> {
 //     const response = await fetch(url);
@@ -63,10 +64,12 @@ function Map() {
 
   const [selectedProperties, setSelectedProperties] =
     useState<IGeoJsonProperties>(defaultGeoJsonProperties);
-
+    
   const [newProperties, setNewProperties] = useState<IGeoJsonProperties>(
     defaultGeoJsonProperties
   );
+
+  // const [newMeta, setNewMeta] = useState<IMeta>(defaultMeta);
 
   const [undoStack, setUndoStack] = useState<
     GeoJSON.FeatureCollection<GeoJSON.GeometryObject>[]
@@ -86,7 +89,9 @@ function Map() {
   };
 
   const onEachFeature = React.useCallback((feature: any, layer: any) => {
-    const countryName = feature.properties.name ? feature.properties.name : "undefined";
+    const countryName = feature.properties.name
+      ? feature.properties.name
+      : "undefined";
     const attachText =
       feature.properties.attachText === undefined
         ? "<em>This region do not have attach text yet.</em>"
@@ -374,6 +379,7 @@ function Map() {
               selectedProperties={selectedProperties}
               setSelectedProperties={setSelectedProperties}
               newProperties={newProperties}
+              meta={map.meta}
               setChanged={setChanged}
             />
             <ZoomControl position="bottomleft" />
@@ -384,6 +390,7 @@ function Map() {
             onClose={() => navigate("/")}
             selectedProperties={selectedProperties}
             setNewProperties={setNewProperties}
+            // setNewMeta={setNewMeta}
             setChanged={setChanged}
           />
 
@@ -403,7 +410,7 @@ function Map() {
           />
           <MdContentCopy
             className="component-bottom-right-copy"
-            size={38}
+            size={40}
             color={showPopup ? "grey" : "BB2649"}
             onClick={() => {
               if (!isAuthenticated) {
@@ -509,7 +516,7 @@ function Map() {
         {/* <BottomRight /> */}
         <div className="component-bottom-right">
           <MdChatBubbleOutline
-            className="component-bottom-right-comment"
+            className="edit-bottom-right-comment"
             size={40}
             color={showPopup ? "grey" : "F35D74"}
             onClick={() => {

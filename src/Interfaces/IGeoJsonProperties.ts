@@ -5,10 +5,18 @@ export default interface IGeoJsonProperties {
     ISO_A3?: string,
 
     name?: string,
-    density?: number,
     attachText?: string,
+    
+    // mode?: "general" | "heatmap" | "colormap" ,
+    
+    // Heat map: color depends on the heatValue of attach
+    heatValue?: number,
+    // colorHeat?: string,
 
-    mode?: "general" | "heatmap" ,
+    // Color map: same tag has same color
+    // tagColor?: string,
+    // tag?: string,
+    // colorLevel?: number,
 
     styles?: IRegionStyles,
 
@@ -17,7 +25,7 @@ export default interface IGeoJsonProperties {
 
 export const defaultGeoJsonProperties: IGeoJsonProperties = {
     name: "",
-    density: 0,
     editId: -1,
+    attachText: "",
     styles: defaultRegionStyles,
 }
