@@ -20,6 +20,7 @@ import IGeoJsonProperties, {
   defaultGeoJsonProperties,
 } from "../Interfaces/IGeoJsonProperties";
 import Popup from "../Views/Components/Popup";
+import { defaultMeta } from "../Interfaces/IMeta";
 // import IMeta, { defaultMeta } from "../Interfaces/IMeta";
 
 // async function getFileFromUrl(url: string, filename: string): Promise<File> {
@@ -64,7 +65,7 @@ function Map() {
 
   const [selectedProperties, setSelectedProperties] =
     useState<IGeoJsonProperties>(defaultGeoJsonProperties);
-    
+
   const [newProperties, setNewProperties] = useState<IGeoJsonProperties>(
     defaultGeoJsonProperties
   );
@@ -87,6 +88,51 @@ function Map() {
     setShowPopup(false);
     // setDisableOtherComponents(false);
   };
+
+  const getHeatOpacity = React.useCallback(
+    (feature: any) => {
+      // return  Math.floor([(value - min) / (max - min)] / (1/level))
+      const min = map.meta.heatValueMin || defaultMeta.heatValueMin || 0;
+      const max = map.meta.heatValueMax || defaultMeta.heatValueMax || 100;
+      const hL = map.meta.heatLevel || defaultMeta.heatLevel || 5;
+
+      let value;
+      if (feature.properties.heatValue === undefined) {
+        value = min;
+      } else if (feature.properties.heatValue < min) {
+        value = min;
+      } else if (feature.properties.heatValue > max) {
+        value = max;
+      } else {
+        value = feature.properties.heatValue;
+      }
+      // console.log(min, max, hL, value)
+
+      const level = Math.floor((value - min) / (max - min) / (1 / hL));
+
+      return (level + 1) / hL;
+    },
+    [map.meta]
+  );
+
+  const stylesControl = React.useCallback(
+    (feature: any) => {
+      // console.log(meta)
+      if (map.meta.mode === "general") {
+        return feature.properties.styles;
+      } else if (map.meta.mode === "heatmap") {
+        const heatStyles = {
+          ...feature.properties.styles,
+
+          fillColor: map.meta.colorHeat,
+          fillOpacity: getHeatOpacity(feature) * 0.8,
+        };
+        return heatStyles;
+      } else if (map.meta.mode === "colormap") {
+      }
+    },
+    [getHeatOpacity, map.meta]
+  );
 
   const onEachFeature = React.useCallback((feature: any, layer: any) => {
     const countryName = feature.properties.name
@@ -450,7 +496,7 @@ function Map() {
             <GeoJSON
               key={index}
               data={geoJsonObject}
-              style={geoJsonObject.properties?.styles}
+              style={stylesControl}
               onEachFeature={onEachFeature}
             />
           ))}
