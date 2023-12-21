@@ -12,7 +12,7 @@
 .edit-bottom-right-comment {
   position: absolute;
   z-index: 1000;
-  bottom: 4vh;
+  bottom: 2vh;
   right: 2vw;
   background-color: white;
   padding: 5px;
@@ -32,7 +32,7 @@
 .component-bottom-right-copy {
   position: absolute;
   z-index: 1000;
-  bottom: 4vh;
+  bottom: 2vh;
   right: 5.5vw;
   background-color: white;
   padding: 5px;
