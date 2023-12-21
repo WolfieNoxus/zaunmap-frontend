@@ -20,6 +20,8 @@ import IGeoJsonProperties, {
   defaultGeoJsonProperties,
 } from "../Interfaces/IGeoJsonProperties";
 import Popup from "../Views/Components/Popup";
+import { defaultMeta } from "../Interfaces/IMeta";
+// import IMeta, { defaultMeta } from "../Interfaces/IMeta";
 
 // async function getFileFromUrl(url: string, filename: string): Promise<File> {
 //     const response = await fetch(url);
@@ -68,6 +70,8 @@ function Map() {
     defaultGeoJsonProperties
   );
 
+  // const [newMeta, setNewMeta] = useState<IMeta>(defaultMeta);
+
   const [undoStack, setUndoStack] = useState<
     GeoJSON.FeatureCollection<GeoJSON.GeometryObject>[]
   >([]);
@@ -85,52 +89,97 @@ function Map() {
     // setDisableOtherComponents(false);
   };
 
-  const onEachFeature = React.useCallback((feature: any, layer: any) => {
-    const countryName = feature.properties.name ? feature.properties.name : "undefined";
-    const attachText =
-      feature.properties.attachText === undefined
-        ? "<em>This region do not have attach text yet.</em>"
-        : feature.properties.attachText;
-    layer.bindPopup(
-      // countryName
-      `<div><strong>${countryName}</strong><p></p><span>Attached:</span><span> ${attachText}</span></div>`
-    );
+  const getHeatOpacity = React.useCallback(
+    (feature: any) => {
+      // return  Math.floor([(value - min) / (max - min)] / (1/level))
+      const min = map.meta.heatValueMin || defaultMeta.heatValueMin || 0;
+      const max = map.meta.heatValueMax || defaultMeta.heatValueMax || 100;
+      const hL = map.meta.heatLevel || defaultMeta.heatLevel || 5;
 
-    layer.on({
-      click: (event: any) => {
-        // console.log(event.target.feature.properties.ADMIN);
-        // console.log(event.target);
-      },
-      mouseover: (event: any) => {
-        if (event.target.feature.type === "Point") {
-          return;
-        }
-        var l = event.target;
+      let value;
+      if (feature.properties.heatValue === undefined) {
+        value = min;
+      } else if (feature.properties.heatValue < min) {
+        value = min;
+      } else if (feature.properties.heatValue > max) {
+        value = max;
+      } else {
+        value = feature.properties.heatValue;
+      }
+      // console.log(min, max, hL, value)
 
-        l.setStyle({
-          weight: 5,
-          color: "#666",
-          dashArray: "",
-          fillOpacity: 0.7,
-          fillColor: "white",
-        });
+      const level = Math.floor((value - min) / (max - min) / (1 / hL));
 
-        l.bringToFront();
-      },
-      mouseout: (event: any) => {
-        if (event.target.feature.type === "Point") {
-          return;
-        }
-        var l = event.target;
-        l.setStyle(
-          feature.properties.styles
-            ? feature.properties.styles
-            : defaultGeoJsonProperties.styles
-        );
-        l.bringToBack();
-      },
-    });
-  }, []);
+      return (level + 1) / hL;
+    },
+    [map.meta]
+  );
+
+  const stylesControl = React.useCallback(
+    (feature: any) => {
+      // console.log(meta)
+      if (map.meta.mode === "general") {
+        return feature.properties.styles;
+      } else if (map.meta.mode === "heatmap") {
+        const heatStyles = {
+          ...feature.properties.styles,
+
+          fillColor: map.meta.colorHeat,
+          fillOpacity: getHeatOpacity(feature) * 0.8,
+        };
+        return heatStyles;
+      } else if (map.meta.mode === "colormap") {
+      }
+    },
+    [getHeatOpacity, map.meta]
+  );
+
+  const onEachFeature = React.useCallback(
+    (feature: any, layer: any) => {
+      const countryName = feature.properties.name
+        ? feature.properties.name
+        : "undefined";
+      const attachText =
+        feature.properties.attachText === undefined
+          ? "<em>This region do not have attach text yet.</em>"
+          : feature.properties.attachText;
+      layer.bindPopup(
+        // countryName
+        `<div><strong>${countryName}</strong><p></p><span>Attached:</span><span> ${attachText}</span></div>`
+      );
+
+      layer.on({
+        click: (event: any) => {
+          // console.log(event.target.feature.properties.ADMIN);
+          // console.log(event.target);
+        },
+        mouseover: (event: any) => {
+          if (event.target.feature.type === "Point") {
+            return;
+          }
+          var l = event.target;
+
+          l.setStyle({
+            // weight: 5,
+            // color: "#666",
+            // dashArray: "",
+            fillOpacity: 0.7,
+            // fillColor: "white",
+          });
+
+          l.bringToFront();
+        },
+        mouseout: (event: any) => {
+          if (event.target.feature.type === "Point") {
+            return;
+          }
+          var l = event.target;
+          l.setStyle(stylesControl(event.target.feature));
+        },
+      });
+    },
+    [stylesControl]
+  );
 
   //
   useEffect(() => {
@@ -374,6 +423,7 @@ function Map() {
               selectedProperties={selectedProperties}
               setSelectedProperties={setSelectedProperties}
               newProperties={newProperties}
+              meta={map.meta}
               setChanged={setChanged}
             />
             <ZoomControl position="bottomleft" />
@@ -384,37 +434,40 @@ function Map() {
             onClose={() => navigate("/")}
             selectedProperties={selectedProperties}
             setNewProperties={setNewProperties}
+            // setNewMeta={setNewMeta}
             setChanged={setChanged}
           />
 
-          <MdChatBubbleOutline
-            className="edit-bottom-right-comment"
-            size={40}
-            color={showPopup ? "grey" : "F35D74"}
-            onClick={() => {
-              setPopupPage({
-                page: "comments",
-                user: loggedinUser,
-                onClose: () => {},
-              });
-              setShowPopup(true);
-              // setDisableOtherComponents(true);
-            }}
-          />
-          <MdContentCopy
-            className="component-bottom-right-copy"
-            size={40}
-            color={showPopup ? "grey" : "BB2649"}
-            onClick={() => {
-              if (!isAuthenticated) {
-                loginWithRedirect();
-              } else {
-                handleForkProject();
+          <div>
+            <MdChatBubbleOutline
+              className="edit-bottom-right-comment"
+              size={40}
+              color={showPopup ? "grey" : "F35D74"}
+              onClick={() => {
+                setPopupPage({
+                  page: "comments",
+                  user: loggedinUser,
+                  onClose: () => {},
+                });
                 setShowPopup(true);
                 // setDisableOtherComponents(true);
-              }
-            }}
-          />
+              }}
+            />
+            <MdContentCopy
+              className="component-bottom-right-copy"
+              size={40}
+              color={showPopup ? "grey" : "BB2649"}
+              onClick={() => {
+                if (!isAuthenticated) {
+                  loginWithRedirect();
+                } else {
+                  handleForkProject();
+                  setShowPopup(true);
+                  // setDisableOtherComponents(true);
+                }
+              }}
+            />
+          </div>
         </div>
       </div>
     );
@@ -443,7 +496,7 @@ function Map() {
             <GeoJSON
               key={index}
               data={geoJsonObject}
-              style={geoJsonObject.properties?.styles}
+              style={stylesControl}
               onEachFeature={onEachFeature}
             />
           ))}
@@ -509,7 +562,7 @@ function Map() {
         {/* <BottomRight /> */}
         <div className="component-bottom-right">
           <MdChatBubbleOutline
-            className="component-bottom-right-comment"
+            className="edit-bottom-right-comment"
             size={40}
             color={showPopup ? "grey" : "F35D74"}
             onClick={() => {

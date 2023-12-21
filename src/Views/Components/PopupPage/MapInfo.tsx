@@ -4,9 +4,12 @@ import { useParams } from "react-router-dom";
 import IMap from "../../../Interfaces/IMap";
 import ReactStars from "react-rating-stars-component";
 import "./css/mapInfo.css";
+
 const MapInfo = () => {
   const { mapId } = useParams<{ mapId: string }>();
   const [mapData, setMapData] = useState<IMap | null>(null);
+  const [userName, setUserName] = useState<string>();
+
   useEffect(() => {
     // console.log('Comments component has re-rendered.');
     const fetchMapData = async () => {
@@ -14,12 +17,20 @@ const MapInfo = () => {
         const response = await apiClient.get(`/map?mapId=${mapId}`);
         // console.log(response.data);
         setMapData(response.data);
+        const username = await getUsername(response.data.owner);
+        setUserName(username);
       } catch (error) {
         console.error("Error fetching comments", error);
       }
     };
     fetchMapData();
   }, [mapId]);
+
+  async function getUsername(userId: string): Promise<string> {
+    const response = await apiClient.get(`/user?userId=${userId}`);
+    return response.data.name;
+  }
+
   const formatDate = (dateString: string): string => {
     const options: Intl.DateTimeFormatOptions = {
       year: "numeric",
@@ -31,6 +42,17 @@ const MapInfo = () => {
     };
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
+
+  const mapMode = (mode: string) => {
+    if (mode === "general") {
+      return "Freelance Map";
+    } else if (mode === "heatmap") {
+      return "Heat Map";
+    } else if (mode === "colormap") {
+      return "Color Map";
+    }
+  }
+
   return (
     <div className="map-info-container">
       <h2 className="map-info-title">Map Info</h2>
@@ -43,7 +65,7 @@ const MapInfo = () => {
             <strong>Description:</strong> {mapData.description}
           </div>
           <div className="map-detail">
-            <strong>Owner:</strong> {mapData.owner}
+            <strong>Owner:</strong> {userName}
           </div>
           <div className="map-detail">
             <strong>Created At:</strong> {formatDate(mapData.createdAt)}
@@ -54,6 +76,10 @@ const MapInfo = () => {
           <div className="map-detail">
             <strong>Public or Private:</strong>{" "}
             {mapData.isPublic ? "Public" : "Private"}
+          </div>
+          <div className="map-detail">
+            <strong>Map Mode:</strong>{" "}
+            {mapMode(mapData.meta.mode)}
           </div>
           <div className="map-detail">
             <strong>Average Rating:</strong>

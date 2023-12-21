@@ -173,6 +173,7 @@
   bottom: 4vh;
   right: 2%;
   z-index: 1000;
+  width: auto;
   /* padding: 5px; */
   border-radius: 25px;
 }
@@ -189,15 +190,6 @@
 .component-bottom-right-add {
   z-index: 1000;
   background-color: white;
-  border-radius: 25px;
-  box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.75);
-}
-
-.component-bottom-right-copy {
-  position: relative;
-  z-index: 1000;
-  background-color: white;
-  padding: 5px;
   border-radius: 25px;
   box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.75);
 }

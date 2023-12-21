@@ -34,6 +34,7 @@
   margin-right: 1%;
   overflow: auto;
   align-content: center;
+  max-height: 100%;
 }
 .bar-content::-webkit-scrollbar {
   display: none;
@@ -156,7 +157,7 @@
   width: 100%;
   box-sizing: border-box;
   border-radius: 4px;
-  border: 1px solid #4b4f5d;
+  border: 2px solid #4b4f5d54;
 }
 
 .input-box-basic:focus {

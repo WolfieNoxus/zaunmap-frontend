@@ -1,4 +1,5 @@
 import IComment from "./IComment";
+import IMeta, { defaultMeta } from "./IMeta";
 
 export default interface IMap {
   _id: string;
@@ -18,6 +19,8 @@ export default interface IMap {
     attachText: string;
     textColor: string;
   }[];
+
+  meta: IMeta;
 }
 
 export const defaultMap: IMap = {
@@ -32,4 +35,6 @@ export const defaultMap: IMap = {
   averageRating: 0,
   ratingCount: 0,
   description: "",
+
+  meta: defaultMeta,
 };
