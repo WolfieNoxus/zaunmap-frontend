@@ -215,7 +215,7 @@ const CommunityList = ({ role }: CommunityListProps) => {
     <div>
       {/* <span>View type: {role === "admin" ? "Admin" : "User"}</span> */}
       {error && <p className="text-danger">{error}</p>}
-      <SearchBar onSearch={handleSearch} />
+      <SearchBar onSearch={handleSearch} tagsExist={true} />
       {loading ? (
         <div className="spinner-border" role="status">
           <span className="visually-hidden">Loading...</span>
