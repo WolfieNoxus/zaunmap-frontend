@@ -2,7 +2,7 @@ import { useState, useEffect, KeyboardEvent } from "react";
 
 import IUser from "../../../Interfaces/IUser";
 import IMap from "../../../Interfaces/IMap";
-import SearchBar from "../Elements/SearchBar";
+// import SearchBar from "../Elements/SearchBar";
 import apiClient from "../../../services/apiClient";
 import { AxiosError } from "axios";
 
@@ -252,35 +252,35 @@ const UserProfile = (userProfile: IUser) => {
     );
   };
 
-  const handleSearch = async (
-    name: string,
-    tags: string,
-    sortBy: string,
-    sortOrder: string
-  ) => {
-    try {
-      const response = await apiClient.get("/map/search", {
-        params: { name, tags, sortBy, sortOrder },
-      });
-      if (response.status === 200) {
-        const filteredUserMaps = (response.data as IMap[]).filter(
-          (map) => map.owner === user?.sub
-        );
-        console.log(filteredUserMaps);
-        setItems(filteredUserMaps);
-      } else {
-        // Handle non-200 responses
-        console.error("Failed to retrieve search results");
-      }
-    } catch (error) {
-      // Handle errors
-      setError("Failed to retrieve search results: " + error);
-      console.error("Error fetching search results:", error);
-    }
-  };
+  // const handleSearch = async (
+  //   name: string,
+  //   // tags: string,
+  //   sortBy: string,
+  //   sortOrder: string
+  // ) => {
+  //   try {
+  //     const response = await apiClient.get("/user/search", {
+  //       params: { name, sortBy, sortOrder },
+  //     });
+  //     if (response.status === 200) {
+  //       // const filteredUserMaps = (response.data as IMap[]).filter(
+  //       //   (map) => map.owner === user?.sub
+  //       // );
+  //       // console.log(filteredUserMaps);
+  //       setItems(response.data as IMap[]);
+  //     } else {
+  //       // Handle non-200 responses
+  //       console.error("Failed to retrieve search results");
+  //     }
+  //   } catch (error) {
+  //     // Handle errors
+  //     setError("Failed to retrieve search results: " + error);
+  //     console.error("Error fetching search results:", error);
+  //   }
+  // };
 
   // Page Flip Code
-  const itemsPerPage = 3;
+  const itemsPerPage = 4;
 
   const [currentPage, setCurrentPage] = useState<number>(1);
   const maxPage = Math.ceil(items.length / itemsPerPage);
@@ -340,7 +340,7 @@ const UserProfile = (userProfile: IUser) => {
         ) : null}
       </div> */}
 
-      <SearchBar onSearch={handleSearch} />
+      {/* <SearchBar onSearch={handleSearch} tagsExist={false} /> */}
       <span className="text-danger">{error} </span>
       <table className="table mb-3">
         <colgroup>
