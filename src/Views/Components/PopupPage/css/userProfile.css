@@ -2,7 +2,14 @@
   display: flex;
   /* display: ; */
   justify-content: center;
+  max-height: 100%;
+  overflow: auto;
 }
+
+.profile-center::-webkit-scrollbar {
+  display: none;
+}
+
 .username-label {
   font-weight: bold;
   margin-right: 8px;

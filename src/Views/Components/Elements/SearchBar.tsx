@@ -4,9 +4,10 @@ import "./css/searchBar.css";
 
 interface SearchBarProps {
   onSearch: (name: string, tags: string, sortBy: string, sortOrder: string) => void;
+  tagsExist: boolean;
 }
 
-const SearchBar: FC<SearchBarProps> = ({ onSearch }) => {
+const SearchBar: FC<SearchBarProps> = ({ onSearch, tagsExist }) => {
   const [searchMode, setSearchMode] = useState<string>('name'); // 'name' or 'tags'
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedTag, setSelectedTag] = useState<string>('');
@@ -27,10 +28,11 @@ const SearchBar: FC<SearchBarProps> = ({ onSearch }) => {
   return (
     <div className="search-container mb-3">
       <div className="search-mode-selector">
-        <select value={searchMode} onChange={(e) => setSearchMode(e.target.value)}>
+      {tagsExist ? <select value={searchMode} onChange={(e) => setSearchMode(e.target.value)}>
           <option value="name">Name</option>
           <option value="tags">Tags</option>
-        </select>
+        </select> : 
+        <span className='me-1'>Name:</span>}
       </div>
       <div className="input-with-clear">
         <input
